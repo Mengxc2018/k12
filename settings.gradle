@@ -1,0 +1,3 @@
+rootProject.name = 'k12soft'
+include 'k12servo'
+

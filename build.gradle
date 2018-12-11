@@ -1,0 +1,17 @@
+group 'cn.k12soft'
+version '0.1.0'
+
+configure(subprojects) {
+    apply plugin: 'java'
+    compileJava.options.encoding = 'UTF-8'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+}

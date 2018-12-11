@@ -1,0 +1,26 @@
+application:
+  security:
+    jwt:
+      secret: k12soft@1703
+    accessRules:
+      - matcher:
+          antPatterns:
+            - /
+            - /swagger-ui**
+            - /swagger-resources/**
+            - /webjars/**
+            - /v2/api-docs/**
+            - /static/**
+            - /iclock/**
+
+            - /users/**
+            - /tokens/**
+        access: permitAll
+      - matcher:
+          antPatterns:
+            - /**
+        access: authenticated
+      # - matcher:
+      #     antPatterns:
+      #       - /management/**
+      #   access: hasAnyRole('MANAGER','TEACHER')

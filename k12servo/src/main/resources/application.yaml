@@ -1,0 +1,94 @@
+spring:
+  profiles:
+    active: local
+    include: swagger,security
+  application:
+    name: k12servo
+  jpa:
+    hibernate:
+      ddlAuto: update
+    show_sql: true
+
+  thymeleaf:
+     cache: false
+     prefix: classpath:/templates/
+     suffix: .html
+     encoding: UTF-8
+     content-type: text/html
+     mode: HTML5
+
+  jackson:
+    timeZone: GMT+8
+    dateFormat: yyyy-MM-dd HH:mm:ss
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
+      WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: true
+    deserialization:
+      READ_DATE_TIMESTAMPS_AS_NANOSECONDS: false
+
+  activiti:
+    # 初始化表，如果没有，则创建---一般创建后改为false即可，可加快项目启动速度
+    database-schema-update: true
+    # 自动部署processes下的配置文件
+    process-definition-location-prefix: classpath:/processes/
+    #保存历史数据级别设置为full最高级别，便于历史数据的追溯
+    history-level: full
+    #### 校验流程文件，默认校验resources下的processes文件夹里的流程文件
+    check-process-definitions: false
+
+server:
+  port: 8082
+  contextPath: /
+  error:
+    whitelabel:
+      enabled: false
+
+logging:
+  level:
+    org.springframework.web: INFO
+    org.hibernate: INFO
+    cn.k12soft.servo: DEBUG
+    # 开启activiti的sql打印，关闭可注释此项
+#    org.activiti.engine.impl.persistence.entity: trace
+
+application:
+  appName: k12servo
+  superUser:
+      mobile: 13100000001
+      username: fenghua.wang
+      password: 123456!
+      gender: MALE
+
+  third:
+    easymob:
+      appKey:
+      clientId:
+      clientSecret:
+    aliyun:
+      region: cn-qingdao
+      accessKeyId: LTAIQRGtTyufG1GX
+      accessKeySecret: ZRlHX7dvhgFsDVdVuWzhqLOxplSSWy
+      sms:
+        endpoint: https://1276178519321483.mns.cn-hangzhou.aliyuncs.com/
+        topicName: sms.topic-cn-hangzhou
+        signName: 博顿教育
+        smsMessageBody: sms
+        templateCodes:
+          INVITATION: SMS_82020041
+          RESET_PASSWORD: SMS_82010043
+      sts:
+        arn: acs:ram::1276178519321483:role/oss-manager-kidService
+        tokenDuration: 86400
+        policy:
+          applyForToken: "{\"Statement\": [{
+                               \"Action\": \"sts:AssumeRole\",
+                               \"Effect\": \"Allow\",
+                               \"Principal\": {
+                                 \"Service\": [\"oas.aliyuncs.com\"]
+                               }
+                             }],
+                           \"Version\": \"1\"}"
+      push:
+        pushKeyId: 24916278
+        pushKeySecret: f0cf8a963c11cb741fadb0661effef81
+        pushIosKeyId : 24916633

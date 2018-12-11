@@ -1,0 +1,8 @@
+debug: false
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://127.0.0.1:3306/k12web?serverTimezone=CST&zeroDateTimeBehavior=convertToNull&useUnicode=yes&characterEncoding=UTF-8
+    username: root
+    password: admin123
+    driver-class-name: com.mysql.cj.jdbc.Driver
