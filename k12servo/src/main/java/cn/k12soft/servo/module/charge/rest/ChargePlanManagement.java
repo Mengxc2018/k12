@@ -32,6 +32,7 @@ import cn.k12soft.servo.module.expense.service.ExpenseEntryService;
 import cn.k12soft.servo.module.expense.service.PaybackService;
 import cn.k12soft.servo.module.revenue.service.IncomeDetailService;
 import cn.k12soft.servo.module.revenue.service.IncomeService;
+import cn.k12soft.servo.module.wxLogin.service.WxService;
 import cn.k12soft.servo.security.Active;
 import cn.k12soft.servo.security.permission.PermissionRequired;
 import cn.k12soft.servo.service.InterestKlassService;
@@ -41,13 +42,6 @@ import cn.k12soft.servo.util.Times;
 import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.chrono.ChronoLocalDateTime;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalField;
 import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
@@ -83,6 +77,7 @@ public class ChargePlanManagement {
   private KlassService klassService;
   private PaybackService paybackService;
   private final ExpenseEntryRepository expenseEntryRepository;
+  private final WxService wxService;
 
   @Autowired
   public ChargePlanManagement(ChargePlanService chargePlanService,
@@ -95,7 +90,8 @@ public class ChargePlanManagement {
                               IncomeService incomeService,
                               IncomeDetailService incomeDetailService,
                               KlassService klassService,
-                              PaybackService paybackService, ExpenseEntryRepository expenseEntryRepository) {
+                              PaybackService paybackService,
+                              ExpenseEntryRepository expenseEntryRepository, WxService wxService) {
     this.chargePlanService = chargePlanService;
     this.studentChargePlanService = studentChargePlanService;
     this.interestKlassService = interestKlassService;
@@ -108,6 +104,7 @@ public class ChargePlanManagement {
     this.klassService = klassService;
     this.paybackService = paybackService;
     this.expenseEntryRepository = expenseEntryRepository;
+    this.wxService = wxService;
   }
 
   @ApiOperation("批量：发起收费计划")
@@ -227,10 +224,11 @@ public class ChargePlanManagement {
     int cycleId = form.getCycleId();
     int identityId = form.getIdentityId();
     int targetType = form.getTargetType();
-    String target = form.getTarget();
+    String target = form.getTarget();   // 应用对象可能多个，多种类型：普通班级id、兴趣班id、学生id
     Instant endAt = form.getEndAt();
     float money = form.getMoney();
 
+    // 选出周期性折扣、身份类型折扣------->开始
     ExpenseEntry expenseEntry = this.expenseEntryService.get(expenseId);
     ExpensePeriodDiscount periodDiscount = null;
     List<ExpensePeriodDiscount> periodDiscountList = expenseEntry.getPeriodDiscounts();
@@ -255,13 +253,14 @@ public class ChargePlanManagement {
     if (identDiscount == null) {
       return;
     }
+    // 选出周期性折扣、身份类型折扣------->结束
 
     List<StudentCharge> list = new LinkedList<>();
 
     String[] ids = StringUtils.splitByWholeSeparator(target, ",");
     KlassType klassType = null;
     int periodDate = Times.time2yyyyMM(System.currentTimeMillis());
-    // 已经创建了的收费计划(退费转入费种的时候，会提前生成下个周期的收费计划, 所以现在发起收费计划，要过滤掉已有的)
+    // 已经创建了的收费计划(退费转入费种的时候，会 提前生成 下个周期的收费计划, 所以现在发起收费计划，要过滤掉已有的)
     List<StudentCharge> alreadyCreatedList = this.studentChargePlanService
       .findAllBySchoolAndExpenseEntry(actor.getSchoolId(), expenseEntry);
     if (targetType == ChargePlanTargetType.COMMON_KLASS.getId()) {
@@ -669,11 +668,16 @@ public class ChargePlanManagement {
                                     ExpensePeriodDiscount periodDiscount, float money, Instant endAt, int klassId, KlassType klassType,
                                     int periodDate) {
     for (Student student : studentList) {
+      StudentCharge studentCharge = null;
       StudentCharge originalStudentCharge = _alreadyCreated(alreadyCreatedList, student, expenseEntry);
+      boolean is = true;  // 是否推送微信服务消息
       if (originalStudentCharge != null) {
         boolean isNext = originalStudentCharge.checkAndCreateNext(System.currentTimeMillis());
         if (isNext) {
+          studentCharge = originalStudentCharge;
           list.add(originalStudentCharge);
+        }else{
+          is = false;
         }
       } else {
         StudentCharge stuChargePlan = new StudentCharge(schoolId);
@@ -690,8 +694,19 @@ public class ChargePlanManagement {
         stuChargePlan.setEndAt(endAt);
         stuChargePlan.setEndMills(endAt.toEpochMilli() - System.currentTimeMillis());
         stuChargePlan.setRemainMoney(0f); // 剩余的钱等于money
+        studentCharge = stuChargePlan;
         list.add(stuChargePlan);
       }
+
+      // 微信推送
+//      if(is) {
+//      CompletableFuture completableFuture = CompletableFuture.supplyAsync(()->{
+//        String msg = "您的幼儿的缴费项目已经生成啦，快去看看吧！";
+//        wxService.sendStudentPlan(studentCharge, msg);
+//        return null;
+//      });
+//      }
+
     }
   }
 

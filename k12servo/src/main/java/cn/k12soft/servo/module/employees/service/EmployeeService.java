@@ -7,7 +7,6 @@ import cn.k12soft.servo.module.department.domain.Dept;
 import cn.k12soft.servo.module.department.repository.DeptRepository;
 import cn.k12soft.servo.module.duty.domain.Duty;
 import cn.k12soft.servo.module.duty.repositpry.DutyRepository;
-import cn.k12soft.servo.module.employeeFlow.repositpry.EmployeeFlowRepository;
 import cn.k12soft.servo.module.employees.domain.Employee;
 import cn.k12soft.servo.module.employees.domain.dto.EmployeeDTO;
 import cn.k12soft.servo.module.employees.domain.dto.EpleToSalDTO;
@@ -27,6 +26,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static cn.k12soft.servo.domain.enumeration.ActorType.TEACHER;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.time.*;
@@ -270,6 +270,27 @@ public class EmployeeService extends AbstractRepositoryService<Employee, Long, E
 
     public Collection<EmployeeDTO> queryAll(Actor actor) {
         Integer schoolId = actor.getSchoolId();
+
+        // 如果包含 并且 只有一个，则返回个人员工信息
+        if (actor.getTypes().contains(TEACHER) && actor.getTypes().size() == 1){
+            Collection<EmployeeDTO> employeeDTOS = new ArrayList<>();
+            EmployeeDTO employeeDTO = new EmployeeDTO();
+            Employee employee = employeeRepository.findByActorId(actor.getId());
+            if (employee == null){
+                User user = userRepository.findOne(actor.getUserId());
+                employeeDTO = new EmployeeDTO(
+                        actor.getId(),
+                        user.getUsername(),
+                        actor.getSchoolId(),
+                        user.getMobile()
+                );
+            }else{
+                employeeDTO = employeeMapper.toDTO(employee);
+            }
+            employeeDTOS.add(employeeDTO);
+            return employeeDTOS;
+        }
+
         // 查询未分配的员工
         Collection<EmployeeDTO> employeeDTOS = employeeOfUserMapper.toDTOs(actorRepository.findByNoPATRIARCH(schoolId));
         // 查询已分配的员工

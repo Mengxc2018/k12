@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: prod
     include: swagger,security
   application:
     name: k12servo
@@ -37,7 +37,6 @@ spring:
     check-process-definitions: false
 
 server:
-  port: 8082
   contextPath: /
   error:
     whitelabel:

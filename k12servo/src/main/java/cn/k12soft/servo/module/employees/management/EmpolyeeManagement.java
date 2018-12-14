@@ -110,7 +110,7 @@ public class EmpolyeeManagement {
         return employeeService.findUnAssigned(actor);
     }
 
-    @ApiOperation("查询所有员工，包括分配的和未分配的")
+    @ApiOperation("当角色只有一个教师角色，返回自己的信息；当角色不包含教师角色，查询所有员工，包括分配的和未分配的")
     @GetMapping("/queryAll")
     public Collection<EmployeeDTO> queryAll(@Active Actor actor){
         return employeeService.queryAll(actor);

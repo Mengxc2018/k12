@@ -163,7 +163,6 @@ public class Employee{
     @ApiModelProperty("丧假")
     private String funeral;     // 丧假
 
-
     private boolean isShow;     // 是否显示
     private Integer schoolId;   // 学校Id
     private Instant createdAt;  // 创建时间

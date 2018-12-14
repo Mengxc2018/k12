@@ -5,7 +5,6 @@ import cn.k12soft.servo.domain.enumeration.ActiveSourceType;
 import cn.k12soft.servo.domain.enumeration.WxActiveType;
 import cn.k12soft.servo.domain.enumeration.WxSendType;
 import cn.k12soft.servo.module.charge.domain.StudentCharge;
-import cn.k12soft.servo.module.expense.domain.ExpenseEntry;
 import cn.k12soft.servo.module.expense.domain.ExpensePeriodType;
 import cn.k12soft.servo.module.healthCheck.domain.HealthCheck;
 import cn.k12soft.servo.module.weixin.pay.K12WXPayConfig;
@@ -179,6 +178,7 @@ public class WxService {
                             continue;
                         }
                         formid = pushCodes.get(0).getFormId();
+                        date.put("form_id", formid);
                         log.info("new formid:"+formid);
                         log.error(map.toString());
                     }
@@ -999,7 +999,7 @@ public class WxService {
         }
     }
 
-    public void sendStudentPlan(StudentCharge studentCharge){
+    public void sendStudentPlan(StudentCharge studentCharge, String msg){
 
         JSONObject keywordJson = new JSONObject();
         JSONObject valueJson = new JSONObject();
@@ -1049,25 +1049,33 @@ public class WxService {
         Instant endAt = studentCharge.getEndAt();
         String endAtStr = LocalDateTime.ofInstant(endAt, ZoneOffset.UTC).toLocalDate().toString();
 
-        valueJson.put("value", "您有新的收费周期类型，请及时查收！");
+        msg = msg + "\n幼儿姓名：" + stuName
+                  + "\n缴费名称：" + chargeName
+                  + "\n缴费金额：" + money + "元"
+                  + "\n缴费周期：" + entityType
+                  + "\n周期开始时间：" + createAtStr
+                  + "\n周期结束时间：" + endAtStr;
+
+        valueJson.put("value", msg);
         keywordJson.put("keyword1", valueJson);
 
-        valueJson.put("value", "幼儿姓名：" + stuName);
+        valueJson.put("value", LocalDate.now().toString());
         keywordJson.put("keyword2", valueJson);
-
-        valueJson.put("value", "缴费名称：" + chargeName);
-
-        valueJson.put("value", "缴费金额：" + money);
-        keywordJson.put("keyword3", valueJson);
-
-        valueJson.put("value", "缴费周期类型：" + entityType);
-        keywordJson.put("keyword4", valueJson);
-
-        valueJson.put("value", "缴费周期开始时间：" + createAtStr);
-        keywordJson.put("keyword4", valueJson);
-
-        valueJson.put("value", "缴费周期结束时间：" + endAtStr);
-        keywordJson.put("keyword4", valueJson);
+//
+//        valueJson.put("value", "缴费名称：" + chargeName);
+//        keywordJson.put("keyword3", valueJson);
+//
+//        valueJson.put("value", "缴费金额：" + money);
+//        keywordJson.put("keyword4", valueJson);
+//
+//        valueJson.put("value", "缴费周期类型：" + entityType);
+//        keywordJson.put("keyword5", valueJson);
+//
+//        valueJson.put("value", "缴费周期开始时间：" + createAtStr);
+//        keywordJson.put("keyword6", valueJson);
+//
+//        valueJson.put("value", "缴费周期结束时间：" + endAtStr);
+//        keywordJson.put("keyword7", valueJson);
 
         // 根据学生找到家长的actor
         Set<Guardian> guardians = guardianRepository.findAllByStudent_Id(stuId);
