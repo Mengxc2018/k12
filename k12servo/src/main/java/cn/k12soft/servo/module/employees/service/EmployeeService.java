@@ -10,6 +10,7 @@ import cn.k12soft.servo.module.duty.repositpry.DutyRepository;
 import cn.k12soft.servo.module.employees.domain.Employee;
 import cn.k12soft.servo.module.employees.domain.dto.EmployeeDTO;
 import cn.k12soft.servo.module.employees.domain.dto.EpleToSalDTO;
+import cn.k12soft.servo.module.employees.domain.form.EmpCommitForm;
 import cn.k12soft.servo.module.employees.domain.form.EmployeeForm;
 import cn.k12soft.servo.module.employees.service.mapper.EmployeeMapper;
 import cn.k12soft.servo.module.employees.repository.EmployeeRepository;
@@ -338,4 +339,40 @@ public class EmployeeService extends AbstractRepositoryService<Employee, Long, E
         return employeeMapper.toDTOs(employeeCollection);
     }
 
+    public void empCommit(Actor actor, EmpCommitForm form) {
+        this.getRepository().save(
+            new Employee(
+                actor.getId(),
+                0,
+                form.getName(),
+                form.getDeptId(),
+                form.getIdCard(),
+                form.getSex(),
+                form.getMobile(),
+                form.getEmergencyContact(),
+                form.getEmergencyContactMobile(),
+                form.getNativePlace(),
+                form.getNation(),
+                form.getPoliticsStatus(),
+                form.getIsMarry(),
+                form.getHjAddress(),
+                form.getAddress(),
+                form.getEducation(),
+                form.getGraduateSchool(),
+                form.getSpecialty(),
+                form.getCgfns(),
+                form.getRemark(),
+                form.getIsGraduate(),
+                form.getIsHasDiploma(),
+                form.getDuty(),
+                form.getParentActorId(),
+                true,
+                actor.getSchoolId(),
+                Instant.now()
+        ));
+    }
+
+    public Collection<EmployeeDTO> findEmpCommit(Actor actor) {
+        return employeeMapper.toDTOs(this.getRepository().findBySchoolIdAndSalaryGreaterThan(actor.getSchoolId(), 0f));
+    }
 }

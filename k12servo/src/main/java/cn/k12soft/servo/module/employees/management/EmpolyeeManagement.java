@@ -3,6 +3,7 @@ package cn.k12soft.servo.module.employees.management;
 import cn.k12soft.servo.domain.Actor;
 import cn.k12soft.servo.module.employees.domain.dto.EmployeeDTO;
 import cn.k12soft.servo.module.employees.domain.dto.EpleToSalDTO;
+import cn.k12soft.servo.module.employees.domain.form.EmpCommitForm;
 import cn.k12soft.servo.module.employees.domain.form.EmployeeForm;
 import cn.k12soft.servo.module.employees.service.EmployeeService;
 import cn.k12soft.servo.security.Active;
@@ -127,6 +128,21 @@ public class EmpolyeeManagement {
     @GetMapping("/findLeave")
     public Collection<EmployeeDTO> findLeave(@Active Actor actor, @RequestParam @Valid LocalDate localDate){
         return employeeService.findLeave(actor, localDate);
+    }
+
+    @ApiOperation("员工提交自己员工信息")
+    @PostMapping("/empCommit")
+    public void empCommit(@Active Actor actor,
+                       @RequestBody @Valid EmpCommitForm form){
+        employeeService.empCommit(actor, form);
+    }
+
+    @ApiOperation("管理员获取员工自己提交的信息列表")
+    @GetMapping("/findEmpCommit")
+    public Collection<EmployeeDTO> findEmpCommit(@Active Actor actor
+//                       @RequestBody @Valid EmpCommitForm form
+    ){
+        return employeeService.findEmpCommit(actor);
     }
 
 }

@@ -143,9 +143,6 @@ public class Employee{
     @ApiModelProperty("该员工的上级id")
     private Integer parentActorId;    // 该员工的上级id
 
-//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private EmployeeBasic employeeBasic;
-
     @ApiModelProperty("加班时间")
     private String overtime;    // 加班时间
     @ApiModelProperty("调休时间")
@@ -286,6 +283,72 @@ public class Employee{
         this.barthWith = barthWith;
         this.marry = marry;
         this.funeral = funeral;
+        this.isShow = isShow;
+        this.schoolId = schoolId;
+        this.createdAt = createdAt;
+    }
+
+    /**
+     * 员工自填
+     * @param fileId
+     * @param actorId
+     * @param name
+     * @param deptId
+     * @param idCard
+     * @param sex
+     * @param mobile
+     * @param emergencyContact
+     * @param emergencyContactMobile
+     * @param nativePlace
+     * @param nation
+     * @param politicsStatus
+     * @param isMarry
+     * @param hjAddress
+     * @param address
+     * @param education
+     * @param graduateSchool
+     * @param specialty
+     * @param cgfns
+     * @param remark
+     * @param isGraduate
+     * @param isHasDiploma
+     * @param duty
+     * @param parentActorId
+     * @param isShow
+     * @param schoolId
+     * @param createdAt
+     */
+    public Employee(Integer fileId, Integer actorId, String name, Integer deptId,
+                    String idCard, String sex, String mobile,
+                    String emergencyContact, String emergencyContactMobile, String nativePlace, String nation,
+                    String politicsStatus, String isMarry, String hjAddress, String address, String education,
+                    String graduateSchool, String specialty, String cgfns, String remark,
+                    boolean isGraduate, boolean isHasDiploma, Duty duty, Integer parentActorId,
+                    boolean isShow, Integer schoolId, Instant createdAt) {
+        this.fileId = fileId;
+        this.actorId = actorId;
+        this.name = name;
+        this.deptId = deptId;
+        this.idCard = idCard;
+        this.sex = sex;
+        this.mobile = mobile;
+        this.emergencyContact = emergencyContact;
+        this.emergencyContactMobile = emergencyContactMobile;
+        this.nativePlace = nativePlace;
+        this.nation = nation;
+        this.politicsStatus = politicsStatus;
+        this.isMarry = isMarry;
+        this.hjAddress = hjAddress;
+        this.address = address;
+        this.education = education;
+        this.graduateSchool = graduateSchool;
+        this.specialty = specialty;
+        this.cgfns = cgfns;
+        this.remark = remark;
+        this.isGraduate = isGraduate;
+        this.isHasDiploma = isHasDiploma;
+        this.duty = duty;
+        this.parentActorId = parentActorId;
         this.isShow = isShow;
         this.schoolId = schoolId;
         this.createdAt = createdAt;

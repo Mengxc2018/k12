@@ -56,4 +56,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>{
 
     Collection<Employee> findBySchoolIdAndIsLeaveAndLeaveAtBetween(Integer schoolId, boolean b, Instant first, Instant second, Sort lleaveAt);
 
+    Collection<Employee> findBySchoolIdAndSalaryGreaterThan(Integer schoolId, float i);
 }

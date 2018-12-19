@@ -7,6 +7,7 @@ import cn.k12soft.servo.module.warehouse.warehouse.repositopry.WarehouseReposito
 import cn.k12soft.servo.security.Active;
 import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -52,8 +53,10 @@ public class WarehouseManagement {
     public Warehouse find(@Active Actor actor,
                           @RequestParam(required = false) @Valid String name,
                           @RequestParam(required = false) @Valid String isbn){
-        Warehouse warehouse = isbn == null ? wareHouseRepository.findByName(name) : wareHouseRepository.findByIsbn(isbn);
-        if (warehouse == null){
+        Warehouse warehouse = isbn == null
+                ? wareHouseRepository.findByName(name)
+                : wareHouseRepository.findByIsbn(isbn);
+        if (warehouse == null && StringUtils.isBlank(name)){
             JSONObject onLine = findOnLine(isbn);
             log.info(onLine.toString());
             if (onLine.get("code") != null && !"null".equals(onLine.get("code"))){

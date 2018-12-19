@@ -25,13 +25,11 @@ import cn.k12soft.servo.module.wxLogin.repository.WxUserRepository;
 import cn.k12soft.servo.repository.*;
 import com.google.common.base.Strings;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +58,7 @@ public class WxService {
     private final GuardianRepository guardianRepository;
     private final PushCodeRepository pushCodeRepository;
     private final WxPushMsgRepository wxPushMsgRepository;
+    private final WxSendService wxSendService;
 
     @Autowired
     public WxService(UserRepository userRepository,
@@ -70,7 +69,8 @@ public class WxService {
                      WxActiveRepository wxActiveRepository,
                      GuardianRepository guardianRepository,
                      PushCodeRepository pushCodeRepository,
-                     WxPushMsgRepository wxPushMsgRepository) {
+                     WxPushMsgRepository wxPushMsgRepository,
+                     WxSendService wxSendService) {
         this.userRepository = userRepository;
         this.actorRepository = actorRepository;
         this.klassRepository = klassRepository;
@@ -80,11 +80,11 @@ public class WxService {
         this.guardianRepository = guardianRepository;
         this.pushCodeRepository = pushCodeRepository;
         this.wxPushMsgRepository = wxPushMsgRepository;
+        this.wxSendService = wxSendService;
     }
 
     public static final String URL = "https://api.weixin.qq.com/cgi-bin/wxopen/template/list?access_token=ACCESS_TOKEN";        // 获取帐号下已存在的模板列表
     public final static String token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET"; // 获取小程序 access_token
-    public final static String SEND_URL = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=ACCESS_TOKEN";      // 发送模板消息
     public final static String TEMPLATE_ID = "Y84Nf9zM5oAQ0l_DFcyOnYpAigrFIXYscY_AD22ijqM";     // 通用消息模版ID
     public final static String WX_PAGE = "pages/information/information";
 //    public final static String SEND_PLAN_PAGE = "pages/information/information";
@@ -102,7 +102,7 @@ public class WxService {
         try {
 
             // 发送请求获取access_token
-            Token token = getToken(token_url).getBody();
+            Token token = wxSendService.getToken(token_url).getBody();
 
             // 存放jsonDate数据
             Map<String, String> maplist = new HashMap<>();
@@ -128,71 +128,6 @@ public class WxService {
         return map;
     }
 
-    /**
-     * 发送微信消息
-     *
-     * @param actor
-     * @param form
-     * @return
-     */
-    public Map<String, Object> sendTemplateMessage(Actor actor, TemplateMessage form, String formid) {
-        Map<String, Object> map = new HashMap<>();
-
-        // 判断formid是否为空，为空，则是交互消息，用上传的formid；不为空，则是系统消息
-        if (Strings.isNullOrEmpty(formid)) {
-            formid = form.getFormId();
-        }
-
-        try {
-            // 获取access_token
-            Token token = getToken(token_url).getBody();
-
-            // 组装数据
-            JSONObject date = new JSONObject();
-            date.put("touser", getOpenid(actor));
-//          date.put("touser", "oNEVZ5G-qXO74HkgB75aWlMzmmMA");   // 测试用
-            date.put("template_id", form.getTemplateId());
-            date.put("page", form.getPage());
-            date.put("form_id", formid);
-            date.put("data", form.getData());
-            date.put("emphasis_keyword", form.getEmphasisKeyword());
-
-            // 推送消息
-            boolean sendCodeTrue = true;
-            while (sendCodeTrue){
-                // 发送消息
-                JSONObject jsonObject = CommonUtil.httpsRequest(SEND_URL.replace("ACCESS_TOKEN", token.getAccessToken()), "POST", date.toString());
-                map = jsonObject;
-                map.put("actorId", actor.getId());
-                log.info("errcode：{}, actorId：{}", jsonObject.get("errcode"), actor.getId());
-                // 判断发送是否成功 41028:form_id不正确，或者过期 41029:form_id已被使用。如果返回41028、41029，则删掉旧的formid重新获取
-                if (!jsonObject.get("errcode").toString().equals("0")){
-                    if (jsonObject.get("errcode").toString().equals("41029") || jsonObject.get("errcode").toString().equals("41028")) {
-                        sendCodeTrue = true;
-                        log.info("old formid:" + formid);
-                        pushCodeRepository.deleteByFormId(formid);
-                        List<PushCode> pushCodes =  pushCodeRepository.findAllByActorIdAndCreatedAtMax(actor.getId());
-                        if (pushCodes.size() == 0){
-                            log.error("actorId：{}没有足够的formid", actor.getId());
-                            sendCodeTrue = false;
-                            continue;
-                        }
-                        formid = pushCodes.get(0).getFormId();
-                        date.put("form_id", formid);
-                        log.info("new formid:"+formid);
-                        log.error(map.toString());
-                    }
-                }else{
-                    sendCodeTrue = false;
-                }
-            }
-
-        } catch (Exception e) {
-            log.error(e.toString());
-        }
-
-        return map;
-    }
 
     /**
      * 系统发送消息
@@ -273,7 +208,7 @@ public class WxService {
                 jsonDate.put("data", JSONObject.fromObject(json.get("jsonDateSave")));
 
                 // 得到该角色的推送消息的formId
-                String formid = getFormId(actorByGuardian.getId());
+                String formid = wxSendService.getFormId(actorByGuardian.getId());
 
                 // 微信推送消息数据
                 TemplateMessage templateMessage = new TemplateMessage(
@@ -294,39 +229,9 @@ public class WxService {
             }
         }
 
-        return sendMessage(messagesPojo, klassId, WX_SEND);
-
+        return wxSendService.sendMessage(messagesPojo, klassId, WX_SEND);
     }
 
-    public ResponseEntity sendMessage(List<TemplateMessagePojo> messagesPojo, Integer klassId, WxSendType WX_SEND){
-        Map<String, Object> map = new LinkedHashMap<>();
-        try {
-            for (TemplateMessagePojo message : messagesPojo) {
-                Actor sendActor = message.getActors();
-                String formid = message.getTemplateMessage().getFormId();
-
-                CompletableFuture completableFuture = CompletableFuture.supplyAsync(()->{
-                    sendTemplateMessage(message.getActors(), message.getTemplateMessage(), formid);
-                    return null;
-                });
-
-                // 保存数据
-                WxPushMsg wxPushMsg = new WxPushMsg(
-                        message.getJsonObject().toString(),
-                        sendActor.getId(),
-                        klassId,
-                        WX_SEND,
-                        sendActor.getSchoolId(),
-                        Instant.now()
-                );
-                wxPushMsgRepository.save(wxPushMsg);
-                log.info("保存推送消息：" + wxPushMsg.toString());
-            }
-        } catch (Exception e) {
-            log.error(e.toString());
-        }
-        return null;
-    }
 
     /**
      * 特定模版
@@ -334,205 +239,205 @@ public class WxService {
      * @param healthCheckObj
      * @return
      */
-    private JSONObject getObjectValue(Object healthCheckObj) {
-        String valueStr = null;
-        JSONObject json = new JSONObject();
-        JSONObject jsonSendMsg = new JSONObject();
-        JSONObject jsonDateSave = new JSONObject();
-        String temperature = null;
-        Field[] field = healthCheckObj.getClass().getDeclaredFields();
-        try {
-            for (int j = 0; j < field.length; j++) { // 遍历所有属性
-                String name = field[j].getName(); // 获取属性的名字
-                if (name == "issue") {
-                    continue;
-                }
-                name = name.substring(0, 1).toUpperCase() + name.substring(1); // 将属性的首字符大写，方便构造get，set方法
-                Method m = healthCheckObj.getClass().getMethod("get" + name);
-                String value = String.valueOf(m.invoke(healthCheckObj)); // 调用getter方法获取属性值
-
-                // 要保存进数据库里的体检信息
-                String saveKey = name.substring(0, 1).toLowerCase() + name.substring(1);
-                String saveValue = value;
-                boolean isSave = true;  // 只保存体检项目，其他不需要保存，因此用此字段做个开关，当进到default时，开关关闭
-
-                // 晨检体温单独处理
-                if (name.equals("Temperature")) {
-                    temperature = value;
-                    jsonDateSave.put(name, temperature);
-                }
-
-                // .....处理开始........
-                // 执行处理方法
-                if (value != null || !value.equals("")) {
-                    String objValueStr = "";
-
-                    switch (value) {
-
-                        case "WELL":
-                            value = "正常";
-                            break;
-
-                        // 精神
-                        case "DOLDRUMS":
-                            value = "精神不振";
-                            break;
-                        case "SAG":
-                            value = "萎靡";
-                            break;
-                        case "TOOEXCITED":
-                            value = "过于兴奋";
-                            break;
-                        case "TOOAGITATED":
-                            value = "过于烦躁";
-                            break;
-
-                        // 身体
-                        case "COUGH":
-                            value = "咳嗽";
-                            break;
-                        case "RHINORRHEA":
-                            value = "流鼻涕";
-                            break;
-                        case "FEVERHIGH":
-                            value = "高烧";
-                            break;
-                        case "EVERLOWF":
-                            value = "低烧";
-                            break;
-                        case "DIARRHEA":
-                            value = "腹泻";
-                            break;
-
-                        // 皮肤
-                        case "RASH":
-                            value = "皮疹";
-                            break;
-                        case "ALLERGY":
-                            value = "过敏";
-                            break;
-                        case "BODYHURT":
-                            value = "身体外伤";
-                            break;
-                        case "FACEHURT":
-                            value = "脸部外伤";
-                            break;
-                        case "MOSQUITOHURT":
-                            value = "蚊虫叮咬";
-                            break;
-
-                        // 正餐
-                        case "LESSEATTING":
-                            value = "饭量少";
-                            break;
-                        case "LESSVEGETABLE":
-                            value = "蔬菜少";
-                            break;
-                        case "LESSMEAT":
-                            value = "肉类少";
-                            break;
-                        case "TEACHERHELP":
-                            value = "老师喂";
-                            break;
-
-                        // 午睡
-                        case "LESS":
-                            value = "少";
-                            break;
-                        case "NOSELEEP":
-                            value = "没睡";
-                            break;
-
-                        // 加餐
-                        case "LESSDRINK":
-                            value = "饮品少";
-                            break;
-                        case "LESSFRUIT":
-                            value = "水果少";
-                            break;
-
-                        // 大小便，排泄
-                        case "YELLO":
-                            value = "小便黄";
-                            break;
-                        // 小便少
-                        case "CONSTIPATION":
-                            value = "便秘";
-                            break;
-
-                        // 口腔
-                        case "HERPAS":
-                            value = "疱疹";
-                            break;
-                        case "ULCERATION":
-                            value = "溃疡";
-                            break;
-                        case "THROATRED":
-                            value = "咽部发红";
-                            break;
-
-                        // 其他
-                        case "MEDICINE":
-                            value = "携带药物";
-                            break;
-                        case "DANGEROUS":
-                            value = "携带危险物品";
-                            break;
-                        case "NOTHING":
-                            value = "无";
-                            break;
-                        default:
-                            value = "";
-                            isSave = false;
-                    }
-
-                    if (isSave) {
-                        jsonDateSave.put(saveKey, saveValue);
-                    }
-
-                    name = name.substring(0, 1).toLowerCase() + name.substring(1);
-                    switch (name) {
-                        case "spirit":
-                            if (!value.equals("")) {
-                                valueStr = value + (" \n");
-                                jsonSendMsg.put("精神状况", value);
-                            }
-                            break;
-                        case "sink":
-                            if (!value.equals("")) {
-                                valueStr = value + (" \n");
-                                jsonSendMsg.put("皮肤状况：", value);
-                            }
-                            break;
-                        case "mouth":
-                            if (!value.equals("")) {
-                                valueStr = value + (" \n");
-                                jsonSendMsg.put("口腔状况：", value);
-                            }
-                            break;
-                        default:
-                            valueStr = null;
-                    }
-                }
-                // .....处理结束........
-
-                json.put("jsonDateSave", jsonDateSave);
-                json.put("jsonSendMsg", jsonSendMsg);
-
-            }
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return json;
-    }
+//    private JSONObject getObjectValue(Object healthCheckObj) {
+//        String valueStr = null;
+//        JSONObject json = new JSONObject();
+//        JSONObject jsonSendMsg = new JSONObject();
+//        JSONObject jsonDateSave = new JSONObject();
+//        String temperature = null;
+//        Field[] field = healthCheckObj.getClass().getDeclaredFields();
+//        try {
+//            for (int j = 0; j < field.length; j++) { // 遍历所有属性
+//                String name = field[j].getName(); // 获取属性的名字
+//                if (name == "issue") {
+//                    continue;
+//                }
+//                name = name.substring(0, 1).toUpperCase() + name.substring(1); // 将属性的首字符大写，方便构造get，set方法
+//                Method m = healthCheckObj.getClass().getMethod("get" + name);
+//                String value = String.valueOf(m.invoke(healthCheckObj)); // 调用getter方法获取属性值
+//
+//                // 要保存进数据库里的体检信息
+//                String saveKey = name.substring(0, 1).toLowerCase() + name.substring(1);
+//                String saveValue = value;
+//                boolean isSave = true;  // 只保存体检项目，其他不需要保存，因此用此字段做个开关，当进到default时，开关关闭
+//
+//                // 晨检体温单独处理
+//                if (name.equals("Temperature")) {
+//                    temperature = value;
+//                    jsonDateSave.put(name, temperature);
+//                }
+//
+//                // .....处理开始........
+//                // 执行处理方法
+//                if (value != null || !value.equals("")) {
+//                    String objValueStr = "";
+//
+//                    switch (value) {
+//
+//                        case "WELL":
+//                            value = "正常";
+//                            break;
+//
+//                        // 精神
+//                        case "DOLDRUMS":
+//                            value = "精神不振";
+//                            break;
+//                        case "SAG":
+//                            value = "萎靡";
+//                            break;
+//                        case "TOOEXCITED":
+//                            value = "过于兴奋";
+//                            break;
+//                        case "TOOAGITATED":
+//                            value = "过于烦躁";
+//                            break;
+//
+//                        // 身体
+//                        case "COUGH":
+//                            value = "咳嗽";
+//                            break;
+//                        case "RHINORRHEA":
+//                            value = "流鼻涕";
+//                            break;
+//                        case "FEVERHIGH":
+//                            value = "高烧";
+//                            break;
+//                        case "EVERLOWF":
+//                            value = "低烧";
+//                            break;
+//                        case "DIARRHEA":
+//                            value = "腹泻";
+//                            break;
+//
+//                        // 皮肤
+//                        case "RASH":
+//                            value = "皮疹";
+//                            break;
+//                        case "ALLERGY":
+//                            value = "过敏";
+//                            break;
+//                        case "BODYHURT":
+//                            value = "身体外伤";
+//                            break;
+//                        case "FACEHURT":
+//                            value = "脸部外伤";
+//                            break;
+//                        case "MOSQUITOHURT":
+//                            value = "蚊虫叮咬";
+//                            break;
+//
+//                        // 正餐
+//                        case "LESSEATTING":
+//                            value = "饭量少";
+//                            break;
+//                        case "LESSVEGETABLE":
+//                            value = "蔬菜少";
+//                            break;
+//                        case "LESSMEAT":
+//                            value = "肉类少";
+//                            break;
+//                        case "TEACHERHELP":
+//                            value = "老师喂";
+//                            break;
+//
+//                        // 午睡
+//                        case "LESS":
+//                            value = "少";
+//                            break;
+//                        case "NOSELEEP":
+//                            value = "没睡";
+//                            break;
+//
+//                        // 加餐
+//                        case "LESSDRINK":
+//                            value = "饮品少";
+//                            break;
+//                        case "LESSFRUIT":
+//                            value = "水果少";
+//                            break;
+//
+//                        // 大小便，排泄
+//                        case "YELLO":
+//                            value = "小便黄";
+//                            break;
+//                        // 小便少
+//                        case "CONSTIPATION":
+//                            value = "便秘";
+//                            break;
+//
+//                        // 口腔
+//                        case "HERPAS":
+//                            value = "疱疹";
+//                            break;
+//                        case "ULCERATION":
+//                            value = "溃疡";
+//                            break;
+//                        case "THROATRED":
+//                            value = "咽部发红";
+//                            break;
+//
+//                        // 其他
+//                        case "MEDICINE":
+//                            value = "携带药物";
+//                            break;
+//                        case "DANGEROUS":
+//                            value = "携带危险物品";
+//                            break;
+//                        case "NOTHING":
+//                            value = "无";
+//                            break;
+//                        default:
+//                            value = "";
+//                            isSave = false;
+//                    }
+//
+//                    if (isSave) {
+//                        jsonDateSave.put(saveKey, saveValue);
+//                    }
+//
+//                    name = name.substring(0, 1).toLowerCase() + name.substring(1);
+//                    switch (name) {
+//                        case "spirit":
+//                            if (!value.equals("")) {
+//                                valueStr = value + (" \n");
+//                                jsonSendMsg.put("精神状况", value);
+//                            }
+//                            break;
+//                        case "sink":
+//                            if (!value.equals("")) {
+//                                valueStr = value + (" \n");
+//                                jsonSendMsg.put("皮肤状况：", value);
+//                            }
+//                            break;
+//                        case "mouth":
+//                            if (!value.equals("")) {
+//                                valueStr = value + (" \n");
+//                                jsonSendMsg.put("口腔状况：", value);
+//                            }
+//                            break;
+//                        default:
+//                            valueStr = null;
+//                    }
+//                }
+//                // .....处理结束........
+//
+//                json.put("jsonDateSave", jsonDateSave);
+//                json.put("jsonSendMsg", jsonSendMsg);
+//
+//            }
+//        } catch (SecurityException e) {
+//            e.printStackTrace();
+//        } catch (IllegalArgumentException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchMethodException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        }
+//        return json;
+//    }
 
 
     /**
@@ -550,7 +455,7 @@ public class WxService {
         try {
             for (int j = 0; j < field.length; j++) { // 遍历所有属性
                 String name = field[j].getName(); // 获取属性的名字
-                if (name == "issue") {
+                if (name == "issue" || name.equals("healthCondition")) {
                     continue;
                 }
                 name = name.substring(0, 1).toUpperCase() + name.substring(1); // 将属性的首字符大写，方便构造get，set方法
@@ -567,7 +472,6 @@ public class WxService {
                     temperature = value;
                     jsonDateSave.put(name, temperature);
                 }
-
 
                 // .....处理开始........
                 // 执行处理方法
@@ -745,48 +649,7 @@ public class WxService {
         return json;
     }
 
-    /**
-     * 通过actorID获取推送码的formId
-     *
-     * @param actorId
-     * @return
-     */
-    private String getFormId(Integer actorId) {
-        String formid = "";
-        try {
-            List<PushCode> pushCodeList = pushCodeRepository.findAllByActorIdAndCreatedAtMax(actorId);
-            formid = pushCodeList.get(0).getFormId();
-            System.out.println(formid);
-            pushCodeRepository.delete(pushCodeList.get(0));
-        } catch (Exception e) {
-            System.out.println(e);
-            log.error("actor: {} 没有足够的formid", actorId);
-        }
-        return formid;
-    }
 
-    public ResponseEntity<Token> getToken(String url) {
-        Token token = null;
-
-        String requestUrl = url.replace("APPID", K12WXPayConfig.WEIXIN_PAY_APPID).replace("APPSECRET", K12WXPayConfig.WEIXIN_PAY_APPSECRET);
-
-        // 发起GET请求获取凭证
-        JSONObject jsonObject = CommonUtil.httpsRequest(requestUrl, "GET", null);
-
-        if (null != jsonObject) {
-            try {
-                token = new Token();
-                token.setAccessToken(jsonObject.getString("access_token"));
-                token.setExpiresIn(jsonObject.getInt("expires_in"));
-            } catch (JSONException e) {
-                token = null;
-                // 获取token失败
-                log.error("获取token失败 errcode:{} errmsg:{}", jsonObject.getInt("errcode"), jsonObject.getString("errmsg"));
-                return new ResponseEntity("errcode:" + jsonObject.getInt("errcode") + " errmsg:" + jsonObject.getString("errmsg"), HttpStatus.BAD_REQUEST);
-            }
-        }
-        return ResponseEntity.ok().body(token);
-    }
 
     public void getPushCode(Actor actor, List<PushCodeForm> forms) {
         User user = userRepository.findOne(actor.getUserId());
@@ -814,12 +677,6 @@ public class WxService {
     public void deleteTimeout(Actor actor) {
         Collection<PushCode> pushCodes = pushCodeRepository.findAllByTimeOut7Days(actor.getId());
         pushCodeRepository.delete(pushCodes);
-    }
-
-    public String getOpenid(Actor actor) {
-        User user = userRepository.findOne(actor.getUserId());
-        WxUsers wxUsers = wxUserRepository.findByMobile(user.getMobile());
-        return wxUsers.getOpenid();
     }
 
     public Collection<WxPushMsg> findWxPushMassage(Actor actor, LocalDate date) {
@@ -933,7 +790,7 @@ public class WxService {
                 Guardian guardian = guardianIterator.next();
                 Integer actorId = guardian.getPatriarchId();
                 Actor actorSend = actorRepository.findOne(actorId);
-                String formid = getFormId(actorId);
+                String formid = wxSendService.getFormId(actorId);
                 map.put("actorSend", actorSend);
                 map.put("sendMessage", sendMessage);
                 map.put("formid", formid);
@@ -976,7 +833,7 @@ public class WxService {
                     i++;
                 }
 
-                String formId = getFormId(sendActorId);
+                String formId = wxSendService.getFormId(sendActorId);
 
                 TemplateMessage templateMessage = new TemplateMessage(
                         null,
@@ -1092,5 +949,9 @@ public class WxService {
             Actor actor = actorRepository.findOne(guardianIterator.next().getPatriarchId());
             sendTemplateMessage(actor, templateMessage, "00");
         }
+    }
+
+    public Map<String, Object> sendTemplateMessage(Actor actor, TemplateMessage form, String msg) {
+        return wxSendService.sendTemplateMessage(actor, form, msg);
     }
 }

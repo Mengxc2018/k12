@@ -43,6 +43,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -700,9 +701,10 @@ public class ChargePlanManagement {
 
       // 微信推送
 //      if(is) {
-//      CompletableFuture completableFuture = CompletableFuture.supplyAsync(()->{
+//        StudentCharge finalStudentCharge = studentCharge;
+//        CompletableFuture completableFuture = CompletableFuture.supplyAsync(()->{
 //        String msg = "您的幼儿的缴费项目已经生成啦，快去看看吧！";
-//        wxService.sendStudentPlan(studentCharge, msg);
+//        wxService.sendStudentPlan(finalStudentCharge, msg);
 //        return null;
 //      });
 //      }

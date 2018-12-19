@@ -224,11 +224,11 @@ public class StudentChargePlanService extends AbstractEntityService<StudentCharg
             this.save(studentCharge);
 
             // 微信服务推送
-//            CompletableFuture completableFuture = CompletableFuture.supplyAsync(()->{
-//                String msg = "您的幼儿有新的缴费项目，请及时查收！";
-//                wxService.sendStudentPlan(studentCharge, msg);
-//                return null;
-//            });
+            CompletableFuture completableFuture = CompletableFuture.supplyAsync(()->{
+                String msg = "您的幼儿有新的缴费项目，请及时查收！";
+                wxService.sendStudentPlan(studentCharge, msg);
+                return null;
+            });
 
             IncomeDetail incomeDetail = new IncomeDetail();
             incomeDetail.setMoney(monthlyMoney);
