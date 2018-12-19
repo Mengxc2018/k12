@@ -12,6 +12,7 @@ import cn.k12soft.servo.module.employees.domain.dto.EmployeeDTO;
 import cn.k12soft.servo.module.employees.domain.dto.EpleToSalDTO;
 import cn.k12soft.servo.module.employees.domain.form.EmpCommitForm;
 import cn.k12soft.servo.module.employees.domain.form.EmployeeForm;
+import cn.k12soft.servo.module.employees.domain.form.ManagerUpdateForm;
 import cn.k12soft.servo.module.employees.service.mapper.EmployeeMapper;
 import cn.k12soft.servo.module.employees.repository.EmployeeRepository;
 import cn.k12soft.servo.module.employees.service.mapper.EmployeeOfUserMapper;
@@ -374,5 +375,39 @@ public class EmployeeService extends AbstractRepositoryService<Employee, Long, E
 
     public Collection<EmployeeDTO> findEmpCommit(Actor actor) {
         return employeeMapper.toDTOs(this.getRepository().findBySchoolIdAndSalaryGreaterThan(actor.getSchoolId(), 0f));
+    }
+
+    public void managerUpdateEmp(Actor actor, ManagerUpdateForm form) {
+        Integer id = form.getId();
+        School school = this.schoolRepository.findOne(actor.getSchoolId());
+
+        Employee employee = this.getRepository().findOne(Long.parseLong(String.valueOf(id)));
+        employee.setProbation(form.getProbation());
+        employee.setSalaryProbationer(form.getSalaryProbationer());
+        employee.setSalary(form.getSalary());
+        employee.setDateJoinAt(form.getDateJoinAt());
+        employee.setDateOfficialAt(form.getDateOfficialAt());
+        employee.setDateRegisterAt(form.getDateRegisterAt());
+        employee.setUseForm(form.getUseForm());
+        employee.setContract(form.getIsContract());
+        employee.setContractDateStart(form.getContractDateStart());
+        employee.setContractDateEnd(form.getContractDateEnd());
+        employee.setRenew(form.getIsRenew());
+        employee.setRenewRemind(form.getRenewRemind());
+        employee.setRenewDateStart(form.getRenewDateStart());
+        employee.setRenewDateEnd(form.getRenewDateEnd());
+        employee.setOfficial(form.getIsOfficial());
+        employee.setLeave(form.getIsLeave());
+        employee.setLeaveAt(form.getLeaveAt());
+        employee.setHasSocial(form.getIsHasSocial());
+
+        employee.setOvertime("0");
+        employee.setRest("0");
+        employee.setAnnual("0");
+        employee.setSick(school.getSick());
+        employee.setBarth(school.getBarth());
+        employee.setMarry(school.getMarry());
+        employee.setFuneral(school.getFuneral());
+        this.getRepository().save(employee);
     }
 }

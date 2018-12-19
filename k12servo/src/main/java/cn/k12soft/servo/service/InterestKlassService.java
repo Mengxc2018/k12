@@ -35,7 +35,7 @@ public class InterestKlassService extends AbstractEntityService<InterestKlass, I
   }
 
   public InterestKlass create(Integer schoolId, InterestKlassForm form) {
-//    Grade grade = gradeService.get(FeeDetailsForm.getGradeId());
+//    Grade grade = gradeService.get(form.getGradeId());
     KlassType klassType = KlassType.get(form.getType());
     InterestKlass klass = new InterestKlass(schoolId, form.getName(), klassType, form.getDescription());
     klass.setCreateAt(Instant.now());

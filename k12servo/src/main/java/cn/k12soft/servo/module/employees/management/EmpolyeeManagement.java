@@ -5,6 +5,7 @@ import cn.k12soft.servo.module.employees.domain.dto.EmployeeDTO;
 import cn.k12soft.servo.module.employees.domain.dto.EpleToSalDTO;
 import cn.k12soft.servo.module.employees.domain.form.EmpCommitForm;
 import cn.k12soft.servo.module.employees.domain.form.EmployeeForm;
+import cn.k12soft.servo.module.employees.domain.form.ManagerUpdateForm;
 import cn.k12soft.servo.module.employees.service.EmployeeService;
 import cn.k12soft.servo.security.Active;
 import io.swagger.annotations.ApiOperation;
@@ -139,10 +140,17 @@ public class EmpolyeeManagement {
 
     @ApiOperation("管理员获取员工自己提交的信息列表")
     @GetMapping("/findEmpCommit")
-    public Collection<EmployeeDTO> findEmpCommit(@Active Actor actor
-//                       @RequestBody @Valid EmpCommitForm form
-    ){
+    public Collection<EmployeeDTO> findEmpCommit(@Active Actor actor){
         return employeeService.findEmpCommit(actor);
+    }
+
+    @ApiOperation("管理员更新员工信息")
+    @PutMapping("/managerUpdateEmp")
+    public void managerUpdateEmp(@Active Actor actor,
+                                 @RequestBody @Valid ManagerUpdateForm form){
+
+        employeeService.managerUpdateEmp(actor, form);
+
     }
 
 }

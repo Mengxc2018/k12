@@ -7,8 +7,8 @@ import javax.persistence.ManyToOne;
 import java.time.Instant;
 
 public class ManagerUpdateForm {
-    @ApiModelProperty("当前员工actorId")
-    private Integer actorId;    // 当前员工
+    @ApiModelProperty("数据id")
+    private Integer id;
 
     @ApiModelProperty("试用时长、单位：月")
     private Integer probation;
@@ -79,8 +79,8 @@ public class ManagerUpdateForm {
     @ApiModelProperty("丧假")
     private String funeral;     // 丧假
 
-    public Integer getActorId() {
-        return actorId;
+    public Integer getId() {
+        return id;
     }
 
     public Integer getProbation() {
