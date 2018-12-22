@@ -12,6 +12,8 @@ import cn.k12soft.servo.module.employeeFlow.service.mapper.LeaveMapper;
 import cn.k12soft.servo.module.employeeFlow.service.mapper.OfficialMapper;
 import cn.k12soft.servo.module.employeeFlow.repositpry.EmployeeFlowRepository;
 import cn.k12soft.servo.module.employees.domain.Employee;
+import cn.k12soft.servo.module.employees.domain.EmployeeBasic;
+import cn.k12soft.servo.module.employees.repository.EmployeeBasicRepository;
 import cn.k12soft.servo.module.employees.repository.EmployeeRepository;
 import cn.k12soft.servo.module.revenue.domain.TeacherSocialSecurity;
 import cn.k12soft.servo.module.revenue.repository.TeacherSocialSecurityRepository;
@@ -34,14 +36,16 @@ public class EmployeeFlowService extends AbstractRepositoryService<EmployeeFlow,
     private final LeaveMapper leaveMapper;
     private final OfficialMapper officialMapper;
     private final EmployeeRepository employeeRepository;
+    private final EmployeeBasicRepository employeeBasicRepository;
     private final TeacherSocialSecurityRepository teacherSocialSecurityRepository;
 
 
-    protected EmployeeFlowService(EmployeeFlowRepository repository, LeaveMapper leaveMapper, OfficialMapper officialMapper, EmployeeRepository employeeRepository, TeacherSocialSecurityRepository teacherSocialSecurityRepository) {
+    protected EmployeeFlowService(EmployeeFlowRepository repository, LeaveMapper leaveMapper, OfficialMapper officialMapper, EmployeeRepository employeeRepository, EmployeeBasicRepository employeeBasicRepository, TeacherSocialSecurityRepository teacherSocialSecurityRepository) {
         super(repository);
         this.leaveMapper = leaveMapper;
         this.officialMapper = officialMapper;
         this.employeeRepository = employeeRepository;
+        this.employeeBasicRepository = employeeBasicRepository;
         this.teacherSocialSecurityRepository = teacherSocialSecurityRepository;
     }
 
@@ -100,29 +104,29 @@ public class EmployeeFlowService extends AbstractRepositoryService<EmployeeFlow,
     }
 
     public void applyBecome(Actor actor, Applyform form) {
-//        Employee employee = employeeRepository.findOne(Long.parseLong(form.getId().toString()));
-//        EmployeeBasic employeeBasic = employee.getEmployeeBasic();
-//        if (form.getFolw().compareTo(JOINBY) > 0) {  // 转正
-//            employeeBasic.setOfficialAt(form.getDate());
-//            employeeBasic.setOfficial(form.getIsTransform());
-//            employeeBasic.setGraduate(form.getIsGraduate());
-//            employeeBasic.setHasDoploma(form.getIsHasDoploma());
-//            // 转正后修改工资信息
-//            updateSalary(employee.getActorId());
-//        } else if (form.getFolw().compareTo(LEAVEBy) > 0) {   // 离职
-//            employeeBasic.setLeave(form.getIsTransform());
-//            employeeBasic.setLeaveAt(form.getDate());
-//            // 标记员工离职
-//            employee.setShow(false);
-//            employeeRepository.save(employee);
-//
-//            // 薪资表标记员工离职
-//            TeacherSocialSecurity teacherSocialSecurity = teacherSocialSecurityRepository.findByActorId(employee.getActorId().toString());
-//            teacherSocialSecurity.setType(FolwEnum.LEAVEBY);
-//            teacherSocialSecurityRepository.save(teacherSocialSecurity);
-//
-//        }
-//        employeeBasicRepository.save(employeeBasic);
+        Employee employee = employeeRepository.findOne(Long.parseLong(form.getId().toString()));
+        EmployeeBasic employeeBasic = employee.getEmployeeBasic();
+        if (form.getFolw().compareTo(JOINBY) > 0) {  // 转正
+            employeeBasic.setOfficialAt(form.getDate());
+            employeeBasic.setOfficial(form.getIsTransform());
+            employeeBasic.setGraduate(form.getIsGraduate());
+            employeeBasic.setHasDoploma(form.getIsHasDoploma());
+            // 转正后修改工资信息
+            updateSalary(employee.getActorId());
+        } else if (form.getFolw().compareTo(LEAVEBy) > 0) {   // 离职
+            employeeBasic.setLeave(form.getIsTransform());
+            employeeBasic.setLeaveAt(form.getDate());
+            // 标记员工离职
+            employee.setShow(false);
+            employeeRepository.save(employee);
+
+            // 薪资表标记员工离职
+            TeacherSocialSecurity teacherSocialSecurity = teacherSocialSecurityRepository.findByActorId(employee.getActorId().toString());
+            teacherSocialSecurity.setType(FolwEnum.LEAVEBY);
+            teacherSocialSecurityRepository.save(teacherSocialSecurity);
+
+        }
+        employeeBasicRepository.save(employeeBasic);
     }
 
     private void updateSalary(Integer actorId) {

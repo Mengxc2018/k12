@@ -1,9 +1,11 @@
 package cn.k12soft.servo.module.commmontest;
 
-import cn.k12soft.servo.service.DailyTaskService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/test")
@@ -11,13 +13,11 @@ public class CommonTaskTest {
 
 
     private final CommonTestService commonTestService;
-    private final DailyTaskService dailyTaskService;
 
 
     @Autowired
-    public CommonTaskTest(CommonTestService commonTestService, DailyTaskService dailyTaskService){
+    public CommonTaskTest(CommonTestService commonTestService){
         this.commonTestService = commonTestService;
-        this.dailyTaskService = dailyTaskService;
     }
 
     @ApiOperation("脚本：统计收入接口   【【【千万不要在线上数据库执行！！！】】】")
@@ -56,13 +56,6 @@ public class CommonTaskTest {
     @GetMapping("/addRateFlow")
     public void addRateJoin() {
         commonTestService.addRateJoin();
-    }
-
-
-    @ApiOperation("收入测试   【【【千万不要在线上数据库执行！！！】】】")
-    @RequestMapping(value = "/socila", method = RequestMethod.GET)
-    public void social(){
-        dailyTaskService.execute();
     }
 
 }

@@ -3,16 +3,15 @@ package cn.k12soft.servo.module.employees.service;
 import cn.k12soft.servo.domain.Actor;
 import cn.k12soft.servo.domain.School;
 import cn.k12soft.servo.domain.User;
-import cn.k12soft.servo.module.department.domain.Dept;
-import cn.k12soft.servo.module.department.repository.DeptRepository;
 import cn.k12soft.servo.module.duty.domain.Duty;
 import cn.k12soft.servo.module.duty.repositpry.DutyRepository;
+import cn.k12soft.servo.module.employeeFlow.repositpry.EmployeeFlowRepository;
 import cn.k12soft.servo.module.employees.domain.Employee;
+import cn.k12soft.servo.module.employees.domain.EmployeeBasic;
 import cn.k12soft.servo.module.employees.domain.dto.EmployeeDTO;
 import cn.k12soft.servo.module.employees.domain.dto.EpleToSalDTO;
-import cn.k12soft.servo.module.employees.domain.form.EmpCommitForm;
 import cn.k12soft.servo.module.employees.domain.form.EmployeeForm;
-import cn.k12soft.servo.module.employees.domain.form.ManagerUpdateForm;
+import cn.k12soft.servo.module.employees.repository.EmployeeBasicRepository;
 import cn.k12soft.servo.module.employees.service.mapper.EmployeeMapper;
 import cn.k12soft.servo.module.employees.repository.EmployeeRepository;
 import cn.k12soft.servo.module.employees.service.mapper.EmployeeOfUserMapper;
@@ -23,12 +22,10 @@ import cn.k12soft.servo.repository.UserRepository;
 import cn.k12soft.servo.service.AbstractRepositoryService;
 import cn.k12soft.servo.util.Times;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static cn.k12soft.servo.domain.enumeration.ActorType.TEACHER;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.time.*;
@@ -46,7 +43,8 @@ public class EmployeeService extends AbstractRepositoryService<Employee, Long, E
     private final SchoolRepository schoolRepository;
     private final EmployeeRepository employeeRepository;
     private final EmployeeOfUserMapper employeeOfUserMapper;
-    private final DeptRepository deptRepository;
+    private final EmployeeFlowRepository employeeFlowRepository;
+    private final EmployeeBasicRepository employeeBasicRepository;
     @Autowired
     protected EmployeeService(EmployeeRepository repository,
                               EmployeeMapper employeeMapper,
@@ -57,7 +55,7 @@ public class EmployeeService extends AbstractRepositoryService<Employee, Long, E
                               SchoolRepository schoolRepository,
                               EmployeeRepository employeeRepository,
                               EmployeeOfUserMapper employeeOfUserMapper,
-                              DeptRepository deptRepository) {
+                              EmployeeFlowRepository employeeFlowRepository, EmployeeBasicRepository employeeBasicRepository) {
         super(repository);
         this.employeeMapper = employeeMapper;
         this.dutyRepository = dutyRepository;
@@ -67,7 +65,8 @@ public class EmployeeService extends AbstractRepositoryService<Employee, Long, E
         this.schoolRepository = schoolRepository;
         this.employeeRepository = employeeRepository;
         this.employeeOfUserMapper = employeeOfUserMapper;
-        this.deptRepository = deptRepository;
+        this.employeeFlowRepository = employeeFlowRepository;
+        this.employeeBasicRepository = employeeBasicRepository;
     }
 
     public List<EmployeeDTO> create(Actor actor, EmployeeForm form) {
@@ -89,6 +88,7 @@ public class EmployeeService extends AbstractRepositoryService<Employee, Long, E
 
         for (String actorIdx : actorIds){
             Employee employee = getRepository().findByActorId(Integer.valueOf(actorIdx));
+            EmployeeBasic employeeBasic = new EmployeeBasic();
             Actor actorx = actorRepository.findOne(Integer.valueOf(actorIdx));
             // 如果是空的，新增一条,加工号
             if (employee == null){
@@ -96,106 +96,73 @@ public class EmployeeService extends AbstractRepositoryService<Employee, Long, E
                 employee = new Employee();
                 employee.setActorNum(Integer.valueOf(num.toString()));
                 employee.setId(Long.parseLong(actorIdx));
+            }
+            // 如果不是空的，职务不是空的，返回员工已分配的错误
+            if (employee != null && employee.getDuty() != null){
+                throw new IllegalArgumentException("actorId为 " + actorIdx + " 的员工已分配职位，不能重复分配");
+            }
 
-                // 产假陪产假判断
-                String barth = "0";
-                String birthWith = "0";
-                User user = userRepository.getOne(actor.getUserId());
-                // 如果没有性别，默认女性
-                if (user.getGender() == null) {
-                    barth = employee.getBarth();
-                    birthWith = "0";
-                } else {
-                    // 如果是男人，则产假为0， 只有陪产假；如果为女人，有产假，没有陪产假
-                    if (user.getGender().toString().equals("FEMALE".toString())) {
-                        barth = employee.getBarth();
-                        birthWith = "0";
-                    }
-                    if (user.getGender().toString().equals("MALE".toString())) {
-                        barth = "0";
-                        birthWith = employee.getBarthWith();
-                    }
-                }
-
-                Duty duty = this.dutyRepository.findOne(Long.parseLong(form.getDutyId().toString()));
-
-                Optional<Dept> deptOptional = deptRepository.findOneById(Long.parseLong(form.getDeptId().toString()));
-
-//                Long id = employee.getId();
-                School school = schoolRepository.findOne(actorx.getSchoolId());
-                employee = new Employee(
-                        null,
-                        form.getFileId(),
-                        Integer.valueOf(actorIdx),
-                        user.getUsername(),
-                        num.intValue(),     // 员工编号
-//                        deptOptional.get(),
-                        form.getDeptId(),
-                        form.getProbation(),
-                        form.getSalaryProbationer(),
-                        form.getSalary(),
-                        form.getDateJoinAt(),
-                        form.getDateOfficialAt(),
-                        form.getDateRegisterAt(),
-                        form.getIdCard(),
-                        form.getSex(),
-                        form.getMobile(),
-                        form.getEmergencyContact(),
-                        form.getEmergencyContactMobile(),
-                        form.getNativePlace(),
-                        form.getNation(),
-                        form.getPoliticsStatus(),
-                        form.getIsMarry(),
-                        form.getHjAddress(),
-                        form.getAddress(),
-                        form.getEducation(),
-                        form.getGraduateSchool(),
-                        form.getSpecialty(),
-                        form.getCgfns(),
-                        form.getUseForm(),
-                        form.getIsContract(),
-                        form.getContractDateStart(),
-                        form.getContractDateEnd(),
-                        form.getRenewRemind(),
-                        form.getIsRenew(),
-                        form.getRenewDateStart(),
-                        form.getRenewDateEnd(),
-                        form.getRemark(),
-                        form.getIsGraduate(),
-                        form.getIsHasDoploma(),
-                        form.getIsHasSocial(),
-                        duty,
-                        "0",
-                        "0",
-                        school.getAnnual(),
-                        school.getSick(),
-                        school.getBarth(),
-                        barth,
-                        birthWith,
-                        school.getMarry(),
-                        true,
-                        schoolId,
-                        Instant.now()
-                );
-                list.add(employeeMapper.toDTO(getRepository().save(employee)));
-            }else {
-                // 如果不是空的，职务不是空的，返回员工已分配的错误
-                if (employee != null && employee.getDuty() != null) {
-                    throw new IllegalArgumentException("actorId为 " + actorIdx + " 的员工已分配职位，不能重复分配");
-                }
-
-                Duty duty = new Duty();
-                // 如果不是空的，但是职务是空的，更新一下职务
-                if (employee != null) {
-                    if (employee.getDuty() == null) {
-                        duty = dutyRepository.findOne(Long.parseLong(form.getDutyId().toString()));
-                        employee.setDuty(duty);
-                        list.add(employeeMapper.toDTO(getRepository().save(employee)));
-                        ;
-                    }
+            Duty duty = new Duty();
+            // 如果不是空的，但是职务是空的，更新一下职务
+            if (employee != null){
+                employeeBasic = employee.getEmployeeBasic();
+                if (employee.getDuty() == null){
+                    duty = dutyRepository.findOne(Long.parseLong(form.getDutyId().toString()));
                 }
             }
 
+            // 产假陪产假判断
+            String barth = "0";
+            String birthWith = "0";
+            User user = userRepository.getOne(actor.getUserId());
+            // 如果没有性别，默认女性
+            if (user.getGender() == null) {
+                barth = employee.getBarth();
+                birthWith = "0";
+            } else {
+                // 如果是男人，则产假为0， 只有陪产假；如果为女人，有产假，没有陪产假
+                if (user.getGender().toString().equals("FEMALE".toString())) {
+                    barth = employee.getBarth();
+                    birthWith = "0";
+                }
+                if (user.getGender().toString().equals("MALE".toString())) {
+                    barth = "0";
+                    birthWith = employee.getBarthWith();
+                }
+            }
+
+            // 添加基本信息
+            employeeBasic = new EmployeeBasic(
+                    form.getJoinAt(),
+                    form.isOfficial(),
+                    form.isGraduate(),
+                    form.isHasDiploma(),
+                    schoolId
+            );
+
+            Long id = employee.getId();
+            School school = schoolRepository.findOne(actorx.getSchoolId());
+            employee = new Employee(
+                    id,
+                    duty,
+                    Integer.valueOf(actorIdx),
+                    Integer.valueOf(num.toString()),
+                    null,
+                    actor.getSchoolId(),
+                    true,
+                    employeeBasic,
+                    "0",    // 加班时间，新建时默认为0
+                    "0",    // 调休时间，新建时默认为0
+                    school.getAnnual(),
+                    school.getSick(),
+                    barth,
+                    birthWith,
+                    school.getMarry(),
+                    school.getFuneral(),
+                    Instant.now()
+            );
+            employeeBasicRepository.save(employeeBasic);
+            list.add(employeeMapper.toDTO(getRepository().save(employee)));
         }
         return list;
     }
@@ -272,27 +239,6 @@ public class EmployeeService extends AbstractRepositoryService<Employee, Long, E
 
     public Collection<EmployeeDTO> queryAll(Actor actor) {
         Integer schoolId = actor.getSchoolId();
-
-        // 如果包含 并且 只有一个，则返回个人员工信息
-        if (actor.getTypes().contains(TEACHER) && actor.getTypes().size() == 1){
-            Collection<EmployeeDTO> employeeDTOS = new ArrayList<>();
-            EmployeeDTO employeeDTO = new EmployeeDTO();
-            Employee employee = employeeRepository.findByActorId(actor.getId());
-            if (employee == null){
-                User user = userRepository.findOne(actor.getUserId());
-                employeeDTO = new EmployeeDTO(
-                        actor.getId(),
-                        user.getUsername(),
-                        actor.getSchoolId(),
-                        user.getMobile()
-                );
-            }else{
-                employeeDTO = employeeMapper.toDTO(employee);
-            }
-            employeeDTOS.add(employeeDTO);
-            return employeeDTOS;
-        }
-
         // 查询未分配的员工
         Collection<EmployeeDTO> employeeDTOS = employeeOfUserMapper.toDTOs(actorRepository.findByNoPATRIARCH(schoolId));
         // 查询已分配的员工
@@ -326,88 +272,18 @@ public class EmployeeService extends AbstractRepositoryService<Employee, Long, E
         return epleToSalMapper.toDTOs(getRepository().findBySchoolId(actor.getSchoolId()));
     }
 
-    public Collection<EmployeeDTO> findLeave(Actor actor, LocalDate localDate) {
+    public List<EmployeeDTO> findLeave(Actor actor, LocalDate localDate) {
         Pair pair = Times.getFirstAndSecond(localDate);
         Instant first = (Instant) pair.getFirst();
         Instant second = (Instant) pair.getSecond();
-        Collection<Employee> employeeCollection =
-                this.employeeRepository.findBySchoolIdAndIsLeaveAndLeaveAtBetween(
-                        actor.getSchoolId(),
-                        true,
-                        first,
-                        second,
-                        new Sort(Sort.Direction.ASC, "lleaveAt"));
-        return employeeMapper.toDTOs(employeeCollection);
+        List<EmployeeDTO> employeeDTOS = new ArrayList<>();
+        Collection<EmployeeBasic> employeeBasics = employeeBasicRepository.findBySchoolIdAndIsLeaveAndLeaveAtBetween(actor.getSchoolId(), true, first, second);
+
+        for (EmployeeBasic employeeBasic : employeeBasics){
+            EmployeeDTO employee = employeeMapper.toDTO(employeeRepository.findByEmployeeBasic(employeeBasic));
+            employeeDTOS.add(employee);
+        }
+        return employeeDTOS;
     }
 
-    public void empCommit(Actor actor, EmpCommitForm form) {
-        this.getRepository().save(
-            new Employee(
-                actor.getId(),
-                0,
-                form.getName(),
-                form.getDeptId(),
-                form.getIdCard(),
-                form.getSex(),
-                form.getMobile(),
-                form.getEmergencyContact(),
-                form.getEmergencyContactMobile(),
-                form.getNativePlace(),
-                form.getNation(),
-                form.getPoliticsStatus(),
-                form.getIsMarry(),
-                form.getHjAddress(),
-                form.getAddress(),
-                form.getEducation(),
-                form.getGraduateSchool(),
-                form.getSpecialty(),
-                form.getCgfns(),
-                form.getRemark(),
-                form.getIsGraduate(),
-                form.getIsHasDiploma(),
-                form.getDuty(),
-                form.getParentActorId(),
-                true,
-                actor.getSchoolId(),
-                Instant.now()
-        ));
-    }
-
-    public Collection<EmployeeDTO> findEmpCommit(Actor actor) {
-        return employeeMapper.toDTOs(this.getRepository().findBySchoolIdAndSalaryGreaterThan(actor.getSchoolId(), 0f));
-    }
-
-    public void managerUpdateEmp(Actor actor, ManagerUpdateForm form) {
-        Integer id = form.getId();
-        School school = this.schoolRepository.findOne(actor.getSchoolId());
-
-        Employee employee = this.getRepository().findOne(Long.parseLong(String.valueOf(id)));
-        employee.setProbation(form.getProbation());
-        employee.setSalaryProbationer(form.getSalaryProbationer());
-        employee.setSalary(form.getSalary());
-        employee.setDateJoinAt(form.getDateJoinAt());
-        employee.setDateOfficialAt(form.getDateOfficialAt());
-        employee.setDateRegisterAt(form.getDateRegisterAt());
-        employee.setUseForm(form.getUseForm());
-        employee.setContract(form.getIsContract());
-        employee.setContractDateStart(form.getContractDateStart());
-        employee.setContractDateEnd(form.getContractDateEnd());
-        employee.setRenew(form.getIsRenew());
-        employee.setRenewRemind(form.getRenewRemind());
-        employee.setRenewDateStart(form.getRenewDateStart());
-        employee.setRenewDateEnd(form.getRenewDateEnd());
-        employee.setOfficial(form.getIsOfficial());
-        employee.setLeave(form.getIsLeave());
-        employee.setLeaveAt(form.getLeaveAt());
-        employee.setHasSocial(form.getIsHasSocial());
-
-        employee.setOvertime("0");
-        employee.setRest("0");
-        employee.setAnnual("0");
-        employee.setSick(school.getSick());
-        employee.setBarth(school.getBarth());
-        employee.setMarry(school.getMarry());
-        employee.setFuneral(school.getFuneral());
-        this.getRepository().save(employee);
-    }
 }

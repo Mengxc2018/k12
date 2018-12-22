@@ -112,7 +112,7 @@ public class WarehouseSchoolService extends AbstractRepositoryService<WarehouseS
 
             // 支出
             CompletableFuture completableFuture  = CompletableFuture.supplyAsync(()->{
-                addPayOut(actor, JSONObject.fromObject(form));
+            addPayOut(actor, JSONObject.fromObject(form));
                 return null;
             });
         }
@@ -136,11 +136,6 @@ public class WarehouseSchoolService extends AbstractRepositoryService<WarehouseS
         return getRepository().findAllBySchoolIdAndSubclassAndSuperclass(actor.getSchoolId(), subclass, superClass);
     }
 
-    /**
-     * 添加库存
-     * @param actor
-     * @param formList
-     */
     public void addWarehouseSchool(Actor actor, List<WarehouseSchoolUpdateForm> formList) {
         Integer schoolId = actor.getSchoolId();
         User user = userRepository.findOne(actor.getUserId());
@@ -176,13 +171,15 @@ public class WarehouseSchoolService extends AbstractRepositoryService<WarehouseS
                     schoolId,
                     null,
                     form.getBuyAt()
-            );
+                    );
             warehouseSchoolLogRepository.save(warehouseSchoolLog);
 
-            CompletableFuture completableFuture = CompletableFuture.supplyAsync( () -> {
+            CompletableFuture completableFuture = CompletableFuture.supplyAsync(
+                    () -> {
                         this.addPayOut(actor, JSONObject.fromObject(form));
                         return null;
-            });
+                    }
+            );
 
         }
 

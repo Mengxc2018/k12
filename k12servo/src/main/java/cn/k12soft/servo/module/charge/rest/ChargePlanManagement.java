@@ -32,7 +32,6 @@ import cn.k12soft.servo.module.expense.service.ExpenseEntryService;
 import cn.k12soft.servo.module.expense.service.PaybackService;
 import cn.k12soft.servo.module.revenue.service.IncomeDetailService;
 import cn.k12soft.servo.module.revenue.service.IncomeService;
-import cn.k12soft.servo.module.wxLogin.service.WxService;
 import cn.k12soft.servo.security.Active;
 import cn.k12soft.servo.security.permission.PermissionRequired;
 import cn.k12soft.servo.service.InterestKlassService;
@@ -42,9 +41,13 @@ import cn.k12soft.servo.util.Times;
 import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import java.time.Instant;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -78,7 +81,6 @@ public class ChargePlanManagement {
   private KlassService klassService;
   private PaybackService paybackService;
   private final ExpenseEntryRepository expenseEntryRepository;
-  private final WxService wxService;
 
   @Autowired
   public ChargePlanManagement(ChargePlanService chargePlanService,
@@ -91,8 +93,7 @@ public class ChargePlanManagement {
                               IncomeService incomeService,
                               IncomeDetailService incomeDetailService,
                               KlassService klassService,
-                              PaybackService paybackService,
-                              ExpenseEntryRepository expenseEntryRepository, WxService wxService) {
+                              PaybackService paybackService, ExpenseEntryRepository expenseEntryRepository) {
     this.chargePlanService = chargePlanService;
     this.studentChargePlanService = studentChargePlanService;
     this.interestKlassService = interestKlassService;
@@ -105,7 +106,6 @@ public class ChargePlanManagement {
     this.klassService = klassService;
     this.paybackService = paybackService;
     this.expenseEntryRepository = expenseEntryRepository;
-    this.wxService = wxService;
   }
 
   @ApiOperation("批量：发起收费计划")
@@ -225,11 +225,10 @@ public class ChargePlanManagement {
     int cycleId = form.getCycleId();
     int identityId = form.getIdentityId();
     int targetType = form.getTargetType();
-    String target = form.getTarget();   // 应用对象可能多个，多种类型：普通班级id、兴趣班id、学生id
+    String target = form.getTarget();
     Instant endAt = form.getEndAt();
     float money = form.getMoney();
 
-    // 选出周期性折扣、身份类型折扣------->开始
     ExpenseEntry expenseEntry = this.expenseEntryService.get(expenseId);
     ExpensePeriodDiscount periodDiscount = null;
     List<ExpensePeriodDiscount> periodDiscountList = expenseEntry.getPeriodDiscounts();
@@ -254,14 +253,13 @@ public class ChargePlanManagement {
     if (identDiscount == null) {
       return;
     }
-    // 选出周期性折扣、身份类型折扣------->结束
 
     List<StudentCharge> list = new LinkedList<>();
 
     String[] ids = StringUtils.splitByWholeSeparator(target, ",");
     KlassType klassType = null;
     int periodDate = Times.time2yyyyMM(System.currentTimeMillis());
-    // 已经创建了的收费计划(退费转入费种的时候，会 提前生成 下个周期的收费计划, 所以现在发起收费计划，要过滤掉已有的)
+    // 已经创建了的收费计划(退费转入费种的时候，会提前生成下个周期的收费计划, 所以现在发起收费计划，要过滤掉已有的)
     List<StudentCharge> alreadyCreatedList = this.studentChargePlanService
       .findAllBySchoolAndExpenseEntry(actor.getSchoolId(), expenseEntry);
     if (targetType == ChargePlanTargetType.COMMON_KLASS.getId()) {
@@ -315,10 +313,8 @@ public class ChargePlanManagement {
   @GetMapping(value = "/charge/findPlan")
   @PermissionRequired(CHARGE_PLAN_GET)
   @Timed
-  Page getByCreateAt(@Active Actor actor,
-                     @RequestParam(value = "startTime", required = true) long startTime,
-                     @RequestParam(value = "page", required = true) int page,
-                     @RequestParam(value = "size") Integer size) {
+  Page getByCreateAt(@Active Actor actor, @RequestParam(value = "startTime", required = true) long startTime,
+                     @RequestParam(value = "page", required = true) int page, @RequestParam(value = "size") Integer size) {
     int pageSize = 10;
     if (size != null) {
       pageSize = size;
@@ -430,11 +426,6 @@ public class ChargePlanManagement {
     }
   }
 
-  /**
-   * 半年：9-2，3-8
-   * @param startTime
-   * @return
-   */
   // 按创建时间查询学生的收费计划
   @ApiOperation("获取所有学生的收费详细")
   @GetMapping(value = "/charge/findAllStuPlan", params = {"startTime"})
@@ -444,59 +435,10 @@ public class ChargePlanManagement {
     if (startTime == 0) {
       startTime = System.currentTimeMillis();
     }
-
-    Calendar startCal = Calendar.getInstance();
-    Calendar endCal = Calendar.getInstance();
-    startCal.setTimeInMillis(startTime);
-
-    int yearInt = startCal.get(Calendar.YEAR);
-    int monthInt = startCal.get(Calendar.MONTH)+1;
-    int month10 = 10 - 1;
-    int month2 = 2 - 1;
-    int day = 1;
-    int time = 0;
-
-    startCal.set(Calendar.DATE, day);
-    startCal.set(Calendar.HOUR_OF_DAY, time);
-    startCal.set(Calendar.MINUTE, time);
-    startCal.set(Calendar.SECOND, time);
-
-    endCal.set(Calendar.DATE, day);
-    endCal.set(Calendar.HOUR_OF_DAY, time);
-    endCal.set(Calendar.MINUTE, time);
-    endCal.set(Calendar.SECOND, time);
-
-    // 当年的2月-9月
-    if (monthInt < 9 && monthInt >2){
-
-      startCal.set(Calendar.YEAR, yearInt);
-      startCal.set(Calendar.MONTH, month2);
-
-      endCal.set(Calendar.YEAR, yearInt);
-      endCal.set(Calendar.MONTH, month10);
-
-    }else if (monthInt > 10 && monthInt < 12){
-
-      // 如果比10月大比12月小
-      startCal.set(Calendar.YEAR, yearInt);
-      startCal.set(Calendar.MONTH, month10);
-
-      endCal.set(Calendar.YEAR, yearInt +1 );
-      endCal.set(Calendar.MONTH, month2);
-
-    }else if (monthInt > 0 && monthInt < 2){
-
-      // 如果当前月份在1月份
-      startCal.set(Calendar.YEAR, yearInt - 1);
-      startCal.set(Calendar.MONTH, month10);
-
-      endCal.set(Calendar.YEAR, yearInt);
-      endCal.set(Calendar.MONTH, month2);
-    }
-
-    Instant startInstant = Instant.ofEpochMilli(startCal.getTimeInMillis()).plusSeconds(8*3600);
-    Instant endInstant = Instant.ofEpochMilli(endCal.getTimeInMillis()).plusSeconds(8*3600);
-
+    startTime = Times.monthStartTime(startTime); // 取月初
+    long endTime = Times.monthEndTime(startTime);
+    Instant startInstant = Instant.ofEpochMilli(startTime);
+    Instant endInstant = Instant.ofEpochMilli(endTime);
     return this.studentChargePlanService.findByCreateAtBetween(startInstant, endInstant);
   }
 
@@ -563,8 +505,7 @@ public class ChargePlanManagement {
   @PermissionRequired(CHARGE_PLAN_GET)
   @Timed
   Page<StudentCharge> getNoPayList(@Active Actor actor, @RequestParam(value = "startTime", required = true) long startTime,
-                                   @RequestParam("klassId") Integer klassIdInteger,
-                                   @RequestParam("studentId") Integer studentIdInteger,
+                                   @RequestParam("klassId") Integer klassIdInteger, @RequestParam("studentId") Integer studentIdInteger,
                                    @RequestParam(value = "page", required = true) int page,
                                    @RequestParam(value = "size", required = false) Integer size) {
     int pageSize = 10;
@@ -669,16 +610,11 @@ public class ChargePlanManagement {
                                     ExpensePeriodDiscount periodDiscount, float money, Instant endAt, int klassId, KlassType klassType,
                                     int periodDate) {
     for (Student student : studentList) {
-      StudentCharge studentCharge = null;
       StudentCharge originalStudentCharge = _alreadyCreated(alreadyCreatedList, student, expenseEntry);
-      boolean is = true;  // 是否推送微信服务消息
       if (originalStudentCharge != null) {
         boolean isNext = originalStudentCharge.checkAndCreateNext(System.currentTimeMillis());
         if (isNext) {
-          studentCharge = originalStudentCharge;
           list.add(originalStudentCharge);
-        }else{
-          is = false;
         }
       } else {
         StudentCharge stuChargePlan = new StudentCharge(schoolId);
@@ -695,20 +631,8 @@ public class ChargePlanManagement {
         stuChargePlan.setEndAt(endAt);
         stuChargePlan.setEndMills(endAt.toEpochMilli() - System.currentTimeMillis());
         stuChargePlan.setRemainMoney(0f); // 剩余的钱等于money
-        studentCharge = stuChargePlan;
         list.add(stuChargePlan);
       }
-
-      // 微信推送
-//      if(is) {
-//        StudentCharge finalStudentCharge = studentCharge;
-//        CompletableFuture completableFuture = CompletableFuture.supplyAsync(()->{
-//        String msg = "您的幼儿的缴费项目已经生成啦，快去看看吧！";
-//        wxService.sendStudentPlan(finalStudentCharge, msg);
-//        return null;
-//      });
-//      }
-
     }
   }
 

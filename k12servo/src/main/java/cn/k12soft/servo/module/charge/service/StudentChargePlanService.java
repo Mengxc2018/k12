@@ -19,7 +19,6 @@ import cn.k12soft.servo.module.revenue.domain.IncomeDetail;
 import cn.k12soft.servo.module.revenue.domain.IncomeSrc;
 import cn.k12soft.servo.module.revenue.service.IncomeDetailService;
 import cn.k12soft.servo.module.revenue.service.IncomeService;
-import cn.k12soft.servo.module.wxLogin.service.WxService;
 import cn.k12soft.servo.service.AbstractEntityService;
 import cn.k12soft.servo.service.InterestKlassService;
 import cn.k12soft.servo.service.KlassService;
@@ -33,7 +32,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,12 +45,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class StudentChargePlanService extends AbstractEntityService<StudentCharge, Integer> {
     private static final Logger logger = LoggerFactory.getLogger(StudentChargePlanService.class);
-    private final WxService wxService;
 
     @Autowired
-    public StudentChargePlanService(StudentChargePlanRepository entityRepository, WxService wxService) {
+    public StudentChargePlanService(StudentChargePlanRepository entityRepository) {
         super(entityRepository);
-        this.wxService = wxService;
     }
 
     @Override
@@ -220,15 +216,8 @@ public class StudentChargePlanService extends AbstractEntityService<StudentCharg
             paybackResultMap.put(studentCharge.getStudentId(), paybackResult);
             studentCharge.setPaybackMoney(paybackResult.getMoney());
             //检查是否要生成下一个周期的收费计划
-            boolean isNext = studentCharge.checkAndCreateNext(currentTime);
+            studentCharge.checkAndCreateNext(currentTime);
             this.save(studentCharge);
-
-            // 微信服务推送
-//            CompletableFuture completableFuture = CompletableFuture.supplyAsync(()->{
-//                String msg = "您的幼儿有新的缴费项目，请及时查收！";
-//                wxService.sendStudentPlan(studentCharge, msg);
-//                return null;
-//            });
 
             IncomeDetail incomeDetail = new IncomeDetail();
             incomeDetail.setMoney(monthlyMoney);
