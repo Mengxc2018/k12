@@ -116,4 +116,9 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long>, J
                                                                                                    @Param("first") Instant first,
                                                                                                    @Param("second") Instant second);
 
+  @Query(value = "SELECT * FROM attendance a"
+          + " WHERE a.student_id = :studentId"
+          + " AND DATE(a.sign_at) = DATE(:date)", nativeQuery = true)
+  List<Attendance> findByStudentIdAndSignAt(@Param("studentId") Integer studentId,
+                                               @Param("date") Instant date);
 }

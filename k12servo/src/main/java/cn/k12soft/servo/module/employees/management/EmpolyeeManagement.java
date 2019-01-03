@@ -3,7 +3,9 @@ package cn.k12soft.servo.module.employees.management;
 import cn.k12soft.servo.domain.Actor;
 import cn.k12soft.servo.module.employees.domain.dto.EmployeeDTO;
 import cn.k12soft.servo.module.employees.domain.dto.EpleToSalDTO;
+import cn.k12soft.servo.module.employees.domain.form.EmpCommitForm;
 import cn.k12soft.servo.module.employees.domain.form.EmployeeForm;
+import cn.k12soft.servo.module.employees.domain.form.ManagerUpdateForm;
 import cn.k12soft.servo.module.employees.service.EmployeeService;
 import cn.k12soft.servo.security.Active;
 import io.swagger.annotations.ApiOperation;
@@ -40,21 +42,21 @@ public class EmpolyeeManagement {
     }
 
 
-    /**
-     * 分配上级
-     * 前端从teacher表里面取到的数据，teacher表的id为actorId，所以传到这个接口的id为actorid，通过actorId找到员工的数据，然后分配
-     * @param actor
-     * @param parentActorId
-     * @return
-     */
-    @ApiOperation("分配、更新上级")
-    @PutMapping("/{parentActorId:\\d+}")
-    public EmployeeDTO addParent(@Active Actor actor,
-                                 @RequestParam("actorId") Integer actorId,
-                                 @PathVariable @Valid Integer parentActorId){
-        return employeeService.addParend(actor, actorId, parentActorId);
-
-    }
+//    /**
+//     * 分配上级
+//     * 前端从teacher表里面取到的数据，teacher表的id为actorId，所以传到这个接口的id为actorid，通过actorId找到员工的数据，然后分配
+//     * @param actor
+//     * @param parentActorId
+//     * @return
+//     */
+//    @ApiOperation("分配、更新上级")
+//    @PutMapping("/{parentActorId:\\d+}")
+//    public EmployeeDTO addParent(@Active Actor actor,
+//                                 @RequestParam("actorId") Integer actorId,
+//                                 @PathVariable @Valid Integer parentActorId){
+//        return employeeService.addParend(actor, actorId, parentActorId);
+//
+//    }
 
     /**
      * 只删除员工上的职务，相当于把职务设置成null，但是该员工表的数据还在
@@ -110,13 +112,13 @@ public class EmpolyeeManagement {
         return employeeService.findUnAssigned(actor);
     }
 
-    @ApiOperation("查询所有员工，包括分配的和未分配的")
+    @ApiOperation("当角色只有一个教师角色，返回自己的信息；当角色不包含教师角色，查询所有员工，包括分配的和未分配的")
     @GetMapping("/queryAll")
     public Collection<EmployeeDTO> queryAll(@Active Actor actor){
         return employeeService.queryAll(actor);
     }
 
-    @ApiOperation("员工表查询员工薪资信息")
+    @ApiOperation("员工表查询所有员工薪资信息")
     @GetMapping("/querySocialSecurity")
     public Collection<EpleToSalDTO> employeeOfSalart(@Active Actor actor){
         return employeeService.findSalart(actor);
@@ -125,8 +127,30 @@ public class EmpolyeeManagement {
     // 查询已离职的教师数据（条件：学校、时间、月查询）
     @ApiOperation("查询已离职的员工")
     @GetMapping("/findLeave")
-    public List<EmployeeDTO> findLeave(@Active Actor actor, @RequestParam @Valid LocalDate localDate){
+    public Collection<EmployeeDTO> findLeave(@Active Actor actor, @RequestParam @Valid LocalDate localDate){
         return employeeService.findLeave(actor, localDate);
+    }
+
+    @ApiOperation("员工提交自己员工信息")
+    @PostMapping("/empCommit")
+    public void empCommit(@Active Actor actor,
+                       @RequestBody @Valid EmpCommitForm form){
+        employeeService.empCommit(actor, form);
+    }
+
+    @ApiOperation("管理员获取员工自己提交的信息列表")
+    @GetMapping("/findEmpCommit")
+    public Collection<EmployeeDTO> findEmpCommit(@Active Actor actor){
+        return employeeService.findEmpCommit(actor);
+    }
+
+    @ApiOperation("管理员更新员工信息")
+    @PutMapping("/managerUpdateEmp")
+    public void managerUpdateEmp(@Active Actor actor,
+                                 @RequestBody @Valid ManagerUpdateForm form){
+
+        employeeService.managerUpdateEmp(actor, form);
+
     }
 
 }

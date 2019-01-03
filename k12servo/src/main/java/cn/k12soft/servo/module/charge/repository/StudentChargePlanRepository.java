@@ -49,6 +49,12 @@ public interface StudentChargePlanRepository extends JpaRepository<StudentCharge
 
   List<StudentCharge> findByKlassIdAndCreateAtBetween(int klassId, Instant monthStartTime, Instant monthEndTime);
 
+  Page<StudentCharge> findAllBySchoolIdAndRemainMoneyLessThan(Integer schoolId, Float remainMoney, Pageable pageable);
+
+  Page<StudentCharge> findAllByStudentIdAndRemainMoneyLessThan(Integer studentId, Float remainMoney, Pageable pageable);
+
+  Page<StudentCharge> findAllByKlassIdAndRemainMoneyLessThan(Integer classId, Float remainMoney, Pageable pageable);
+
   @Modifying
   @Query(value = "UPDATE StudentCharge stuChar SET stuChar.periodDiscount=:periodDiscount,stuChar.identDiscount=:identDiscount,stuChar.endAt=:endAt,stuChar.money=:money WHERE stuChar.expenseEntry=:expenseEntry")
   void updateByChargePlan(@Param("expenseEntry") ExpenseEntry expenseEntry, @Param("periodDiscount") ExpensePeriodDiscount periodDiscount,
@@ -68,4 +74,9 @@ public interface StudentChargePlanRepository extends JpaRepository<StudentCharge
   void deleteByExpenseEntry(ExpenseEntry entry);
 
   List<StudentCharge> findByKlassIdAndExpenseEntryAndCreateAtBetween(int klassId, ExpenseEntry expenseEntry, Instant startInstant, Instant endInstant);
+
+  @Query(value = "select * from student_charge sc"
+          + " WHERE sc.student_id = :studentId"
+          + " AND ( SELECT MAX( s.CREATE_AT ) FROM student_charge s WHERE s.STUDENT_ID = :studentId ) = sc.CREATE_AT", nativeQuery = true)
+  StudentCharge findByStudentIdAndLastCreateAt(Integer studentId);
 }

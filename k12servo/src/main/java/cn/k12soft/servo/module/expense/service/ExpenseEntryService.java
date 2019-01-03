@@ -57,7 +57,7 @@ public class ExpenseEntryService extends AbstractRepositoryService<ExpenseEntry,
   }
 
   public ExpenseEntry create(Integer schoolId, ExpenseEntryForm form) {
-    ExpenseEntry created = new ExpenseEntry(schoolId, form.getName(), form.getPeriodType(), form.getAmount(), form.isDelayCharge());
+    ExpenseEntry created = new ExpenseEntry(schoolId, form.getName(), form.getPeriodType(), form.getAmount(), form.isDelayCharge(), form.getIsFixation());
     ExpenseEntryRepository repository = getRepository();
     ExpenseEntry entry = repository.save(created);
     boolean updated = false;

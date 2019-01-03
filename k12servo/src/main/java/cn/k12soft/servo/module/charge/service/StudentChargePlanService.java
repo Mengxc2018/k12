@@ -4,7 +4,10 @@ import cn.k12soft.servo.domain.InterestKlass;
 import cn.k12soft.servo.domain.Klass;
 import cn.k12soft.servo.domain.School;
 import cn.k12soft.servo.domain.Vacation;
+import cn.k12soft.servo.domain.enumeration.StudentAccountOpType;
 import cn.k12soft.servo.module.account.domain.StudentAccount;
+import cn.k12soft.servo.module.account.domain.StudentAccountChangeRecord;
+import cn.k12soft.servo.module.account.service.StudentAccountChangeRecordService;
 import cn.k12soft.servo.module.account.service.StudentAccountService;
 import cn.k12soft.servo.module.charge.domain.ChargePlan;
 import cn.k12soft.servo.module.charge.domain.StudentCharge;
@@ -19,6 +22,7 @@ import cn.k12soft.servo.module.revenue.domain.IncomeDetail;
 import cn.k12soft.servo.module.revenue.domain.IncomeSrc;
 import cn.k12soft.servo.module.revenue.service.IncomeDetailService;
 import cn.k12soft.servo.module.revenue.service.IncomeService;
+import cn.k12soft.servo.module.wxLogin.service.WxService;
 import cn.k12soft.servo.service.AbstractEntityService;
 import cn.k12soft.servo.service.InterestKlassService;
 import cn.k12soft.servo.service.KlassService;
@@ -32,6 +36,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +50,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class StudentChargePlanService extends AbstractEntityService<StudentCharge, Integer> {
     private static final Logger logger = LoggerFactory.getLogger(StudentChargePlanService.class);
+    private final WxService wxService;
 
     @Autowired
-    public StudentChargePlanService(StudentChargePlanRepository entityRepository) {
+    public StudentChargePlanService(StudentChargePlanRepository entityRepository, WxService wxService) {
         super(entityRepository);
+        this.wxService = wxService;
     }
 
     @Override
@@ -113,6 +120,25 @@ public class StudentChargePlanService extends AbstractEntityService<StudentCharg
         }
     }
 
+    public Page<StudentCharge> findArrearsListByRemainMoney(Integer schoolId, int studentId, int klassId, long monthStartTime, long monthEndTime,
+                                                            Pageable pageable){
+//        long zeroHourTime = Times.getZeroTimeOfToday();
+        if (studentId == 0 && klassId == 0) {
+            return getEntityRepository().findAllBySchoolIdAndRemainMoneyLessThan(schoolId, 0f, pageable);
+//                    .findAllBySchoolIdAndPaymentAtIsNullAndEndAtBeforeAndCreateAtAfter(schoolId, Instant.ofEpochMilli(zeroHourTime), pageable);
+        } else {
+            if (studentId > 0) {
+                return getEntityRepository().findAllByStudentIdAndRemainMoneyLessThan(studentId, 0f, pageable);
+//                        .findAllByStudentIdAndPaymentAtIsNullAndEndAtBeforeAndCreateAtAfter(studentId, Instant.ofEpochMilli(zeroHourTime),
+//                                Instant.ofEpochMilli(monthStartTime), pageable);
+            } else {
+                return getEntityRepository().findAllByKlassIdAndRemainMoneyLessThan(klassId, 0f, pageable);
+//                        .findAllByKlassIdAndPaymentAtIsNullAndEndAtBeforeAndCreateAtAfter(klassId, Instant.ofEpochMilli(zeroHourTime),
+//                                Instant.ofEpochMilli(monthStartTime), pageable);
+            }
+        }
+    }
+
     public List<StudentCharge> findRemainMoneyList(int studentId, int klassId, long monthStartTime, long monthEndTime) {
         if (studentId > 0) {
             List<StudentCharge> studentChargesList = getEntityRepository()
@@ -146,11 +172,10 @@ public class StudentChargePlanService extends AbstractEntityService<StudentCharg
         getEntityRepository().deleteByExpenseEntry(entry);
     }
 
-    public void deductExpenses(StudentService studentService, IncomeService incomeService, KlassService klassService, InterestKlassService interestKlassService, PaybackService paybackService, StudentAccountService studentAccountService, IncomeDetailService incomeDetailService) {
+    public void deductExpenses(StudentService studentService, IncomeService incomeService, KlassService klassService, InterestKlassService interestKlassService, PaybackService paybackService,
+                               StudentAccountService studentAccountService, IncomeDetailService incomeDetailService, StudentAccountChangeRecordService studentAccountChangeRecordService) {
         long currentTime = System.currentTimeMillis();
         LocalDate lastMonthDate = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth()).minusDays(2);
-//        long lastMonthBeginTime = Times.monthStartTime(System.currentTimeMillis() - Times.ONE_DAY_MILLIS);
-//        int monthlyPeriodDate = Times.time2yyyyMM(lastMonthBeginTime);
         logger.info("[deductExpenses] begin ...");
         List<StudentCharge> list = this.getAll();
         Map<String, Income> klassIncomeMap = new HashMap<>(); // 班级收入
@@ -163,48 +188,64 @@ public class StudentChargePlanService extends AbstractEntityService<StudentCharg
             if (!studentCharge.isPeriodDeduct()) {
                 continue;
             }
-            // 没有余额，没钱可扣
-            if (studentCharge.getRemainMoney() <= 0) {
-                continue;
-            }
+
             float monthlyMoney = 0f;
             if (periodType == ExpensePeriodType.YEAR) {
-                monthlyMoney = studentCharge.getMoney() / 12;
+                monthlyMoney = studentCharge.calcPayMoney() / 12;
             } else if (periodType == ExpensePeriodType.HALF_YEAR) {
-                monthlyMoney = studentCharge.getMoney() / 6;
+                monthlyMoney = studentCharge.calcPayMoney() / 6;
             } else if (periodType == ExpensePeriodType.QUARTER) {
-                monthlyMoney = studentCharge.getMoney() / 3;
+                monthlyMoney = studentCharge.calcPayMoney() / 3;
             } else if (periodType == ExpensePeriodType.MONTH) {
-                monthlyMoney = studentCharge.getMoney();
+                monthlyMoney = studentCharge.calcPayMoney();
             }
-            float remainMoney = studentCharge.getRemainMoney() - monthlyMoney;
-            studentCharge.setRemainMoney(remainMoney);// 可以为负，表示余额不足
+            float inComeMoney = monthlyMoney;
+
+            // 从账户表里扣除费用，如果不够，记录到studentCharge的remainMoney, 表示欠费, 欠费的，缴费时补扣
+            boolean isInCome = true; // true: 算入园所收入表
+            StudentAccount studentAccount = studentAccountService.findByStudentId(studentCharge.getStudentId());
+            if(studentAccount == null ||studentAccount.getMoney()<=0){
+                isInCome = false;
+            }else{
+                if(studentAccount.getMoney()>inComeMoney){
+                    studentAccount.setMoney(studentAccount.getMoney() - inComeMoney ); // 账户扣款
+                }else{
+                    studentCharge.setRemainMoney(studentCharge.getRemainMoney() - (inComeMoney-studentAccount.getMoney())); // 账户不够，还要补交(inComeMoney-studentAccount.getMoney())
+                    inComeMoney = studentAccount.getMoney(); // 实际扣除的钱为账户剩余额度
+                    studentAccount.setMoney(0f); // 账户不够，直接设置为0
+                }
+                studentAccountChangeRecordService.create(studentAccount.getStudent().getId(), studentAccount, studentCharge.getKlassId(), inComeMoney, null, StudentAccountOpType.MONTHLY_TASK); // 账户变化明细
+            }
+
 //            // 当前周期结束了，生成下一个周期的收费计划
 //            boolean success = studentCharge.checkAndCreateNext(currentTime);
 //            if(!success){
 //                continue;
 //            }
 
-            String key = studentCharge.getSchoolId() + "_" + studentCharge.getKlassType().getId() + "_" + studentCharge.getKlassId() + "_" + studentCharge.getExpenseEntry().getId();
-            Income income = klassIncomeMap.get(key);
-            if (income == null) {
-                income = new Income(studentCharge.getSchoolId());
-                income.setStudentChargeId(studentCharge.getId());
-                income.setKlassType(studentCharge.getKlassType().getId());
-                income.setKlassId(studentCharge.getKlassId());
-                income.setExpenseId(studentCharge.getExpenseEntry().getId());
-                income.setNames(studentCharge.getExpenseEntry().getName());
-                income.setMoney(0f);
-                Klass klass = klassService.get(studentCharge.getKlassId());
-                if (klass != null) {
-                    income.setKlassName(klass.getName());
-                } else {
-                    InterestKlass interestKlass = interestKlassService.get(studentCharge.getKlassId());
-                    income.setKlassName(interestKlass.getName());
+
+            if(isInCome) {
+                String key = studentCharge.getSchoolId() + "_" + studentCharge.getKlassType().getId() + "_" + studentCharge.getKlassId() + "_" + studentCharge.getExpenseEntry().getId();
+                Income income = klassIncomeMap.get(key);
+                if (income == null) {
+                    income = new Income(studentCharge.getSchoolId());
+                    income.setStudentChargeId(studentCharge.getId());
+                    income.setKlassType(studentCharge.getKlassType().getId());
+                    income.setKlassId(studentCharge.getKlassId());
+                    income.setExpenseId(studentCharge.getExpenseEntry().getId());
+                    income.setNames(studentCharge.getExpenseEntry().getName());
+                    income.setMoney(0f);
+                    Klass klass = klassService.get(studentCharge.getKlassId());
+                    if (klass != null) {
+                        income.setKlassName(klass.getName());
+                    } else {
+                        InterestKlass interestKlass = interestKlassService.get(studentCharge.getKlassId());
+                        income.setKlassName(interestKlass.getName());
+                    }
+                    klassIncomeMap.put(key, income);
                 }
-                klassIncomeMap.put(key, income);
+                income.setMoney(income.getMoney() + inComeMoney);
             }
-            income.setMoney(income.getMoney() + monthlyMoney);
 
             VacationSummary vacationSummary = vacationSummaryMap.get(studentCharge.getStudentId());
             if(vacationSummary == null){
@@ -216,21 +257,33 @@ public class StudentChargePlanService extends AbstractEntityService<StudentCharg
             paybackResultMap.put(studentCharge.getStudentId(), paybackResult);
             studentCharge.setPaybackMoney(paybackResult.getMoney());
             //检查是否要生成下一个周期的收费计划
-            studentCharge.checkAndCreateNext(currentTime);
+            if(isInCome) {
+                boolean isNext = studentCharge.checkAndCreateNext(currentTime);
+            }
             this.save(studentCharge);
 
+            // 微信服务推送
+//            CompletableFuture completableFuture = CompletableFuture.supplyAsync(()->{
+//                String msg = "您的幼儿有新的缴费项目，请及时查收！";
+//                wxService.sendStudentPlan(studentCharge, msg);
+//                return null;
+//            });
+
             IncomeDetail incomeDetail = new IncomeDetail();
-            incomeDetail.setMoney(monthlyMoney);
+            if(isInCome) {
+                incomeDetail.setMoney(inComeMoney); // 扣的费用
+            }
             incomeDetail.setStudentId(studentCharge.getStudentId());
             incomeDetail.setStudentName(studentCharge.getStudentName());
-            incomeDetail.setExpenseId(income.getExpenseId());
+            incomeDetail.setExpenseId(studentCharge.getExpenseEntry().getId());
             incomeDetail.setTheYearMonth(yyyyMM);
             incomeDetail.setRefundMoney(paybackResult.getMoney());
             incomeDetail.setCreateAt(Instant.now());
             incomeDetailService.save(incomeDetail);
+
             logger.info(
                     "[deductExpenses] dec money studentId=" + studentCharge.getStudentId() + " money=" + studentCharge.getMoney() + " decMoney="
-                            + monthlyMoney + " remainMoney=" + studentCharge.getRemainMoney());
+                            + inComeMoney + " remainMoney=" + studentCharge.getRemainMoney());
         }
 
         for (Income income : klassIncomeMap.values()) {

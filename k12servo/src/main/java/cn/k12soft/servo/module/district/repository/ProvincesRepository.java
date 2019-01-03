@@ -18,4 +18,6 @@ public interface ProvincesRepository extends JpaSpecificationExecutor<Provinces>
     Collection<Provinces> findByName(String name);
 
     Provinces findByCode(String code);
+
+    Collection<Provinces> findByParentId(String groupId);
 }

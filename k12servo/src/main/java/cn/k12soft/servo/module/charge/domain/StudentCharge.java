@@ -9,7 +9,10 @@ import cn.k12soft.servo.module.expense.domain.ExpenseIdentDiscount;
 import cn.k12soft.servo.module.expense.domain.ExpensePeriodDiscount;
 import cn.k12soft.servo.module.expense.domain.ExpensePeriodType;
 import cn.k12soft.servo.util.Times;
+
+import java.text.DecimalFormat;
 import java.time.Instant;
+import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -66,7 +69,7 @@ public class StudentCharge extends SchoolEntity {
   private Float money;
 
   @Column(nullable = false)
-  private Float remainMoney; // 剩余额度, 用于周期性查询
+  private Float remainMoney; // 应该补交金额
 
   private Instant createAt; // 发起收费时间
 
@@ -257,25 +260,53 @@ public class StudentCharge extends SchoolEntity {
 
   public boolean checkAndCreateNext(long currentTime) {
     ExpensePeriodType periodType = this.getExpenseEntry().getPeriodType();
-    int tmpPeriodDate = 0;
+    long currPeriodDateTime = Times.yyyyMM2Date(this.periodDate);
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTimeInMillis(currPeriodDateTime);
     if (periodType == ExpensePeriodType.YEAR) {
-      tmpPeriodDate = Times.getYear(currentTime);
+      calendar.add(Calendar.YEAR , 1);
     } else if (periodType == ExpensePeriodType.HALF_YEAR) {
-      tmpPeriodDate = Times.getHalfYear(currentTime);
+      calendar.add(Calendar.MONTH, 6);
+//      tmpPeriodDate = Times.getHalfYear(currentTime);
     } else if (periodType == ExpensePeriodType.QUARTER) {
-      tmpPeriodDate = Times.getSeason(currentTime);
+      calendar.add(Calendar.MONTH, 3);
+//      tmpPeriodDate = Times.getSeason(currentTime);
     } else if (periodType == ExpensePeriodType.MONTH) {
-      tmpPeriodDate = Times.time2yyyyMM(currentTime);
+      calendar.add(Calendar.MONTH, 1);
+//      tmpPeriodDate = Times.time2yyyyMM(currentTime);
     }
 
-    if (tmpPeriodDate == this.periodDate) {
-      return false;
+    long nextPeriodDateTime = calendar.getTimeInMillis();
+    int nextPeriodDate = Times.getYear(nextPeriodDateTime);
+    int currYyyyMM = Times.time2yyyyMM(currentTime);
+    if(currYyyyMM>nextPeriodDate){
+        return false;
     }
-    this.periodDate = tmpPeriodDate;
+    this.periodDate = nextPeriodDate;
     this.createAt = Instant.now();
-    long endTime = currentTime + this.getEndMills();
+    long endTime = nextPeriodDateTime + this.getEndMills();
     this.endAt = Instant.ofEpochMilli(endTime);
+    this.paymentAt = null;
+    this.checkAt = null;
     return true;
-  }
+}
+
+    // 实际需要交的费用，打折后的
+    public float calcPayMoney(){
+      float payMoney = this.money;
+      boolean isDisc = false;
+      if(periodDiscount != null && periodDiscount.getDiscountRate() != null && periodDiscount.getDiscountRate().floatValue()>0){
+          payMoney = payMoney*(1-periodDiscount.getDiscountRate().floatValue());
+          isDisc = true;
+      }
+      if(identDiscount != null && identDiscount.getDiscountRate() != null && identDiscount.getDiscountRate().floatValue()>0){
+          payMoney = paybackMoney * (1-identDiscount.getDiscountRate().floatValue());
+          isDisc = true;
+      }
+      if(!isDisc){
+          return payMoney;
+      }
+      return (float)Math.round(payMoney*100f)/100;
+    }
 
 }

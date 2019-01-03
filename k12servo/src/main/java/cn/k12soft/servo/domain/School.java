@@ -1,10 +1,11 @@
 package cn.k12soft.servo.domain;
 
-import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.*;
 
-import cn.k12soft.servo.module.zone.domain.Citys;
+import cn.k12soft.servo.module.department.domain.Dept;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
@@ -17,8 +18,10 @@ public class School {
   private String name;
   @Column(name = "`desc`")
   private String desc;
-  private int cityId; // 所属城市
+  private Integer cityId; // 所属城市
   private String cityName;  // 城市名
+  @Column
+  private Integer parentId;
   private String code;      // 学校编码
   private Integer formDate; // 考核周期开始日期
   private Integer toDate;   // 考核周期结束时间
@@ -29,9 +32,11 @@ public class School {
   private String marry;       // 婚假
   private String funeral;     // 丧假
   private long lastCalcTeacherPayoutTime; // 每日计算老师工资写入支出表的时间
+  @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+  private Set<Dept> department = new HashSet<>();
 
 
-  School() {
+  public School() {
   }
 
   public School(Integer id) {
@@ -199,11 +204,11 @@ public class School {
     this.lastCalcTeacherPayoutTime = lastCalcTeacherPayoutTime;
   }
 
-  public int getCityId() {
+  public Integer getCityId() {
     return cityId;
   }
 
-  public void setCityId(int cityId) {
+  public void setCityId(Integer cityId) {
     this.cityId = cityId;
   }
 
@@ -228,12 +233,42 @@ public class School {
     return Objects.hash(getId());
   }
 
+  public Set<Dept> getDepartment() {
+    return department;
+  }
+
+
+  public Integer getParentId() {
+    return parentId;
+  }
+
+  public void setParentId(Integer parentId) {
+    this.parentId = parentId;
+  }
+
+  public void setDepartment(Set<Dept> department) {
+    this.department = department;
+  }
+
   @Override
   public String toString() {
-    return "Kindergarten{" +
-      "id=" + id +
-      ", name='" + name + '\'' +
-      ", desc='" + desc + '\'' +
-      "} " + super.toString();
+    return "School{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", desc='" + desc + '\'' +
+            ", cityId=" + cityId +
+            ", cityName='" + cityName + '\'' +
+            ", code='" + code + '\'' +
+            ", formDate=" + formDate +
+            ", toDate=" + toDate +
+            ", annual='" + annual + '\'' +
+            ", sick='" + sick + '\'' +
+            ", barth='" + barth + '\'' +
+            ", barthWith='" + barthWith + '\'' +
+            ", marry='" + marry + '\'' +
+            ", funeral='" + funeral + '\'' +
+            ", lastCalcTeacherPayoutTime=" + lastCalcTeacherPayoutTime +
+            ", departments=" + department +
+            '}';
   }
 }

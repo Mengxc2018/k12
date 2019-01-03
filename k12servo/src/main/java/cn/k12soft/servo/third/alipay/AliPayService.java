@@ -315,6 +315,7 @@ public class AliPayService {
 //                if(response.isSuccess()){
 //                    boolean checkRet = AlipaySignature.rsaCheckV1(response.getParams(), ALIPAY_PUBLIC_KEY, CHARSET, SIGN_TYPE);
 //                    if(checkRet) {
+//                        // 支付宝支付成功
 //                        billingAliPayInfo.setState(BILLING_STATE_1);
 //                        billingAliPayInfo.setPayAt(Instant.now());
 //                        getBillingAliPayInfoRepository().save(billingAliPayInfo);

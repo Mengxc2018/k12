@@ -7,12 +7,17 @@ import cn.k12soft.servo.module.holidaysWeek.service.HolidaysWeekService;
 import cn.k12soft.servo.repository.*;
 import cn.k12soft.servo.service.dto.AttendanceDTO;
 import cn.k12soft.servo.service.mapper.AttendanceMapper;
+import cn.k12soft.servo.util.Times;
 import cn.k12soft.servo.web.form.AttendanceForm;
 import cn.k12soft.servo.web.form.RetroAttendanceForm;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.TemporalField;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -238,4 +243,37 @@ public class AttendanceService extends
         return param;
     }
 
+    public void addTestDate(LocalDate localDate, Integer studentId) {
+        LocalDate one = localDate.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate two = localDate.with(TemporalAdjusters.lastDayOfMonth());
+
+        List<Student> students = this.studentRepository.findAll();
+
+        Instant date = one.atStartOfDay().toInstant(ZoneOffset.UTC).plusSeconds(8*3600);
+
+        if (studentId == null){
+            for (Student student : students) {
+                for (int i = one.lengthOfMonth(); i > 0; i--) {
+                    if (holidaysWeekService.isWeekend(date)){
+                        date = date.plusSeconds(24*3600);
+                        continue;
+                    }
+                    List<Attendance> attendances = this.getRepository().findByStudentIdAndSignAt(student.getId(), date);
+                    if (attendances.size() == 0) {
+                        Attendance attendance = new Attendance(
+                                1,
+                                student.getId(),
+                                student.getName(),
+                                student.getKlass().getId(),
+                                "",
+                                0f,
+                                date
+                        );
+                        this.getRepository().save(attendance);
+                    }
+                    date = date.plusSeconds(24*3600);
+                }
+            }
+        }
+    }
 }

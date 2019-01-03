@@ -10,18 +10,16 @@ import cn.k12soft.servo.module.duty.domain.Duty;
 import cn.k12soft.servo.module.duty.repositpry.DutyRepository;
 import cn.k12soft.servo.module.empFlowRate.domain.FolwEnum;
 import cn.k12soft.servo.module.employees.domain.Employee;
-import cn.k12soft.servo.module.employees.domain.EmployeeBasic;
-import cn.k12soft.servo.module.employees.repository.EmployeeBasicRepository;
 import cn.k12soft.servo.module.employees.repository.EmployeeRepository;
 import cn.k12soft.servo.module.revenue.domain.TeacherSocialSecurity;
 import cn.k12soft.servo.module.revenue.repository.TeacherSocialSecurityRepository;
-import cn.k12soft.servo.module.schedulingPerson.repository.SchedulingPersonRepository;
 import cn.k12soft.servo.repository.*;
 import cn.k12soft.servo.third.aliyun.AliyunSMSService;
 import cn.k12soft.servo.web.form.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -51,8 +49,6 @@ public class InvitationService {
     private final StudentRepository studentRepository;
     private final EmployeeRepository employeeRepository;
     private final DutyRepository dutyRepository;
-    private final SchedulingPersonRepository schedulingPersonRepository;
-    private final EmployeeBasicRepository employeeBasicRepository;
     private final TeacherSocialSecurityRepository teacherSocialSecurityRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -65,7 +61,8 @@ public class InvitationService {
                              UserRepository userRepository,
                              StudentRepository studentRepository,
                              EmployeeRepository employeeRepository, DutyRepository dutyRepository,
-                             SchedulingPersonRepository schedulingPersonRepository, EmployeeBasicRepository employeeBasicRepository, TeacherSocialSecurityRepository teacherSocialSecurityRepository, PasswordEncoder passwordEncoder) {
+                             TeacherSocialSecurityRepository teacherSocialSecurityRepository,
+                             PasswordEncoder passwordEncoder) {
         this.schoolRepository = schoolRepository;
         this.invitationRepository = invitationRepository;
         this.guardianRepository = guardianRepository;
@@ -77,8 +74,6 @@ public class InvitationService {
         this.studentRepository = studentRepository;
         this.employeeRepository = employeeRepository;
         this.dutyRepository = dutyRepository;
-        this.schedulingPersonRepository = schedulingPersonRepository;
-        this.employeeBasicRepository = employeeBasicRepository;
         this.teacherSocialSecurityRepository = teacherSocialSecurityRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -106,7 +101,6 @@ public class InvitationService {
     }
 
     public void inviteTeacher(Actor invitor, TeacherForm form) {
-//        int secretCode = generateSecretCode();
         String mobile = form.getMobile();
         Integer schoolId = invitor.getSchoolId();
         Invitation invitation = createInvitation(schoolId, mobile, form.getUsername());
@@ -116,13 +110,9 @@ public class InvitationService {
             actor.addRole(rootRole);//TODO:: make role correct
             actorRepository.save(actor);
         }
-//        invitation.secretCode(secretCode);
-//        invitationRepository.save(invitation);
-//        sendSecretCode(secretCode, mobile);
     }
 
     public void inviteTeacherTest(Actor invitor, Integer dutyId, TeacherTestForm form) {
-//        int secretCode = generateSecretCode();
         String mobile = form.getMobile();
         Integer schoolId = invitor.getSchoolId();
         Invitation invitation = createInvitation(schoolId, mobile, form.getUsername());
@@ -132,15 +122,6 @@ public class InvitationService {
             actor.addRole(rootRole);//TODO:: make role correct
             actorRepository.save(actor);
         }
-
-        // 验证角色数量
-//        User user = userRepository.queryByMobile(mobile);
-//        Collection<Actor> actorCollection = actorRepository.findByUserId(user.getId());
-//        if (actorCollection.size() == 0){
-//            invitation.secretCode(secretCode);      // 生成邀请码
-//            invitationRepository.save(invitation);  // 保存邀请码
-//            sendSecretCode(secretCode, mobile);   // 如果存在角色，则不需要发送验证码，直接使用
-//        }
 
         // 插入员工表
         // 员工工号生成策略：学校id+四位数
@@ -156,37 +137,34 @@ public class InvitationService {
         }
         num++;
 
-        // 添加入职基本信息
-        EmployeeBasic employeeBasic = new EmployeeBasic(
-                form.getJoinTime(),
-                form.getIsOfficial(),
-                form.getIsGraduate(),
-                form.getIsHasDiploma(),
-                actor.getSchoolId()
-        );
+        Employee employee = null;
+        Instant dateOfficialAt = null;  // 转正时间
+        Instant dateJoinAt = null;  // 入职时间
+
         // 是否转正、试用期处理
         String probation = form.getProbation() == null ? "0" : form.getProbation();
         if (form.getIsOfficial()) {
-            employeeBasic.setOfficialAt(form.getJoinTime());
-            probation = "0";
+            dateJoinAt = form.getJoinTime();    // 入职时间
+            probation = "0";    // 试用时间，单位：月
         } else {
             probation = form.getProbation();
         }
-        employeeBasic.setHasSocial(form.getIsHasSocial());
-        employeeBasic.setProbation(probation);
-        employeeBasic.setHasSocial(form.getIsHasSocial());
+        employee.setHasSocial(form.getIsHasSocial());   // 有无社保
 
         // 创建员工表信息
         Duty duty = dutyRepository.findOne(Long.parseLong(dutyId.toString()));
         School school = schoolRepository.findOne(schoolId);
-        Employee employee = new Employee(
+        dateOfficialAt = form.getJoinTime().plus(Integer.valueOf(probation), ChronoUnit.MONTHS);    // 转正时间
+        employee = new Employee(
                 duty,
                 actor.getId(),
                 Integer.valueOf(num.toString()),
-                null,
                 actor.getSchoolId(),
+                Integer.valueOf(probation),
                 true,
-                employeeBasic,
+                form.getIsHasSocial(),  // 有无社保
+                dateJoinAt,     // 入职时间
+                dateOfficialAt,     // 转正时间
                 "0",    // 加班时间，新建时默认为0
                 "0",    // 调休时间，新建时默认为0
                 school.getAnnual(),
@@ -195,10 +173,13 @@ public class InvitationService {
                 school.getBarthWith(),
                 school.getMarry(),
                 school.getFuneral(),
+
+                form.getIsOfficial(),   // 是否转正
+                form.getIsGraduate(),   // 是否毕业
+                form.getIsHasDiploma(), // 是否有毕业证
                 Instant.now()
         );
         employeeRepository.save(employee);
-        employeeBasicRepository.save(employee.getEmployeeBasic());
         // 邀请员工后插入工资及社保表
         teacherSocialSecurity(actor, employee, form);
 
@@ -210,9 +191,7 @@ public class InvitationService {
         TeacherSocialSecurity teacherSocialSecurity = new TeacherSocialSecurity(
                 actor.getId().toString(),
                 employee,
-                user.getUsername(),
-                employee.getDuty().getName(),
-                employee.getDuty().getName()
+                user.getUsername()
         );
         // 工资判断
         // 是否转正，转正前80%工资，转正100%工资
@@ -232,7 +211,6 @@ public class InvitationService {
         }
         teacherSocialSecurity.setType(folwEnum);
         teacherSocialSecurity.setSalary(salaryf);
-        teacherSocialSecurity.setActualPayroll(actualPayroll);
         teacherSocialSecurity.setSchoolId(actor.getSchoolId());
         teacherSocialSecurity.setTaxIncome(0f);
 
@@ -260,7 +238,7 @@ public class InvitationService {
 //        sendSecretCode(secretCode, mobile);
     }
 
-    private Invitation createInvitation(Integer schoolId, String mobile, String username) {
+    public Invitation createInvitation(Integer schoolId, String mobile, String username) {
         return invitationRepository
                 .findOneByMobile(mobile)
                 .orElseGet(() -> {

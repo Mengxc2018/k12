@@ -1,14 +1,16 @@
 package cn.k12soft.servo.module.employees.domain.form;
 
-import cn.k12soft.servo.module.duty.domain.Duty;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 public class ManagerUpdateForm {
+    @NotNull
     @ApiModelProperty("数据id")
     private Integer id;
+
+    private Integer actorId;
 
     @ApiModelProperty("试用时长、单位：月")
     private Integer probation;
@@ -55,10 +57,7 @@ public class ManagerUpdateForm {
 
     @ApiModelProperty("是否转正")
     private boolean isOfficial;
-    @ApiModelProperty("是否离职")
-    private boolean isLeave;    // 是否离职
-    @ApiModelProperty("离职时间")
-    private Instant leaveAt;    // 离职时间
+
     @ApiModelProperty("有无社保")
     private boolean hasSocial;  // 有无社保
 
@@ -81,6 +80,10 @@ public class ManagerUpdateForm {
 
     public Integer getId() {
         return id;
+    }
+
+    public Integer getActorId() {
+        return actorId;
     }
 
     public Integer getProbation() {
@@ -141,14 +144,6 @@ public class ManagerUpdateForm {
 
     public boolean getIsOfficial() {
         return isOfficial;
-    }
-
-    public boolean getIsLeave() {
-        return isLeave;
-    }
-
-    public Instant getLeaveAt() {
-        return leaveAt;
     }
 
     public boolean getIsHasSocial() {

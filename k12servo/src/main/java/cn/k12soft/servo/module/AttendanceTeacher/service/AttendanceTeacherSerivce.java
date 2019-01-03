@@ -29,12 +29,16 @@ import cn.k12soft.servo.repository.ActorRepository;
 import cn.k12soft.servo.repository.SchoolRepository;
 import cn.k12soft.servo.repository.UserRepository;
 import cn.k12soft.servo.service.AbstractRepositoryService;
+import jdk.nashorn.internal.runtime.regexp.joni.encoding.CharacterType;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -659,5 +663,49 @@ public class AttendanceTeacherSerivce extends
             list.add(map);
         }
         return list;
+    }
+
+    public void addDate(Integer num, LocalDate localDate) {
+        LocalDate one = localDate.withDayOfMonth(1);
+        LocalDate two = localDate.withDayOfMonth(localDate.lengthOfMonth());
+        List<Actor> actorsTeach = actorRepository.findAllBySchoolIdAndTypesContains(1, ActorType.TEACHER);
+        List<Actor> actorsManag = actorRepository.findAllBySchoolIdAndTypesContains(1, ActorType.MANAGER);
+        actorsTeach.addAll(actorsManag);
+
+        for (int i = localDate.lengthOfMonth(); i > 0; i--){
+            Long date = Long.parseLong(one.toString().replace("-",""));
+            for (Actor actor : actorsTeach){
+                AttendanceTeacher attendanceTeacher = getRepository().findByActorIdAndCreatedAt(actor.getId(), date);
+                if (attendanceTeacher != null){
+                    continue;
+                }
+                attendanceTeacher = new AttendanceTeacher();
+                String random = RandomStringUtils.random(1,1,4,false, false);
+                attendanceTeacher.setActorId(actor.getId());
+                attendanceTeacher.setSchoolId(actor.getSchoolId());
+                attendanceTeacher.setCreatedAt(date);
+                attendanceTeacher.setTimes(new Long(0));
+                date--;
+                switch (random){
+                    case "1":
+                        attendanceTeacher.setAmStartTime(Instant.ofEpochSecond(1544142600));
+                        attendanceTeacher.setAst(VacationTeacherUtil.ATTENDANCESTATUS.ALL);
+                        break;
+                    case "2":
+                        attendanceTeacher.setAmEndTime(Instant.ofEpochSecond(1544155200));
+                        attendanceTeacher.setAet(VacationTeacherUtil.ATTENDANCESTATUS.ALL);
+                        break;
+                    case "3":
+                        attendanceTeacher.setPmStartTime(Instant.ofEpochSecond(1544158800));
+                        attendanceTeacher.setPst(VacationTeacherUtil.ATTENDANCESTATUS.ALL);
+                        break;
+                    case "4":
+                        attendanceTeacher.setPmEndTime(Instant.ofEpochSecond(1544176800));
+                        attendanceTeacher.setPet(VacationTeacherUtil.ATTENDANCESTATUS.ALL);
+                        break;
+                }
+                this.getRepository().save(attendanceTeacher);
+            }
+        }
     }
 }

@@ -1,10 +1,6 @@
 package cn.k12soft.servo.module.employees.domain.form;
 
-import cn.k12soft.servo.module.duty.domain.Duty;
 import io.swagger.annotations.ApiModelProperty;
-
-import javax.persistence.ManyToOne;
-import java.time.Instant;
 
 public class EmpCommitForm {
 
@@ -14,7 +10,6 @@ public class EmpCommitForm {
     @ApiModelProperty("员工姓名")
     private String name;
 
-    //    @OneToOne
     @ApiModelProperty("部门")
     private Integer deptId;
 
@@ -71,37 +66,39 @@ public class EmpCommitForm {
     @ApiModelProperty("是否有毕业证")
     private boolean isHasDiploma; // 是否有毕业证
 
-    @ManyToOne
-    private Duty duty;     // 职务Id
+    private Integer dutyId;     // 职务Id
 
     @ApiModelProperty("该员工的上级id")
     private Integer parentActorId;    // 该员工的上级id
-
-    public EmpCommitForm(Integer actorId, String name, Integer deptId, String idCard, String sex, String mobile, String emergencyContact, String emergencyContactMobile, String nativePlace, String nation, String politicsStatus, String isMarry, String hjAddress, String address, String education, String graduateSchool, String specialty, String cgfns, String remark, boolean isGraduate, boolean isHasDiploma, Duty duty, Integer parentActorId) {
-        this.actorId = actorId;
-        this.name = name;
-        this.deptId = deptId;
-        this.idCard = idCard;
-        this.sex = sex;
-        this.mobile = mobile;
-        this.emergencyContact = emergencyContact;
-        this.emergencyContactMobile = emergencyContactMobile;
-        this.nativePlace = nativePlace;
-        this.nation = nation;
-        this.politicsStatus = politicsStatus;
-        this.isMarry = isMarry;
-        this.hjAddress = hjAddress;
-        this.address = address;
-        this.education = education;
-        this.graduateSchool = graduateSchool;
-        this.specialty = specialty;
-        this.cgfns = cgfns;
-        this.remark = remark;
-        this.isGraduate = isGraduate;
-        this.isHasDiploma = isHasDiploma;
-        this.duty = duty;
-        this.parentActorId = parentActorId;
-    }
+//
+//    public EmpCommitForm() {
+//    }
+//
+//    public EmpCommitForm(Integer actorId, String name, Integer deptId, String idCard, String sex, String mobile, String emergencyContact, String emergencyContactMobile, String nativePlace, String nation, String politicsStatus, String isMarry, String hjAddress, String address, String education, String graduateSchool, String specialty, String cgfns, String remark, boolean isGraduate, boolean isHasDiploma, Integer dutyId, Integer parentActorId) {
+//        this.actorId = actorId;
+//        this.name = name;
+//        this.deptId = deptId;
+//        this.idCard = idCard;
+//        this.sex = sex;
+//        this.mobile = mobile;
+//        this.emergencyContact = emergencyContact;
+//        this.emergencyContactMobile = emergencyContactMobile;
+//        this.nativePlace = nativePlace;
+//        this.nation = nation;
+//        this.politicsStatus = politicsStatus;
+//        this.isMarry = isMarry;
+//        this.hjAddress = hjAddress;
+//        this.address = address;
+//        this.education = education;
+//        this.graduateSchool = graduateSchool;
+//        this.specialty = specialty;
+//        this.cgfns = cgfns;
+//        this.remark = remark;
+//        this.isGraduate = isGraduate;
+//        this.isHasDiploma = isHasDiploma;
+//        this.dutyId = dutyId;
+//        this.parentActorId = parentActorId;
+//    }
 
     public Integer getActorId() {
         return actorId;
@@ -187,11 +184,11 @@ public class EmpCommitForm {
         return isHasDiploma;
     }
 
-    public Duty getDuty() {
-        return duty;
-    }
-
     public Integer getParentActorId() {
         return parentActorId;
+    }
+
+    public Integer getDutyId() {
+        return dutyId;
     }
 }

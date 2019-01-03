@@ -37,7 +37,7 @@ public class Attendance extends SchoolEntity {
     this.portrait = portrait;
     this.temperature = temperature;
     this.signAt = signAt;
-    this.createdAt = Instant.now();
+    this.createdAt = signAt;
   }
 
   public Attendance(Integer schoolId, Integer studentId, String name, Integer klassId, String portrait, AttendanceType type, float temperature) {

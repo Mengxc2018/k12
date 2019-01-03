@@ -6,7 +6,7 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class SchoolEntity {
 
-  @Column(nullable = false)
+//  @Column(nullable = false)
   private Integer schoolId;
 
   protected SchoolEntity() {

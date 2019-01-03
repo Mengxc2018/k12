@@ -3,6 +3,8 @@ package cn.k12soft.servo.module.district.service;
 import cn.k12soft.servo.domain.Actor;
 import cn.k12soft.servo.domain.School;
 import cn.k12soft.servo.domain.enumeration.ActorType;
+import cn.k12soft.servo.module.department.domain.Dept;
+import cn.k12soft.servo.module.department.repository.DeptRepository;
 import cn.k12soft.servo.module.district.form.CityForm;
 import cn.k12soft.servo.module.district.form.ProvincesForm;
 import cn.k12soft.servo.module.district.form.RegionsForm;
@@ -31,10 +33,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.google.common.base.Strings;
 
+import java.security.acl.Group;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 @Service
 @Transactional
@@ -50,6 +54,7 @@ public class DistrictService {
     private final ProvincesMapper provincesMapper;
     private final RegionsMapper regionsMapper;
     private final SchoolPojoMapper schoolPojoMapper;
+    private final DeptRepository deptRepository;
 
     @Autowired
     public DistrictService(CitysRepository citysRepository,
@@ -60,7 +65,7 @@ public class DistrictService {
                            GroupsMapper groupsMapper,
                            CitysMapper citysMapper,
                            ProvincesMapper provincesMapper,
-                           RegionsMapper regionsMapper, SchoolPojoMapper schoolPojoMapper) {
+                           RegionsMapper regionsMapper, SchoolPojoMapper schoolPojoMapper, DeptRepository deptRepository) {
         this.citysRepository = citysRepository;
         this.provincesRepository = provincesRepository;
         this.regionsRepository = regionsRepository;
@@ -71,6 +76,7 @@ public class DistrictService {
         this.provincesMapper = provincesMapper;
         this.regionsMapper = regionsMapper;
         this.schoolPojoMapper = schoolPojoMapper;
+        this.deptRepository = deptRepository;
     }
 
     private static final ActorType GROUP = ActorType.GROUP;   // 集团G
@@ -383,50 +389,6 @@ public class DistrictService {
         return groupsRepository.findAll();
     }
 
-    /**
-     * 集团关联大区
-     * @param actor
-     * @param code
-     * @return
-     */
-    public Regions relevanceRegions(Actor actor, String code) {
-        // 集团的id
-        Integer groupId = Integer.valueOf(actor.getGroupId());
-        // 根据code找到大区数据
-        Regions regions = regionsRepository.findByCode(code);
-        Groups groups = groupsRepository.findById(groupId);
-        regions.setGroupId(groups.getId());
-        regions.setGroupName(groups.getName());
-        return regionsRepository.save(regions);
-    }
-
-    public Provinces relevanceProvinces(Actor actor, String code) {
-        Integer regionId = Integer.valueOf(actor.getRegionId());
-        Regions regions = regionsRepository.findById(regionId);
-        Provinces provinces = provincesRepository.findByCode(code);
-        provinces.setRegionName(regions.getName());
-        provinces.setRegionId(regions.getId());
-        return provincesRepository.save(provinces);
-    }
-
-    public Citys relevanceCity(Actor actor, String code) {
-        Integer provincesId = Integer.valueOf(actor.getProvinceId());
-        Provinces provinces = provincesRepository.findById(provincesId);
-        Citys citys = citysRepository.findByCode(code);
-        citys.setProvinceId(provinces.getId());
-        citys.setProvinceName(provinces.getName());
-        return citysRepository.save(citys);
-    }
-
-    public Citys relevanceSchool(Actor actor, String code) {
-        Integer citysId = Integer.valueOf(actor.getCityId());
-        Citys citys = citysRepository.findById(citysId);
-        School school = schoolRepository.findByCode(code);
-        school.setCityId(citys.getId());
-        school.setCityName(citys.getName());
-        return citysRepository.save(citys);
-    }
-
     public void cancel(String code) {
         String one = code.substring(0,1);
         switch (one){
@@ -520,20 +482,107 @@ public class DistrictService {
         return map;
     }
 
+    /**
+     * 上下级关系的分配
+     * @param first
+     * @param second
+     */
     public void correlation(String first, String second) {
         // G Q P C S
+        School school = null;
+        Citys citys = null;
+        Provinces provinces = null;
+        Regions regions = null;
+        Groups groups = null;
         String one = first.substring(0, 1);
         String two = second.substring(0, 1);
-        if (one.equals(G) && two.equals(Q)){
-            groupsToRegions(first, second);
-        }else if (one.equals(Q) && two.equals(P)){
-            regionsToProvinces(first, second);
-        }else if (one.equals(P) && two.equals(C)){
-            provincesToCitys(first, second);
-        }else if (one.equals(C) && two.equals(S)){
-            CitysToSchools(first, second);
-        }else{
-            throw new IllegalArgumentException("请检查上下级关系重新分配！");
+        String code = "";
+        Map<String, String> map = new HashMap<>();
+        map.put(one, first);
+        map.put(two, second);
+        for (String str : map.keySet()){
+            switch (str){
+                case G:
+                    code = map.get(str);
+                    groups = this.groupsRepository.findByCode(code);
+                    break;
+                case Q:
+                    code = map.get(str);
+                    regions = this.regionsRepository.findByCode(code);
+                    break;
+                case P:
+                    code = map.get(str);
+                    provinces = this.provincesRepository.findByCode(code);
+                    break;
+                case C:
+                    code = map.get(str);
+                    citys = this.citysRepository.findByCode(code);
+                    break;
+                case S:code = map.get(str);
+                    school = this.schoolRepository.findByCode(code);
+                    break;
+            }
+        }
+
+        switch (one){
+            case G:
+                Integer groupId = groups.getId();
+                switch (two){
+                    case Q:
+                        regions.setParentId(groupId);
+                        this.regionsRepository.save(regions);
+                        break;
+                    case P:
+                        provinces.setParentId(groupId);
+                        this.provincesRepository.save(provinces);
+                        break;
+                    case C:
+                        citys.setParentId(groupId);
+                        citys = this.citysRepository.findByCode(code);
+                        break;
+                    case S:
+                        school.setParentId(groupId);
+                        this.schoolRepository.save(school);
+                        break;
+                }
+                break;
+            case Q:
+                Integer regionId = regions.getId();
+                switch (two){
+                    case P:
+                        provinces.setParentId(regionId);
+                        this.provincesRepository.save(provinces);
+                        break;
+                    case C:
+                        citys.setParentId(regionId);
+                        this.citysRepository.findByCode(code);
+                        break;
+                    case S:
+                        school.setParentId(regionId);
+                        this.schoolRepository.save(school);
+                        break;
+                }
+                break;
+            case P:
+                Integer provinceId = regions.getId();
+                switch (two){
+                    case C:
+                        citys.setParentId(provinceId);
+                        this.citysRepository.findByCode(code);
+                        break;
+                    case S:
+                        school.setParentId(provinceId);
+                        this.schoolRepository.save(school);
+                        break;
+                }
+                break;
+            case C:
+                Integer cityId = citys.getId();
+                school.setParentId(cityId);
+                this.schoolRepository.save(school);
+                break;
+            default:
+                return;
         }
     }
 
@@ -688,4 +737,120 @@ public class DistrictService {
     }
 
 
+    public void addDept(Actor actor, String code, String deptIds) {
+        String one = code.substring(0, 1);
+        Map<String, String> map = new HashMap<>();
+        map.put(one, code);
+        for (String str : map.keySet()){
+            switch (str){
+                case G:
+                    setGroupDept(code, deptIds);
+                    break;
+                case Q:
+                    setRegionsDept(code, deptIds);
+                    break;
+                case P:
+                    setProvincesDept(code, deptIds);
+                    break;
+                case C:
+                    setCityDept(code, deptIds);
+                    break;
+            }
+        }
+    }
+    public void setCityDept(String code, String deptIds){
+        String[] ida = deptIds.split(",");
+        Citys citys = this.citysRepository.findByCode(code);
+        for (String deptId : ida){
+            Dept dept = this.deptRepository.findOne(Long.parseLong(deptId));
+            citys.getDepartment().add(dept);
+        }
+        this.citysRepository.save(citys);
+    }
+    public void setProvincesDept(String code, String deptIds){
+        String[] ida = deptIds.split(",");
+        Provinces provinces = this.provincesRepository.findByCode(code);
+        for (String deptId : ida){
+            Dept dept = this.deptRepository.findOne(Long.parseLong(deptId));
+            provinces.getDepartment().add(dept);
+        }
+        this.provincesRepository.save(provinces);
+    }
+    public void setRegionsDept(String code, String deptIds){
+        String[] ida = deptIds.split(",");
+        Regions regions = this.regionsRepository.findByCode(code);
+        for (String deptId : ida){
+            Dept dept = this.deptRepository.findOne(Long.parseLong(deptId));
+            regions.getDepartment().add(dept);
+        }
+        this.regionsRepository.save(regions);
+    }
+    public void setGroupDept(String code, String deptIds){
+        String[] ida = deptIds.split(",");
+        Groups groups = this.groupsRepository.findByCode(code);
+        for (String deptId : ida){
+            Dept dept = this.deptRepository.findOne(Long.parseLong(deptId));
+            groups.getDepartment().add(dept);
+        }
+        this.groupsRepository.save(groups);
+    }
+
+    public void deleteDept(Actor actor, String code, String deptIds) {
+        String one = code.substring(0, 1);
+        Map<String, String> map = new HashMap<>();
+        map.put(one, code);
+        for (String str : map.keySet()){
+            switch (str){
+                case G:
+                    deleteGroupDept(code, deptIds);
+                    break;
+                case Q:
+                    deleteRegionsDept(code, deptIds);
+                    break;
+                case P:
+                    deleteProvincesDept(code, deptIds);
+                    break;
+                case C:
+                    deleteCityDept(code, deptIds);
+                    break;
+            }
+        }
+
+    }
+    public void deleteCityDept(String code, String deptIds){
+        String[] ida = deptIds.split(",");
+        Citys citys = this.citysRepository.findByCode(code);
+        for (String deptId : ida){
+            Dept dept = this.deptRepository.findOne(Long.parseLong(deptId));
+            citys.getDepartment().remove(dept);
+        }
+        this.citysRepository.save(citys);
+    }
+    public void deleteProvincesDept(String code, String deptIds){
+        String[] ida = deptIds.split(",");
+        Provinces provinces = this.provincesRepository.findByCode(code);
+        for (String deptId : ida){
+            Dept dept = this.deptRepository.findOne(Long.parseLong(deptId));
+            provinces.getDepartment().remove(dept);
+        }
+        this.provincesRepository.save(provinces);
+    }
+    public void deleteRegionsDept(String code, String deptIds){
+        String[] ida = deptIds.split(",");
+        Regions regions = this.regionsRepository.findByCode(code);
+        for (String deptId : ida){
+            Dept dept = this.deptRepository.findOne(Long.parseLong(deptId));
+            regions.getDepartment().remove(dept);
+        }
+        this.regionsRepository.save(regions);
+    }
+    public void deleteGroupDept(String code, String deptIds){
+        String[] ida = deptIds.split(",");
+        Groups groups = this.groupsRepository.findByCode(code);
+        for (String deptId : ida){
+            Dept dept = this.deptRepository.findOne(Long.parseLong(deptId));
+            groups.getDepartment().remove(dept);
+        }
+        this.groupsRepository.save(groups);
+    }
 }

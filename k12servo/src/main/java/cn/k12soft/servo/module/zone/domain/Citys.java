@@ -1,12 +1,11 @@
 package cn.k12soft.servo.module.zone.domain;
 
+import cn.k12soft.servo.module.department.domain.Dept;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.Instant;
+import java.util.Set;
 
 /**
  * Created by liubing on 2018/7/24
@@ -26,6 +25,8 @@ public class Citys {
     @Column
     private String provinceName;
     @Column
+    private Integer parentId;
+    @Column
     private String atteTeacher; // 教师出勤率
     @Column
     private String atteStudent; // 学生出勤率
@@ -38,6 +39,9 @@ public class Citys {
     private Instant monthInst; // 月份
     @Column
     private Instant createAt;
+    @Column
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Set<Dept> department;
 
     public Citys(){
 
@@ -140,5 +144,19 @@ public class Citys {
         this.createAt = createAt;
     }
 
-}
+    public Set<Dept> getDepartment() {
+        return department;
+    }
 
+    public void setDepartment(Set<Dept> department) {
+        this.department = department;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+}

@@ -29,13 +29,29 @@ public class StudentAccountChangeRecordService extends AbstractRepositoryService
   }
 
   public void create(Student student, StudentAccount studentAccount, Integer klassId, Float changeMoney, Actor actor, StudentAccountOpType opType){
+//      StudentAccountChangeRecord record = new StudentAccountChangeRecord();
+////      record.setStudentAccountId(studentAccount.getId());
+//      record.setKlassId(klassId);
+//      record.setStudentId(student.getId());
+//      record.setChangeMoney(changeMoney);
+//      record.setRemainMoney(studentAccount.getMoney());
+//      record.setCreatedBy(actor);
+//      record.setOpType(opType.getId());
+//      record.setCreateAt(Instant.now());
+//      save(record);
+      create(student.getId(), studentAccount, klassId, changeMoney, actor, opType);
+  }
+
+  public void create(int studentId, StudentAccount studentAccount, Integer klassId, Float changeMoney, Actor actor, StudentAccountOpType opType){
       StudentAccountChangeRecord record = new StudentAccountChangeRecord();
 //      record.setStudentAccountId(studentAccount.getId());
       record.setKlassId(klassId);
-      record.setStudentId(student.getId());
+      record.setStudentId(studentId);
       record.setChangeMoney(changeMoney);
       record.setRemainMoney(studentAccount.getMoney());
-      record.setCreatedBy(actor);
+      if(actor != null) {
+          record.setCreatedBy(actor);
+      }
       record.setOpType(opType.getId());
       record.setCreateAt(Instant.now());
       save(record);

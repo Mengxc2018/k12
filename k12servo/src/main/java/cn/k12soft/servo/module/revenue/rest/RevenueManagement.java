@@ -64,30 +64,6 @@ public class RevenueManagement {
         this.actorRepository = actorRepository;
     }
 
-    // 速算扣除数
-    private static final Float QUICK_DEDUCTION0 = 0f;
-    private static final Float QUICK_DEDUCTION105 = 105f;
-    private static final Float QUICK_DEDUCTION555 = 555f;
-    private static final Float QUICK_DEDUCTION1005 = 1005f;
-    private static final Float QUICK_DEDUCTION2755 = 2755f;
-    private static final Float QUICK_DEDUCTION5505 = 5505f;
-    private static final Float QUICK_DEDUCTION13505 = 13505f;
-    // 税率
-    private static final Float TAX_RATE3 = 0.03f;
-    private static final Float TAX_RATE10 = 0.1f;
-    private static final Float TAX_RATE20 = 0.2f;
-    private static final Float TAX_RATE25 = 0.25f;
-    private static final Float TAX_RATE30 = 0.30f;
-    private static final Float TAX_RATE35 = 0.35f;
-    private static final Float TAX_RATE45 = 0.45f;
-    // 应纳税所得额(含税)
-    private static final Float SALARY1500 = 1500f;
-    private static final Float SALARY4500 = 4500f;
-    private static final Float SALARY9000 = 9000f;
-    private static final Float SALARY35000 = 35000f;
-    private static final Float SALARY55000 = 55000f;
-    private static final Float SALARY80000 = 80000f;
-
     // 个税起征点
     private static final Float TAX_INCOME = 5000f;
 
@@ -291,160 +267,26 @@ public class RevenueManagement {
     @PostMapping(value = "/revenue/tsss/create")
     @PermissionRequired(CHARGE_PLAN_GET)
     @Timed
-    public void createTeacherSocialSecurity(@Active Actor actor, @RequestBody TeacherSocialSecurityForm teacherSocialSecurityForm){
-        int teacherActorId = teacherSocialSecurityForm.getActorId();
-        Actor teacherActor = this.actorRepository.getOne(teacherActorId);
-        if(teacherActor == null){
-            return;
-        }
+    public TeacherSocialSecurity createTeacherSocialSecurity(@Active Actor actor, @RequestBody TeacherSocialSecurityForm teacherSocialSecurityForm){
+        return this.teacherSocialSecurityService.createTeacherSocialSecurity(actor, teacherSocialSecurityForm);
+    }
 
-        Employee employee = this.employeeRepository.findByActorId(teacherActorId);
-        if(employee == null){
-            return;
-        }
-
-        TeacherSocialSecurity teacherSocialSecurity = new TeacherSocialSecurity(actor.getSchoolId());
-        teacherSocialSecurity.setName(teacherSocialSecurityForm.getName());
-        teacherSocialSecurity.setEmployee(employee);
-        teacherSocialSecurity.setActorId(String.valueOf(teacherActorId));
-        if(teacherSocialSecurityForm.getAccumulationFund() != null) {
-            teacherSocialSecurity.setAccumulationFund(teacherSocialSecurityForm.getAccumulationFund());
-        }
-        if(teacherSocialSecurityForm.getActualPayroll() != null) {
-            teacherSocialSecurity.setActualPayroll(teacherSocialSecurityForm.getActualPayroll());
-        }
-        teacherSocialSecurity.setDepartment(teacherSocialSecurityForm.getDepartment());
-        if(teacherSocialSecurityForm.getEndowmentInsurance() != null) {
-            teacherSocialSecurity.setEndowmentInsurance(teacherSocialSecurityForm.getEndowmentInsurance());
-        }
-        if(teacherSocialSecurityForm.getInjuryInsurance() != null) {
-            teacherSocialSecurity.setInjuryInsurance(teacherSocialSecurityForm.getInjuryInsurance());
-        }
-        if(teacherSocialSecurityForm.getMaternityInsurance() != null){
-            teacherSocialSecurity.setMaternityInsurance(teacherSocialSecurityForm.getMaternityInsurance());
-        }
-        teacherSocialSecurity.setPost(teacherSocialSecurityForm.getPost());
-        if(teacherSocialSecurityForm.getSalary() != null) {
-            teacherSocialSecurity.setSalary(teacherSocialSecurityForm.getSalary());
-        }
-        if(teacherSocialSecurityForm.getTax() != null) {
-            teacherSocialSecurity.setTax(teacherSocialSecurityForm.getTax());
-        }
-        if(teacherSocialSecurityForm.getMedicalInsurance() != null){
-            teacherSocialSecurity.setMedicalInsurance(teacherSocialSecurityForm.getMedicalInsurance());
-        }
-        if(teacherSocialSecurityForm.getUnemploymentInsurance() != null) {
-            teacherSocialSecurity.setUnemploymentInsurance(teacherSocialSecurityForm.getUnemploymentInsurance());
-        }
-        if(teacherSocialSecurityForm.getTaxIncome() != null) {
-            teacherSocialSecurity.setTaxIncome(teacherSocialSecurityForm.getTaxIncome());
-        }
-
-        // 计算教师社保信息及个人所得税
-        teacherSocialSecurity = countSalary(teacherSocialSecurity);
-
-        this.teacherSocialSecurityService.save(teacherSocialSecurity);
+    @ApiOperation("职工工资即时计算")
+    @PostMapping(value = "/revenue/tsss/countTsss")
+    @Timed
+    public TeacherSocialSecurity countTsss(@Active Actor actor, @RequestBody TeacherSocialSecurityForm teacherSocialSecurityForm){
+        return this.teacherSocialSecurityService.countTsss(actor, teacherSocialSecurityForm);
     }
 
     @ApiOperation("修改老师社保信息")
-    @PutMapping(value = "/revenue/tsss/update/{id:\\d+}")
+    @PutMapping(value = "/revenue/tsss/update")
     @PermissionRequired(CHARGE_PLAN_GET)
     @Timed
-    public void updateTeacherSocialSecurity(@Active Actor actor, @PathVariable Integer id, @RequestBody TeacherSocialSecurityForm teacherSocialSecurityForm){
-        int teacherActorId = teacherSocialSecurityForm.getActorId();
-        if(teacherActorId>0) {
-            Actor teacherActor = this.actorRepository.getOne(teacherActorId);
-            if (teacherActor == null) {
-                return;
-            }
-        }
-        TeacherSocialSecurity teacherSocialSecurity = this.teacherSocialSecurityService.get(id);
-        if(teacherSocialSecurity == null){
-            return;
-        }
-        if(teacherActorId>0){
-            teacherSocialSecurity.setActorId(String.valueOf(teacherActorId));
-        }
-        if(StringUtils.isBlank(teacherSocialSecurityForm.getPost())) {
-            teacherSocialSecurity.setPost(teacherSocialSecurityForm.getPost());
-        }
-        if(StringUtils.isBlank(teacherSocialSecurityForm.getDepartment())) {
-            teacherSocialSecurity.setDepartment(teacherSocialSecurityForm.getDepartment());
-        }
-        if(teacherSocialSecurityForm.getAccumulationFund() != null) {
-            teacherSocialSecurity.setAccumulationFund(teacherSocialSecurityForm.getAccumulationFund());
-        }
-        if(teacherSocialSecurityForm.getActualPayroll() != null) {
-            teacherSocialSecurity.setActualPayroll(teacherSocialSecurityForm.getActualPayroll());
-        }
-        if(teacherSocialSecurityForm.getEndowmentInsurance() != null) {
-            teacherSocialSecurity.setEndowmentInsurance(teacherSocialSecurityForm.getEndowmentInsurance());
-        }
-        if(teacherSocialSecurityForm.getInjuryInsurance() != null) {
-            teacherSocialSecurity.setInjuryInsurance(teacherSocialSecurityForm.getInjuryInsurance());
-        }
-        if(teacherSocialSecurityForm.getMaternityInsurance() != null){
-            teacherSocialSecurity.setMaternityInsurance(teacherSocialSecurityForm.getMaternityInsurance());
-        }
-        if(teacherSocialSecurityForm.getSalary() != null) {
-            teacherSocialSecurity.setSalary(teacherSocialSecurityForm.getSalary());
-        }
-        if(teacherSocialSecurityForm.getTax() != null) {
-            teacherSocialSecurity.setTax(teacherSocialSecurityForm.getTax());
-        }
-        if(teacherSocialSecurityForm.getMedicalInsurance() != null){
-            teacherSocialSecurity.setMedicalInsurance(teacherSocialSecurityForm.getMedicalInsurance());
-        }
-        if(teacherSocialSecurityForm.getUnemploymentInsurance() != null) {
-            teacherSocialSecurity.setUnemploymentInsurance(teacherSocialSecurityForm.getUnemploymentInsurance());
-        }
-        if(teacherSocialSecurityForm.getTaxIncome() != null) {
-            teacherSocialSecurity.setTaxIncome(teacherSocialSecurityForm.getTaxIncome());
-        }
-        // 计算教师社保信息及个人所得税
-        teacherSocialSecurity = countSalary(teacherSocialSecurity);
-        this.teacherSocialSecurityService.save(teacherSocialSecurity);
+    public void updateTeacherSocialSecurity(@Active Actor actor,
+                                            @RequestBody TeacherSocialSecurityForm teacherSocialSecurityForm){
+        this.teacherSocialSecurityService.updateTeacherSocialSecurity(actor, teacherSocialSecurityForm);
     }
 
-    public TeacherSocialSecurity countSalary(TeacherSocialSecurity teacherSocialSecurity){
-        // 计算教师社保信息
-        Float salaryf = teacherSocialSecurity.getSalary();
-        Float endowmentInsurancef = teacherSocialSecurity.getEndowmentInsurance();
-        Float unemploymentInsurancef = teacherSocialSecurity.getUnemploymentInsurance();
-        Float medicalInsurancef = teacherSocialSecurity.getMedicalInsurance();
-        Float maternityInsurancef = teacherSocialSecurity.getMaternityInsurance();
-        Float injuryInsurancef = teacherSocialSecurity.getInjuryInsurance();
-        Float accumulationFundf = teacherSocialSecurity.getAccumulationFund();
-        Float taxRate = 0f;
-        // 个税税率计算
-        if (salaryf != 0){
-            if (salaryf <= SALARY1500){
-                taxRate = TAX_RATE3;
-            }else if (salaryf > SALARY1500 && salaryf <= SALARY4500){
-                taxRate = TAX_RATE10;
-            }else if (salaryf > SALARY4500 && salaryf <= SALARY9000){
-                taxRate = TAX_RATE20;
-            }else if (salaryf > SALARY9000 && salaryf <= SALARY35000){
-                taxRate = TAX_RATE25;
-            }else if (salaryf > SALARY35000 && salaryf <= SALARY55000){
-                taxRate = TAX_RATE30;
-            }else if (salaryf > SALARY55000 && salaryf <= SALARY80000){
-                taxRate = TAX_RATE35;
-            }else if (salaryf > SALARY80000){
-                taxRate = TAX_RATE45;
-            }
-        }
-        // 计算各种税率
-        teacherSocialSecurity.setEndowmentInsurance(endowmentInsurancef * salaryf / 100);
-        teacherSocialSecurity.setUnemploymentInsurance(unemploymentInsurancef * salaryf / 100);
-        teacherSocialSecurity.setMedicalInsurance(medicalInsurancef * salaryf / 100);
-        teacherSocialSecurity.setMaternityInsurance(maternityInsurancef * salaryf / 100);
-        teacherSocialSecurity.setInjuryInsurance(injuryInsurancef * salaryf / 100);
-        teacherSocialSecurity.setAccumulationFund(accumulationFundf * salaryf / 100);
-        teacherSocialSecurity.setTax(taxRate * salaryf / 100);
-
-        return  teacherSocialSecurity;
-    }
 
     @ApiOperation("删除老师社保信息")
     @DeleteMapping(value = "/revenue/tsss/delete/{id:\\d+}")
@@ -462,18 +304,7 @@ public class RevenueManagement {
                                      @RequestParam(value = "name", required = false) String name,
                                      @RequestParam(value = "page", required = true) int page,
                                      @RequestParam(value = "size", required = false) Integer size) {
-        int pageSize = 10;
-        if (size != null) {
-            pageSize = size;
-        }
-        page = Math.max(0, page - 1);
-        Sort sort = new Sort(Sort.Direction.DESC, "name");
-        Pageable pageable = new PageRequest(page, pageSize, sort);
-        if(StringUtils.isNotBlank(name)){
-            return this.teacherSocialSecurityService.findByNameAndSchoolId(name, actor.getSchoolId(), pageable);
-        }else {
-            return this.teacherSocialSecurityService.findBySchoolId(actor.getSchoolId(), pageable);
-        }
+        return this.teacherSocialSecurityService.getAllTeacherSocialSecurity(actor, name, page, size);
     }
 
     @ApiOperation("查询所有收入")
