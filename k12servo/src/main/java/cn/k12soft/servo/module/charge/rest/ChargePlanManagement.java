@@ -68,6 +68,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 public class ChargePlanManagement {
 
@@ -510,12 +512,10 @@ public class ChargePlanManagement {
   @PutMapping(value = "/charge/payed")
   @PermissionRequired(CHARGE_PLAN_PUT)
   @Timed
-  public StudentCharge pay(@RequestParam("id") int id, @RequestParam("money") int money, @RequestParam("userAccount") int useAccount) {
+  public StudentCharge pay(@RequestParam("id") int id) {
     StudentCharge studentCharge = this.studentChargePlanService.get(id);
     if (studentCharge != null && studentCharge.getPaymentAt() == null) {
       studentCharge.setPaymentAt(Instant.now());
-      // 检查欠费
-      checkArrears(studentCharge, useAccount);
     }
     return studentCharge;
   }
@@ -527,8 +527,7 @@ public class ChargePlanManagement {
   @Timed
   public StudentCharge onCheck(@Active Actor actor, @RequestParam("id") int id) {
     StudentCharge studentCharge = this.studentChargePlanService.get(id);
-//    if (studentCharge != null && studentCharge.getCheckAt() == null) {
-    if (studentCharge != null) {
+    if (studentCharge != null && studentCharge.getCheckAt() == null) {
       studentCharge.setChecker(actor);
       studentCharge.setCheckAt(Instant.now());
       this.studentChargePlanService.save(studentCharge);
@@ -625,6 +624,21 @@ public class ChargePlanManagement {
       return this.studentChargePlanService.findArrearsListByRemainMoney(actor.getSchoolId(), studentId, klassId, monthStartTime, monthEndTime, pageable);
   }
 
+  @ApiOperation("补交欠款")
+  @PutMapping(value = "/charge/payArrears")
+  @PermissionRequired(CHARGE_PLAN_PUT)
+  @Timed
+  public StudentCharge payArrears(@Active Actor actor, @RequestParam("id") int id, @RequestParam("useAccount") int useAccount){
+      StudentCharge studentCharge = this.studentChargePlanService.get(id);
+      if(studentCharge == null || studentCharge.getRemainMoney()>=0){
+          return studentCharge;
+      }
+      //useAccount=0 不用账户里的钱，系统外交欠款后清空remainMoney
+      //useAccount=1 使用账户里的钱，交欠款
+      checkArrears(studentCharge, useAccount);
+      return this.studentChargePlanService.get(id);
+  }
+
   // 当月余额查询
   @ApiOperation("当月余额查询")
   @GetMapping(value = "/charge/findRemains")
@@ -676,7 +690,6 @@ public class ChargePlanManagement {
                                     ExpensePeriodDiscount periodDiscount, float money, Instant endAt, int klassId, KlassType klassType,
                                     int periodDate) {
     for (Student student : studentList) {
-      klassId = student.getKlass().getId();
       StudentCharge studentCharge = null;
       StudentCharge originalStudentCharge = _alreadyCreated(alreadyCreatedList, student, expenseEntry);
       boolean is = true;  // 是否推送微信服务消息
@@ -978,6 +991,21 @@ public class ChargePlanManagement {
       incomeService.save(income);
       incomeDetailService.save(incomeDetail);
       this.studentChargePlanService.save(studentCharge);
+  }
+
+  @ApiOperation("结清欠款")
+  @GetMapping("/feeCloseOff")
+  public void feeCloseOff(@RequestParam @Valid Integer studentChargeId){
+    StudentCharge studentCharge = studentChargePlanService.get(studentChargeId);
+    StudentAccount studentAccount = this.studentAccountService.findByStudentId(studentCharge.getStudentId());
+    try {
+      if(studentCharge.getMoney() > studentAccount.getMoney()) {
+        throw new Exception("学生账户余额不足，无法结清欠款");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    checkArrears(studentCharge, 1);
   }
 
 }

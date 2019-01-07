@@ -72,7 +72,7 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
         boolean isgone = true;
         Collection<Student> students = studentRepository.findAllBySchoolIdAndIsShow(schoolId, true);
 
-        // 判断月份,结束时间是否为本月，如果有本月，则需要计算本月的信息
+        // 判断月份,结束时间是否为本月，如果是本月，则处理本月的信息
         if (!localDateNow.getMonth().equals(toDate.getMonth())) {
             isgone = false;
         }
@@ -88,6 +88,8 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
                 Integer klassId = student.getKlass().getId();
 
                 Optional<StudentChargeRecord> studentChargeRecordOpt = this.getRepository().findBySchoolIdAndMonth(schoolId, studentId, formDate);
+
+                StudentAccount studentAccount = studentAccountRepository.findByStudentId(studentId);
 
                 StudentChargeRecord scr = studentChargeRecordOpt.isPresent()
                         ? studentChargeRecordOpt.get()
@@ -137,7 +139,6 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
 
 
                 // 获取学生缴费，时间范围为： 月
-
                 Collection<StudentCharge> studentCharges = this.studentChargePlanRepository.findByStudentIdAndCreateAtBetween(studentId, first, second);
                 for (StudentCharge studentCharge : studentCharges) {
 
@@ -149,21 +150,7 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
                         studentChargeIds += studentChargeId + ",";
                     }
 
-
-                    // 判断缴费周期
-//                    ExpensePeriodDiscount periodDiscount = studentCharge.getPeriodDiscount();
-//                    float monthlyMoney = 0f;    // 缴费金额平均化
-//                    if (periodType == ExpensePeriodType.YEAR) {
-//                        monthlyMoney = studentCharge.getMoney() / 12;
-//                    } else if (periodType == ExpensePeriodType.HALF_YEAR) {
-//                        monthlyMoney = studentCharge.getMoney() / 6;
-//                    } else if (periodType == ExpensePeriodType.QUARTER) {
-//                        monthlyMoney = studentCharge.getMoney() / 3;
-//                    } else if (periodType == ExpensePeriodType.MONTH) {
-//                        monthlyMoney = studentCharge.getMoney();
-//                    }
-
-                    // *****************收入--START*****************
+                    // *****************收入、退费--START*****************
 
                     ExpenseEntry expenseEntry = studentCharge.getExpenseEntry();
                     String entityName = expenseEntry.getName();
@@ -200,19 +187,15 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
                         }
                     }
 
-                    // *****************收入--END*****************
+                    // *****************收入、退费--END*****************
 
-
-                    // *****************支出--START*****************
 
                     balance = studentCharge.getRemainMoney();
                     if (daysLost != 0) {
                         // 上个月余额
-                        balance += studentCharge.getPaybackMoney();
+                        balance = balance + studentCharge.getPaybackMoney() + studentAccount.getPaybackMoney();
                         StudentChargeRecord stuCha = paybackCount(studentCharge, scr, attendDays, formDate, toDate);
                     }
-
-                    // *****************支出--END*****************
 
                     scr.setFeeEducation(feeEducation);
                     scr.setFeeFood(feeFood);
@@ -257,15 +240,13 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
 
         // 保育教育费
         Float feeEducation = scr.getFeeEducation() == null ? 0f : scr.getFeeEducation();
-        // 伙食费
-        Float feeFood = scr.getFeeFood() == null ? 0f : scr.getFeeFood();
-        // 其他
-        Float feeOther = scr.getFeeOther() == null ? 0f : scr.getFeeOther();
-        // 收费合计
-        Float feeTotal = scr.getFeeTotal() == null ? 0f : scr.getFeeTotal();
+//        // 伙食费
+//        Float feeFood = scr.getFeeFood() == null ? 0f : scr.getFeeFood();
+//        // 其他
+//        Float feeOther = scr.getFeeOther() == null ? 0f : scr.getFeeOther();
+//        // 收费合计
+//        Float feeTotal = scr.getFeeTotal() == null ? 0f : scr.getFeeTotal();
 
-        // 余额（上个月的余额）
-        Float balance = scr.getBalance() == null ? 0f : scr.getBalance();
         // 保育教育缺勤退费
         Float deductLost = scr.getDeductLost() == null ? 0f : scr.getDeductLost();
         // 伙食费缺勤退费
@@ -372,7 +353,7 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
 //    }
 
     /**
-     * 统计上一个月的收入
+     * 统计上一个月的收支
      * 上个月的收入（studentChargeRecord）需要重新计算
      */
     public void countLastMonth() {
@@ -391,7 +372,6 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
         // 上个月的开始结束时间
         LocalDate formDate = LocalDate.now().plusMonths(-1).with(TemporalAdjusters.firstDayOfMonth());
         LocalDate toDate = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
-
         Instant lastMonthFirst = formDate.atStartOfDay().toInstant(ZoneOffset.UTC);
         Instant lastMonthSecond = toDate.atStartOfDay().toInstant(ZoneOffset.UTC);
 
@@ -446,7 +426,6 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
                 // 支出
                 if (daysLost != 0) {
                     studentChargeRecord = paybackCount(studentCharge, studentChargeRecord, attendDays, formDate, toDate);
-                }else{
                 }
             } else if (entityName.contains("伙食")) {
 
@@ -471,6 +450,9 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
             }
 
             studentChargeRecord = this.leaveSchool(studentChargeRecord);
+
+            // 欠费余额
+//            studentCharge.getRemainMoney()
 
             // 剩余额度、余额
             studentChargeRecord.setBalance(studentCharge.getRemainMoney());
@@ -497,15 +479,18 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
 
     /**
      * 退园退费
+     *
      * @return
      */
-    public StudentChargeRecord leaveSchool(StudentChargeRecord studentChargeRecord){
+    public StudentChargeRecord leaveSchool(StudentChargeRecord studentChargeRecord) {
         Float money = 0f;
         Student student = this.studentRepository.findOne(studentChargeRecord.getStudentId());
-        if (student.getState() == StudentState.LEAVE_SCHOOL){
+        if (student.getState() == StudentState.LEAVE_SCHOOL) {
             StudentAccount studentAccount = studentAccountRepository.findByStudentId(studentChargeRecord.getStudentId());
             StudentCharge studentCharge = studentChargePlanRepository.findByStudentIdAndLastCreateAt(student.getId());
             money = studentAccount.getMoney() + studentCharge.getRemainMoney(); // 退园的费用 = 学生账户的钱 + 缴费的remainMoney的钱，学生账户的退费金额不计入，在其他地方计入
+            // 检查是否有欠费
+//            studentChargePlanService.
             studentChargeRecord.setDeductLeave(money);
         }
         return studentChargeRecord;

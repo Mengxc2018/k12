@@ -19,7 +19,7 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 
     Collection<Student> findByKlassAndIsShowAndIsUpdate(Klass klass, boolean isShow, boolean isUpdate);
 
-    Collection<Student> findAllBySchoolIdAndIsShow(Integer schoolId, boolean isUpdate);
+    Collection<Student> findAllBySchoolIdAndIsShow(Integer schoolId, boolean isShow);
 
     Collection<Student> findAllBySchoolIdAndIsUpdate(Integer schoolId, boolean isUpdate);
 }

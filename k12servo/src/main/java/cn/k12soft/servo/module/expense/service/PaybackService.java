@@ -5,7 +5,6 @@ import cn.k12soft.servo.domain.Student;
 import cn.k12soft.servo.domain.Vacation;
 import cn.k12soft.servo.module.charge.domain.StudentCharge;
 import cn.k12soft.servo.module.charge.domain.VacationSummary;
-import cn.k12soft.servo.module.charge.repository.StudentChargePlanRepository;
 import cn.k12soft.servo.module.charge.service.StudentChargePlanService;
 import cn.k12soft.servo.module.expense.domain.*;
 import cn.k12soft.servo.module.expense.repository.PaybackRuleRepository;
@@ -18,7 +17,6 @@ import java.util.List;
 import cn.k12soft.servo.repository.VacationRepository;
 import cn.k12soft.servo.service.StudentService;
 import cn.k12soft.servo.util.Times;
-import org.junit.Test;
 import org.springframework.beans.factory.CannotLoadBeanClassException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -175,12 +173,12 @@ public class PaybackService {
       return result;
   }
 
-  public PaybackResult calc(StudentCharge studentCharge, PaybackResult result, LocalDate fromDate, int[] termArr, int[] yearArr){
+  public void calc(StudentCharge studentCharge, PaybackResult result, LocalDate fromDate, int[] termArr, int[] yearArr){
       int leftDaysOfMonth = getLeftDaysOfMonth(studentCharge.getStudentId(), fromDate);// 本月请假天数
-      return calc(studentCharge, result, leftDaysOfMonth, termArr, yearArr);
+      calc(studentCharge, result, leftDaysOfMonth, termArr, yearArr);
   }
 
-  private PaybackResult calc(StudentCharge studentCharge, PaybackResult result, int leftDays, int[] termArr, int[] yearArr) {
+  private void calc(StudentCharge studentCharge, PaybackResult result, int leftDays, int[] termArr, int[] yearArr) {
     List<PaybackBySemester> paybackBySemesterList = studentCharge.getExpenseEntry().getPaybackBySemesters();
     // 优先按 学期规则退费
     if(paybackBySemesterList.size()>0){
@@ -197,7 +195,7 @@ public class PaybackService {
           tmpExpenseEntry.setName(studentCharge.getExpenseEntry().getName());
           tmpExpenseEntry.addPaybackBySemester(paybackBySemester);
           result.addExpenseEntry(tmpExpenseEntry);
-          return result;
+          return;
         }
       }
     }
@@ -216,10 +214,9 @@ public class PaybackService {
           tmpExpenseEntry.setName(studentCharge.getExpenseEntry().getName());
           tmpExpenseEntry.addPaybackByDays(paybackByDays);
           result.addExpenseEntry(tmpExpenseEntry);
-          return result;
+          return;
         }
       }
     }
-      return result;
   }
 }
