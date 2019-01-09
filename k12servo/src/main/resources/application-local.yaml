@@ -3,8 +3,8 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
 #    url: jdbc:mysql://192.168.1.245:3306/k12web?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull&useUnicode=yes&characterEncoding=UTF-8
-#    url: jdbc:mysql://localhost:3306/k12web?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull&useUnicode=yes&characterEncoding=UTF-8
-    url: jdbc:mysql://localhost:3306/k13?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull&useUnicode=yes&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/k12web?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull&useUnicode=yes&characterEncoding=UTF-8
+#    url: jdbc:mysql://localhost:3306/k14?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull&useUnicode=yes&characterEncoding=UTF-8
 #    url: jdbc:mysql://192.168.1.245:3306/k14?serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull&useUnicode=yes&characterEncoding=UTF-8
     username: root
     password: root

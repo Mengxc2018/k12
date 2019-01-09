@@ -78,5 +78,12 @@ public interface StudentChargePlanRepository extends JpaRepository<StudentCharge
   @Query(value = "select * from student_charge sc"
           + " WHERE sc.student_id = :studentId"
           + " AND ( SELECT MAX( s.CREATE_AT ) FROM student_charge s WHERE s.STUDENT_ID = :studentId ) = sc.CREATE_AT", nativeQuery = true)
-  StudentCharge findByStudentIdAndLastCreateAt(Integer studentId);
+  StudentCharge findByStudentIdAndLastCreateAt(@Param("studentId") Integer studentId);
+
+  @Query(value = "SELECT * FROM student_charge s "
+          + " WHERE s.student_id = :studentId"
+          + " AND (DATE(s.create_at) BETWEEN DATE(:first ) AND DATE(:second))", nativeQuery = true)
+  List<StudentCharge> findByStudentIdAndCreateAtBetweenForSql(@Param("studentId") Integer studentId,
+                                                              @Param("first") Instant first,
+                                                              @Param("second") Instant second);
 }

@@ -295,12 +295,13 @@ public class StudentCharge extends SchoolEntity {
     public float calcPayMoney(){
       float payMoney = this.money;
       boolean isDisc = false;
+      Float pbm = paybackMoney == null ? 0f : paybackMoney;
       if(periodDiscount != null && periodDiscount.getDiscountRate() != null && periodDiscount.getDiscountRate().floatValue()>0){
           payMoney = payMoney*(1-periodDiscount.getDiscountRate().floatValue()/100f);
           isDisc = true;
       }
       if(identDiscount != null && identDiscount.getDiscountRate() != null && identDiscount.getDiscountRate().floatValue()>0){
-          payMoney = paybackMoney * (1-identDiscount.getDiscountRate().floatValue()/100f);
+          payMoney = pbm * (1-identDiscount.getDiscountRate().floatValue()/100f);
           isDisc = true;
       }
       if(!isDisc){

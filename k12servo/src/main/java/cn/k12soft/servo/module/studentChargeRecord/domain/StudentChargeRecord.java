@@ -46,6 +46,9 @@ public class StudentChargeRecord {
     private FeeType feeType;
 
 
+    @ApiModelProperty("伙食费跟教育费总和，没有其他费用")
+    private Float feeTotalFoodEdu;
+
     @ApiModelProperty("收费合计")
     private Float feeTotal;
 
@@ -79,6 +82,9 @@ public class StudentChargeRecord {
     @ApiModelProperty("实收金额")
     private Float actual;
 
+    @ApiModelProperty("实收金额，收入只有伙食费保教费，没有其他费用")
+    private Float actualFoodEdu;
+
     @ApiModelProperty("园长")
     private Integer managerBy;
 
@@ -88,15 +94,19 @@ public class StudentChargeRecord {
     public StudentChargeRecord() {
     }
 
-    public StudentChargeRecord(Integer studentId, Integer klassId, Integer schoolId, Instant joinAt, Float feeEducation, Float feeFood, Float feeOther, FeeType feeType, Float feeTotal, Integer daysAttendance, Integer daysLost, Float balance, Float deductLost, Float deductFood, Float deductOther, Float deductLeave, Float deductTotal, Float actual, Integer managerBy, String chargeBy, Instant createAt) {
+    public StudentChargeRecord(Integer studentId, Integer klassId, Integer schoolId, Instant createAt, String studentChargeIds, String lastMonthIds, Instant joinAt, Float feeEducation, Float feeFood, Float feeOther, FeeType feeType, Float feeTotalFoodEdu, Float feeTotal, Integer daysAttendance, Integer daysLost, Float balance, Float deductLost, Float deductFood, Float deductOther, Float deductLeave, Float deductTotal, Float actual, Float actualFoodEdu, Integer managerBy, String chargeBy) {
         this.studentId = studentId;
         this.klassId = klassId;
         this.schoolId = schoolId;
+        this.createAt = createAt;
+        StudentChargeIds = studentChargeIds;
+        this.lastMonthIds = lastMonthIds;
         this.joinAt = joinAt;
         this.feeEducation = feeEducation;
         this.feeFood = feeFood;
         this.feeOther = feeOther;
         this.feeType = feeType;
+        this.feeTotalFoodEdu = feeTotalFoodEdu;
         this.feeTotal = feeTotal;
         this.daysAttendance = daysAttendance;
         this.daysLost = daysLost;
@@ -107,9 +117,9 @@ public class StudentChargeRecord {
         this.deductLeave = deductLeave;
         this.deductTotal = deductTotal;
         this.actual = actual;
+        this.actualFoodEdu = actualFoodEdu;
         this.managerBy = managerBy;
         this.chargeBy = chargeBy;
-        this.createAt = createAt;
     }
 
     public StudentChargeRecord(Integer studentId, Integer klassId, Instant joinAt, Integer schoolId, Instant createAt) {
@@ -310,5 +320,21 @@ public class StudentChargeRecord {
 
     public void setLastMonthIds(String lastMonthIds) {
         this.lastMonthIds = lastMonthIds;
+    }
+
+    public Float getFeeTotalFoodEdu() {
+        return feeTotalFoodEdu;
+    }
+
+    public void setFeeTotalFoodEdu(Float feeTotalFoodEdu) {
+        this.feeTotalFoodEdu = feeTotalFoodEdu;
+    }
+
+    public Float getActualFoodEdu() {
+        return actualFoodEdu;
+    }
+
+    public void setActualFoodEdu(Float actualFoodEdu) {
+        this.actualFoodEdu = actualFoodEdu;
     }
 }

@@ -2,6 +2,7 @@ package cn.k12soft.servo.module.studentChargeRecord.service;
 
 import cn.k12soft.servo.domain.Actor;
 import cn.k12soft.servo.domain.Attendance;
+import cn.k12soft.servo.domain.Klass;
 import cn.k12soft.servo.domain.Student;
 import cn.k12soft.servo.domain.enumeration.StudentState;
 import cn.k12soft.servo.module.account.domain.StudentAccount;
@@ -14,12 +15,16 @@ import cn.k12soft.servo.module.charge.service.StudentChargePlanService;
 import cn.k12soft.servo.module.expense.domain.*;
 import cn.k12soft.servo.module.expense.service.PaybackService;
 import cn.k12soft.servo.module.holidaysWeek.service.HolidaysWeekService;
+import cn.k12soft.servo.module.studentChargeRecord.domain.StudentChargeKlassTotal;
 import cn.k12soft.servo.module.studentChargeRecord.domain.StudentChargeRecord;
+import cn.k12soft.servo.module.studentChargeRecord.repository.StudentChargeKlassTotalRepository;
 import cn.k12soft.servo.module.studentChargeRecord.repository.StudentChargeRecordRepository;
 import cn.k12soft.servo.repository.AttendanceRepository;
+import cn.k12soft.servo.repository.KlassRepository;
 import cn.k12soft.servo.repository.StudentRepository;
 import cn.k12soft.servo.service.AbstractRepositoryService;
 import cn.k12soft.servo.service.StudentService;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.*;
 import java.util.*;
 
 @Service
@@ -44,9 +49,12 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
     private final StudentService studentService;
     private final StudentChargePlanService studentChargePlanService;
     private final StudentAccountRepository studentAccountRepository;
+    private final StudentChargeKlassTotalRepository studentChargeKlassTotalRepository;
+    private final KlassRepository klassRepository;
+
 
     @Autowired
-    protected StudentChargeRecordService(StudentChargeRecordRepository repository, AttendanceRepository attendanceRepository, HolidaysWeekService holidaysWeekService, StudentRepository studentRepository, StudentChargePlanRepository studentChargePlanRepository, ChargePlanRepository chargePlanRepository, PaybackService paybackService, StudentService studentService, StudentChargePlanService studentChargePlanService, StudentAccountRepository studentAccountRepository) {
+    protected StudentChargeRecordService(StudentChargeRecordRepository repository, AttendanceRepository attendanceRepository, HolidaysWeekService holidaysWeekService, StudentRepository studentRepository, StudentChargePlanRepository studentChargePlanRepository, ChargePlanRepository chargePlanRepository, PaybackService paybackService, StudentService studentService, StudentChargePlanService studentChargePlanService, StudentAccountRepository studentAccountRepository, StudentChargeKlassTotalRepository studentChargeKlassTotalRepository, KlassRepository klassRepository) {
         super(repository);
         this.attendanceRepository = attendanceRepository;
         this.holidaysWeekService = holidaysWeekService;
@@ -57,20 +65,22 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
         this.studentService = studentService;
         this.studentChargePlanService = studentChargePlanService;
         this.studentAccountRepository = studentAccountRepository;
+        this.studentChargeKlassTotalRepository = studentChargeKlassTotalRepository;
+        this.klassRepository = klassRepository;
     }
 
 
-    public List<StudentChargeRecord> findBy(Actor actor, LocalDate formDate, LocalDate toDate) {
+    public List<StudentChargeRecord> findStudentChargeRecord(Actor actor, Integer klassId, LocalDate formDate, LocalDate toDate) {
         List<StudentChargeRecord> studentChargeRecords = new ArrayList<>();
         LocalDate localDateNow = LocalDate.now();
         Instant instantNow = Instant.now();
         Integer schoolId = actor.getSchoolId();
 
         Instant first = formDate.with(TemporalAdjusters.firstDayOfMonth()).atStartOfDay().toInstant(ZoneOffset.UTC);
-        Instant second = toDate.with(TemporalAdjusters.lastDayOfMonth()).atStartOfDay().toInstant(ZoneOffset.UTC);
+        Instant second = toDate.plusDays(1).with(TemporalAdjusters.firstDayOfMonth()).atStartOfDay().toInstant(ZoneOffset.UTC);
 
         boolean isgone = true;
-        Collection<Student> students = studentRepository.findAllBySchoolIdAndIsShow(schoolId, true);
+        Collection<Student> students = studentRepository.findAllBySchoolIdAndKlassIdAndIsShow(schoolId, klassId, true);
 
         // 判断月份,结束时间是否为本月，如果是本月，则处理本月的信息
         if (!localDateNow.getMonth().equals(toDate.getMonth())) {
@@ -85,11 +95,14 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
             for (Student student : students) {
 
                 Integer studentId = student.getId();
-                Integer klassId = student.getKlass().getId();
 
                 Optional<StudentChargeRecord> studentChargeRecordOpt = this.getRepository().findBySchoolIdAndMonth(schoolId, studentId, formDate);
 
                 StudentAccount studentAccount = studentAccountRepository.findByStudentId(studentId);
+                if (studentAccount == null){
+                    studentAccount = new StudentAccount( student, 0f);
+                    this.studentAccountRepository.save(studentAccount);
+                }
 
                 StudentChargeRecord scr = studentChargeRecordOpt.isPresent()
                         ? studentChargeRecordOpt.get()
@@ -107,6 +120,9 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
                 // 收费合计
                 Float feeTotal = scr.getFeeTotal() == null ? 0f : scr.getFeeTotal();
 
+                // 伙食费跟教育费总和
+                Float feeTotalFoodEdu = scr.getFeeTotalFoodEdu() == null ? 0 : scr.getFeeTotalFoodEdu();
+
                 // 余额（上个月的余额）
                 Float balance = scr.getBalance() == null ? 0f : scr.getBalance();
                 // 保育教育缺勤退费
@@ -122,6 +138,9 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
 
                 // 实收金额
                 Float actual = scr.getActual() == null ? 0f : scr.getActual();
+                // 实收金额，收入只有伙食费保教费
+                Float actualFoodEdu = scr.getActualFoodEdu() == null ? 0f : scr.getActualFoodEdu();
+
                 // 园长
                 // 收费经办人
 
@@ -139,7 +158,9 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
 
 
                 // 获取学生缴费，时间范围为： 月
-                Collection<StudentCharge> studentCharges = this.studentChargePlanRepository.findByStudentIdAndCreateAtBetween(studentId, first, second);
+
+                List<StudentCharge> studentCharges = this.studentChargePlanRepository.findByStudentIdAndCreateAtBetweenForSql(studentId, first, second);
+
                 for (StudentCharge studentCharge : studentCharges) {
 
                     String studentChargeId = studentCharge.getId().toString();
@@ -160,20 +181,22 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
                         // 收入
                         feeEducation = studentCharge.getMoney();
                         feeTotal += feeEducation;
+                        feeTotalFoodEdu += feeEducation;
 
                         // 支出
                         if (daysLost != 0) {
-                            StudentChargeRecord stuCha = paybackCount(studentCharge, scr, attendDays, formDate, toDate);
+                            scr = paybackCount(studentCharge, scr, attendDays, formDate, toDate);
                         }
                     } else if (entityName.contains("伙食")) {
 
                         // 收入
                         feeFood = studentCharge.getMoney();
                         feeTotal += feeFood;
+                        feeTotalFoodEdu += feeFood;
 
                         // 支出
                         if (daysLost != 0) {
-                            StudentChargeRecord stuCha = paybackCount(studentCharge, scr, attendDays, formDate, toDate);
+                            scr = paybackCount(studentCharge, scr, attendDays, formDate, toDate);
                         }
                     } else {
 
@@ -183,40 +206,48 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
 
                         // 支出
                         if (daysLost != 0) {
-                            StudentChargeRecord stuCha = paybackCount(studentCharge, scr, attendDays, formDate, toDate);
+                            scr = paybackCount(studentCharge, scr, attendDays, formDate, toDate);
                         }
                     }
 
                     // *****************收入、退费--END*****************
 
 
-                    balance = studentCharge.getRemainMoney();
                     if (daysLost != 0) {
                         // 上个月余额
-                        balance = balance + studentCharge.getPaybackMoney() + studentAccount.getPaybackMoney();
-                        StudentChargeRecord stuCha = paybackCount(studentCharge, scr, attendDays, formDate, toDate);
+                        balance = studentCharge.getPaybackMoney() + studentAccount.getPaybackMoney();
                     }
 
-                    scr.setFeeEducation(feeEducation);
-                    scr.setFeeFood(feeFood);
-                    scr.setFeeOther(feeOther);
-                    scr.setFeeTotal(feeTotal);
-
-                    scr.setDaysAttendance(days);
-                    scr.setDaysLost(daysLost);
-
-                    scr.setBalance(balance);
-                    scr.setDeductLost(deductLost);
-                    scr.setDeductFood(deductFood);
-                    scr.setDeductOther(deductOther);
-                    scr.setDeductLeave(deductLeave);
-                    scr.setDeductTotal(deductTotal);
-
-                    scr.setActual(actual);
-
-                    scr.setStudentChargeIds(studentChargeIds);
-
                 }
+                // 退费合计
+                deductTotal = deductTotal + balance + deductFood + deductLeave + deductOther;
+
+                // 实收金额
+                actual = feeTotal - deductTotal;
+                // 实收金额，收入只有伙食费保教费
+                actualFoodEdu = feeTotalFoodEdu - deductTotal;
+
+                scr.setFeeEducation(feeEducation);
+                scr.setFeeFood(feeFood);
+                scr.setFeeOther(feeOther);
+                scr.setFeeTotal(feeTotal);
+                scr.setFeeTotalFoodEdu(feeTotalFoodEdu);
+
+                scr.setDaysAttendance(days);
+                scr.setDaysLost(daysLost);
+
+                scr.setBalance(balance);
+                scr.setDeductLost(deductLost);
+                scr.setDeductFood(deductFood);
+                scr.setDeductOther(deductOther);
+                scr.setDeductLeave(deductLeave);
+                scr.setDeductTotal(deductTotal);
+
+                scr.setActual(actual);
+                scr.setActualFoodEdu(actualFoodEdu);
+
+                scr.setStudentChargeIds(studentChargeIds);
+
                 this.getRepository().save(scr);
             }
         }
@@ -240,12 +271,6 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
 
         // 保育教育费
         Float feeEducation = scr.getFeeEducation() == null ? 0f : scr.getFeeEducation();
-//        // 伙食费
-//        Float feeFood = scr.getFeeFood() == null ? 0f : scr.getFeeFood();
-//        // 其他
-//        Float feeOther = scr.getFeeOther() == null ? 0f : scr.getFeeOther();
-//        // 收费合计
-//        Float feeTotal = scr.getFeeTotal() == null ? 0f : scr.getFeeTotal();
 
         // 保育教育缺勤退费
         Float deductLost = scr.getDeductLost() == null ? 0f : scr.getDeductLost();
@@ -261,56 +286,89 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
         // 当前学生收费项目
         ExpenseEntry expenseEntry = studentCharge.getExpenseEntry();
 
-        List<PaybackByDays> paybackByDays = expenseEntry.getPaybackByDays();
-        PaybackByDays paybackByDay = paybackByDays.get(0);
-        Integer comparetype = paybackByDay.getCompareType();    // > = <
-        Integer pType = paybackByDay.getpType();                // 金额=1，比例=2
-        Integer pDay = paybackByDay.getpDay();                  // 天数
-        Float pValue = paybackByDay.getpValue();                // 金额或者比例
+        // 如果查不到退费规则，默认不退费
+        if (expenseEntry.getPaybackBySemesters().size() != 0 || expenseEntry.getPaybackByDays().size() != 0){
 
-//        // 按照实际缴费金额计算
+            // 按天退费
+            if (expenseEntry.getPaybackByDays().size() != 0){
 
-        // 扣费方式
-        if (expenseEntry.getPaybackByDays().size() > 0) {        // 按天退费（考勤天数）
+                List<PaybackByDays> paybackByDays = expenseEntry.getPaybackByDays();
 
-//            deductLost = payback(comparetype, attendDays, pDay, deductLost, pValue, feeEducation, pType);
-            switch (comparetype) {
-                case 1:  // >
-                    break;
-                case 2:  // = 如果实际出勤天数与退费天数相等
-                    // 儿童实际出勤天数 等于 退费规则中的天数中时
-                    // 退还（比例=2/金额=1）
-                    if (attendDays == pDay) {    // 如果实际出勤天数与退费天数相等
-                        if (pType == 1) {
-                            deductLost = pValue;
-                        } else if (pType == 2) {           // 如果实际出勤天数比退费出勤天数少
-                            deductLost = feeEducation * pValue;
-                        }
+                PaybackByDays paybackByDay = paybackByDays.get(0);
+                Integer comparetype = paybackByDay.getCompareType();    // > = <
+                Integer pType = paybackByDay.getpType();                // 金额=1，比例=2
+                Integer pDay = paybackByDay.getpDay();                  // 天数
+                Float pValue = paybackByDay.getpValue();                // 金额或者比例
+
+                //        // 按照实际缴费金额计算
+
+                // 扣费方式/按天退费（考勤天数）
+                if (expenseEntry.getPaybackByDays().size() > 0) {
+                    String entityName = expenseEntry.getName();
+
+                    //            deductLost = payback(comparetype, attendDays, pDay, deductLost, pValue, feeEducation, pType);
+                    switch (comparetype) {
+                        case 1:  // >
+                            break;
+
+                        case 2:  // = 如果实际出勤天数与退费天数相等
+                            // 儿童实际出勤天数 等于 退费规则中的天数中时
+                            // 退还（比例=2/金额=1）
+                            if (attendDays == pDay) {    // 如果实际出勤天数与退费天数相等
+                                if (pType == 1) {
+
+                                    // 判断保教费还是伙食费还是其他
+                                    if (entityName.contains("保育") || entityName.contains("保教") || entityName.contains("教育")) {
+                                        deductLost =pValue;
+                                    } else if (entityName.contains("伙食")) {
+                                        deductFood = pValue;
+                                    } else {
+                                        deductOther += pValue;
+                                    }
+
+                                } else if (pType == 2) {           // 如果实际出勤天数比退费出勤天数少
+
+                                    // 判断保教费还是伙食费还是其他
+                                    if (entityName.contains("保育") || entityName.contains("保教") || entityName.contains("教育")) {
+
+                                        deductLost = deductLost * pValue;
+                                    } else if (entityName.contains("伙食")) {
+                                        deductFood = deductFood * pValue;
+                                    } else {
+                                        deductOther = deductOther + deductOther * pValue;
+                                    }
+                                }
+                            }
+                            break;
+
+                        case 3:  // < 如果应出勤天数比实际出勤天数少
+                            // 儿童实际出勤天数 小于 退费规则中的天数中时
+                            // 退还（比例=2/金额=1）
+                            if (attendDays < pDay) {
+                                if (pType == 1) {
+                                    deductLost = pValue;
+                                } else if (pType == 2) {
+                                    deductLost = feeEducation * pValue;
+                                }
+                            }
+                            break;
                     }
-                    break;
-                case 3:  // < 如果实际出勤天数比实际出勤天数少
-                    // 儿童实际出勤天数 小于 退费规则中的天数中时
-                    // 退还（比例=2/金额=1）
-                    if (attendDays < pDay) {
-                        if (pType == 1) {
-                            deductLost = pValue;
-                        } else if (pType == 2) {
-                            deductLost = feeEducation * pValue;
-                        }
-                    }
-                    break;
+
+                }
+            } else if (expenseEntry.getPaybackBySemesters().size() > 0) {     // 按学期请假退费暂且不需要
+                //                VacationSummary vacationSummary = paybackService.getVacationSummary(studentId, formDate, toDate);
+                //                PaybackResult paybackResult = paybackService.getPaybackResult(studentService, studentChargePlanService, studentId, formDate, toDate);
+                //                PaybackResult p = paybackService.calc(studentCharge, paybackResult, formDate, vacationSummary.getTermArr(), vacationSummary.getTermArr());
+                //
+                //                System.out.println(p.getStudent().getName() + "<-->" + p.getMoney() + "<-->" + p.getExpenseEntryList().size());
+                //                System.out.println(p.getStudent().getName() + "<-->" + p.getMoney() + "<-->" + p.getExpenseEntryList().size());
             }
-
-        } else if (expenseEntry.getPaybackBySemesters().size() > 0) {     // 按学期请假退费
-//                VacationSummary vacationSummary = paybackService.getVacationSummary(studentId, formDate, toDate);
-//                PaybackResult paybackResult = paybackService.getPaybackResult(studentService, studentChargePlanService, studentId, formDate, toDate);
-//                PaybackResult p = paybackService.calc(studentCharge, paybackResult, formDate, vacationSummary.getTermArr(), vacationSummary.getTermArr());
-//
-//                System.out.println(p.getStudent().getName() + "<-->" + p.getMoney() + "<-->" + p.getExpenseEntryList().size());
-//                System.out.println(p.getStudent().getName() + "<-->" + p.getMoney() + "<-->" + p.getExpenseEntryList().size());
-
+        }else{
+            scr.setDeductFood(0f);
+            scr.setDeductFood(0f);
         }
 
+        scr.setDeductFood(deductFood);
         scr.setDeductLost(deductLost);
         scr.setDeductTotal(deductTotal);
         scr.setDeductOther(deductOther);
@@ -353,8 +411,7 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
 //    }
 
     /**
-     * 统计上一个月的收支
-     * 上个月的收入（studentChargeRecord）需要重新计算
+     *
      */
     public void countLastMonth() {
 
@@ -455,7 +512,7 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
 //            studentCharge.getRemainMoney()
 
             // 剩余额度、余额
-            studentChargeRecord.setBalance(studentCharge.getRemainMoney());
+            studentChargeRecord.setBalance(studentCharge.getPaybackMoney());
 
             // 实收余额
 //            studentChargeRecord.setActual(actual);
@@ -495,5 +552,72 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
         }
         return studentChargeRecord;
     }
+
+    public List<StudentChargeKlassTotal> findStudentChargeKlassTotal(Actor actor, LocalDate formDate, LocalDate toDate) {
+        return this.studentChargeKlassTotalRepository.findAllBySchoolIdAndCreateAtBetween(actor.getSchoolId(), formDate, toDate);
+    }
+
+
+    public void countStudentChargeKlass(StudentCharge studentCharge){
+
+        Integer klassId = studentCharge.getKlassId();
+        Integer schoolId = studentCharge.getSchoolId();
+        LocalDate one = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate two = LocalDate.now().plusMonths(1).with(TemporalAdjusters.firstDayOfMonth());
+
+        ExpenseEntry entry = studentCharge.getExpenseEntry();
+        String entityName = entry.getName();
+
+        StudentChargeKlassTotal sckt = this.studentChargeKlassTotalRepository.findBySchoolIdKlassIdAndCreateAtBetween(schoolId, klassId, one, two);
+        if (sckt == null){
+            Klass klass = this.klassRepository.findOne(studentCharge.getKlassId());
+            sckt = new StudentChargeKlassTotal(studentCharge.getKlassId(), klass.getName(), studentCharge.getSchoolId(), Instant.now());
+
+        }
+
+        Float feeEducation = sckt.getFeeEducation();
+        Float feeFood = sckt.getFeeFood();
+        Float feeTotal = sckt.getFeeTotal();
+        Float feeAllTotal = sckt.getFeeAllTotal();
+
+        String feeOther = StringUtils.isBlank(sckt.getFeeOther()) ? "" : sckt.getFeeOther();
+
+
+        if (entityName.contains("保育保教") || entityName.contains("保教") || entityName.contains("保育")) {
+
+            // 收入
+            feeEducation = studentCharge.getMoney();
+            feeTotal += feeEducation;
+            feeAllTotal += feeEducation;
+
+        } else if (entityName.contains("伙食")) {
+
+            // 收入
+            feeFood = studentCharge.getMoney();
+            feeTotal += feeFood;
+            feeAllTotal += feeFood;
+
+        } else {
+
+            // 收入
+            JSONObject feeOtherJson = new JSONObject();
+            feeAllTotal += studentCharge.getMoney();
+            feeOtherJson.put(entityName, studentCharge.getMoney());
+            feeOther = feeOther + "," + feeOtherJson.toString();
+
+        }
+
+        sckt.setFeeFood(feeFood);
+        sckt.setFeeEducation(feeEducation);
+        sckt.setFeeTotal(feeTotal);
+        sckt.setFeeAllTotal(feeAllTotal);
+
+        sckt.setFeeOther(feeOther);
+
+        this.studentChargeKlassTotalRepository.save(sckt);
+
+
+    }
+
 
 }
