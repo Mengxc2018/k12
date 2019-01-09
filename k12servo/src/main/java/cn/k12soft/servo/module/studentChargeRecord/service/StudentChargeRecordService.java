@@ -11,9 +11,7 @@ import cn.k12soft.servo.module.charge.domain.ChargePlan;
 import cn.k12soft.servo.module.charge.domain.StudentCharge;
 import cn.k12soft.servo.module.charge.repository.ChargePlanRepository;
 import cn.k12soft.servo.module.charge.repository.StudentChargePlanRepository;
-import cn.k12soft.servo.module.charge.service.StudentChargePlanService;
 import cn.k12soft.servo.module.expense.domain.*;
-import cn.k12soft.servo.module.expense.service.PaybackService;
 import cn.k12soft.servo.module.holidaysWeek.service.HolidaysWeekService;
 import cn.k12soft.servo.module.studentChargeRecord.domain.StudentChargeKlassTotal;
 import cn.k12soft.servo.module.studentChargeRecord.domain.StudentChargeRecord;
@@ -23,7 +21,6 @@ import cn.k12soft.servo.repository.AttendanceRepository;
 import cn.k12soft.servo.repository.KlassRepository;
 import cn.k12soft.servo.repository.StudentRepository;
 import cn.k12soft.servo.service.AbstractRepositoryService;
-import cn.k12soft.servo.service.StudentService;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,25 +42,21 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
     private final StudentRepository studentRepository;
     private final StudentChargePlanRepository studentChargePlanRepository;
     private final ChargePlanRepository chargePlanRepository;
-    private final PaybackService paybackService;
-    private final StudentService studentService;
-    private final StudentChargePlanService studentChargePlanService;
     private final StudentAccountRepository studentAccountRepository;
     private final StudentChargeKlassTotalRepository studentChargeKlassTotalRepository;
     private final KlassRepository klassRepository;
 
 
     @Autowired
-    protected StudentChargeRecordService(StudentChargeRecordRepository repository, AttendanceRepository attendanceRepository, HolidaysWeekService holidaysWeekService, StudentRepository studentRepository, StudentChargePlanRepository studentChargePlanRepository, ChargePlanRepository chargePlanRepository, PaybackService paybackService, StudentService studentService, StudentChargePlanService studentChargePlanService, StudentAccountRepository studentAccountRepository, StudentChargeKlassTotalRepository studentChargeKlassTotalRepository, KlassRepository klassRepository) {
+    protected StudentChargeRecordService(StudentChargeRecordRepository repository, AttendanceRepository attendanceRepository,
+                                         HolidaysWeekService holidaysWeekService, StudentRepository studentRepository, StudentChargePlanRepository studentChargePlanRepository, ChargePlanRepository chargePlanRepository,
+                                         StudentAccountRepository studentAccountRepository, StudentChargeKlassTotalRepository studentChargeKlassTotalRepository, KlassRepository klassRepository) {
         super(repository);
         this.attendanceRepository = attendanceRepository;
         this.holidaysWeekService = holidaysWeekService;
         this.studentRepository = studentRepository;
         this.studentChargePlanRepository = studentChargePlanRepository;
         this.chargePlanRepository = chargePlanRepository;
-        this.paybackService = paybackService;
-        this.studentService = studentService;
-        this.studentChargePlanService = studentChargePlanService;
         this.studentAccountRepository = studentAccountRepository;
         this.studentChargeKlassTotalRepository = studentChargeKlassTotalRepository;
         this.klassRepository = klassRepository;
@@ -410,129 +403,126 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
 //        return deductLost;
 //    }
 
-    /**
-     *
-     */
-    public void countLastMonth() {
-
-        Float feeEducation = 0f;
-        Float feeFood = 0f;
-        Float feeOther = 0f;
-        Float feeTotal = 0f;
-
-        Float deductLost = 0f;
-        Float deductFood = 0f;
-
-        Integer daysLost = 0;
-        Integer attendDays = 0;
-
-        // 上个月的开始结束时间
-        LocalDate formDate = LocalDate.now().plusMonths(-1).with(TemporalAdjusters.firstDayOfMonth());
-        LocalDate toDate = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
-        Instant lastMonthFirst = formDate.atStartOfDay().toInstant(ZoneOffset.UTC);
-        Instant lastMonthSecond = toDate.atStartOfDay().toInstant(ZoneOffset.UTC);
-
-
-        List<StudentCharge> studentCharges = this.studentChargePlanRepository.findByCreateAtBetween(lastMonthFirst, lastMonthSecond);
-        for (StudentCharge studentCharge : studentCharges) {
-            String studentChageIds = "";
-            Integer studentChargeId = studentCharge.getId();
-            Integer studentId = studentCharge.getStudentId();
-
-            StudentChargeRecord studentChargeRecord = this.getRepository().findByStudentIdAndCreateAtBetween(studentId, lastMonthFirst, lastMonthSecond);
-
-            Student student = studentRepository.findOne(studentId);
-
-            if (studentChargeRecord == null) {
-                studentChargeRecord = new StudentChargeRecord(
-                        studentId,
-                        studentCharge.getKlassId(),
-                        student.getJoinedAt(),
-                        studentCharge.getSchoolId(),
-                        Instant.now()
-                );
-            } else {
-                if (studentChargeRecord.getStudentChargeIds().contains(studentChargeId.toString())) {
-                    continue;
-                } else {
-
-                    feeEducation = studentChargeRecord.getFeeEducation();
-                    feeFood = studentChargeRecord.getFeeFood();
-                    feeOther = studentChargeRecord.getFeeOther();
-                    feeTotal = studentChargeRecord.getFeeTotal();
-
-                    deductFood = studentChargeRecord.getDeductFood();
-                    deductLost = studentChargeRecord.getDeductLost();
-
-                }
-            }
-
-            studentChageIds = studentChargeRecord.getStudentChargeIds() + studentChargeId.toString() + ",";
-
-            //
-            Integer chargePlanId = studentCharge.getPlanId();
-            ChargePlan chargePlan = this.chargePlanRepository.findOne(chargePlanId);
-            String entityName = chargePlan.getExpenseEntry().getName();
-
-            if (entityName.contains("保育保教") || entityName.contains("保教") || entityName.contains("保育")) {
-
-                // 收入
-                feeEducation = studentCharge.getMoney();
-                feeTotal += feeEducation;
-
-                // 支出
-                if (daysLost != 0) {
-                    studentChargeRecord = paybackCount(studentCharge, studentChargeRecord, attendDays, formDate, toDate);
-                }
-            } else if (entityName.contains("伙食")) {
-
-                // 收入
-                feeFood = studentCharge.getMoney();
-                feeTotal += feeFood;
-
-                // 支出
-                if (daysLost != 0) {
-                    studentChargeRecord = paybackCount(studentCharge, studentChargeRecord, attendDays, formDate, toDate);
-                }
-            } else {
-
-                // 收入
-                feeOther += studentCharge.getMoney();
-                feeTotal += feeOther;
-
-                // 支出
-                if (daysLost != 0) {
-                    studentChargeRecord = paybackCount(studentCharge, studentChargeRecord, attendDays, formDate, toDate);
-                }
-            }
-
-            studentChargeRecord = this.leaveSchool(studentChargeRecord);
-
-            // 欠费余额
-//            studentCharge.getRemainMoney()
-
-            // 剩余额度、余额
-            studentChargeRecord.setBalance(studentCharge.getPaybackMoney());
-
-            // 实收余额
-//            studentChargeRecord.setActual(actual);
-
-            studentChargeRecord.setDaysLost(daysLost);
-            studentChargeRecord.setDaysAttendance(attendDays);
-
-            studentChargeRecord.setFeeEducation(feeEducation);
-            studentChargeRecord.setFeeFood(feeFood);
-            studentChargeRecord.setFeeOther(feeOther);
-            studentChargeRecord.setFeeTotal(feeTotal);
-
-            studentChargeRecord.setDeductLost(deductLost);
-            studentChargeRecord.setDeductFood(deductFood);
-
-            studentChargeRecord.setStudentChargeIds(studentChageIds);
-
-            this.getRepository().save(studentChargeRecord);
-        }
-    }
+//    public void countLastMonth() {
+//
+//        Float feeEducation = 0f;
+//        Float feeFood = 0f;
+//        Float feeOther = 0f;
+//        Float feeTotal = 0f;
+//
+//        Float deductLost = 0f;
+//        Float deductFood = 0f;
+//
+//        Integer daysLost = 0;
+//        Integer attendDays = 0;
+//
+//        // 上个月的开始结束时间
+//        LocalDate formDate = LocalDate.now().plusMonths(-1).with(TemporalAdjusters.firstDayOfMonth());
+//        LocalDate toDate = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+//        Instant lastMonthFirst = formDate.atStartOfDay().toInstant(ZoneOffset.UTC);
+//        Instant lastMonthSecond = toDate.atStartOfDay().toInstant(ZoneOffset.UTC);
+//
+//
+//        List<StudentCharge> studentCharges = this.studentChargePlanRepository.findByCreateAtBetween(lastMonthFirst, lastMonthSecond);
+//        for (StudentCharge studentCharge : studentCharges) {
+//            String studentChageIds = "";
+//            Integer studentChargeId = studentCharge.getId();
+//            Integer studentId = studentCharge.getStudentId();
+//
+//            StudentChargeRecord studentChargeRecord = this.getRepository().findByStudentIdAndCreateAtBetween(studentId, lastMonthFirst, lastMonthSecond);
+//
+//            Student student = studentRepository.findOne(studentId);
+//
+//            if (studentChargeRecord == null) {
+//                studentChargeRecord = new StudentChargeRecord(
+//                        studentId,
+//                        studentCharge.getKlassId(),
+//                        student.getJoinedAt(),
+//                        studentCharge.getSchoolId(),
+//                        Instant.now()
+//                );
+//            } else {
+//                if (studentChargeRecord.getStudentChargeIds().contains(studentChargeId.toString())) {
+//                    continue;
+//                } else {
+//
+//                    feeEducation = studentChargeRecord.getFeeEducation();
+//                    feeFood = studentChargeRecord.getFeeFood();
+//                    feeOther = studentChargeRecord.getFeeOther();
+//                    feeTotal = studentChargeRecord.getFeeTotal();
+//
+//                    deductFood = studentChargeRecord.getDeductFood();
+//                    deductLost = studentChargeRecord.getDeductLost();
+//
+//                }
+//            }
+//
+//            studentChageIds = studentChargeRecord.getStudentChargeIds() + studentChargeId.toString() + ",";
+//
+//            //
+//            Integer chargePlanId = studentCharge.getPlanId();
+//            ChargePlan chargePlan = this.chargePlanRepository.findOne(chargePlanId);
+//            String entityName = chargePlan.getExpenseEntry().getName();
+//
+//            if (entityName.contains("保育保教") || entityName.contains("保教") || entityName.contains("保育")) {
+//
+//                // 收入
+//                feeEducation = studentCharge.getMoney();
+//                feeTotal += feeEducation;
+//
+//                // 支出
+//                if (daysLost != 0) {
+//                    studentChargeRecord = paybackCount(studentCharge, studentChargeRecord, attendDays, formDate, toDate);
+//                }
+//            } else if (entityName.contains("伙食")) {
+//
+//                // 收入
+//                feeFood = studentCharge.getMoney();
+//                feeTotal += feeFood;
+//
+//                // 支出
+//                if (daysLost != 0) {
+//                    studentChargeRecord = paybackCount(studentCharge, studentChargeRecord, attendDays, formDate, toDate);
+//                }
+//            } else {
+//
+//                // 收入
+//                feeOther += studentCharge.getMoney();
+//                feeTotal += feeOther;
+//
+//                // 支出
+//                if (daysLost != 0) {
+//                    studentChargeRecord = paybackCount(studentCharge, studentChargeRecord, attendDays, formDate, toDate);
+//                }
+//            }
+//
+//            studentChargeRecord = this.leaveSchool(studentChargeRecord);
+//
+//            // 欠费余额
+////            studentCharge.getRemainMoney()
+//
+//            // 剩余额度、余额
+//            studentChargeRecord.setBalance(studentCharge.getPaybackMoney());
+//
+//            // 实收余额
+////            studentChargeRecord.setActual(actual);
+//
+//            studentChargeRecord.setDaysLost(daysLost);
+//            studentChargeRecord.setDaysAttendance(attendDays);
+//
+//            studentChargeRecord.setFeeEducation(feeEducation);
+//            studentChargeRecord.setFeeFood(feeFood);
+//            studentChargeRecord.setFeeOther(feeOther);
+//            studentChargeRecord.setFeeTotal(feeTotal);
+//
+//            studentChargeRecord.setDeductLost(deductLost);
+//            studentChargeRecord.setDeductFood(deductFood);
+//
+//            studentChargeRecord.setStudentChargeIds(studentChageIds);
+//
+//            this.getRepository().save(studentChargeRecord);
+//        }
+//    }
 
     /**
      * 退园退费
@@ -546,14 +536,12 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
             StudentAccount studentAccount = studentAccountRepository.findByStudentId(studentChargeRecord.getStudentId());
             StudentCharge studentCharge = studentChargePlanRepository.findByStudentIdAndLastCreateAt(student.getId());
             money = studentAccount.getMoney() + studentCharge.getRemainMoney(); // 退园的费用 = 学生账户的钱 + 缴费的remainMoney的钱，学生账户的退费金额不计入，在其他地方计入
-            // 检查是否有欠费
-//            studentChargePlanService.
             studentChargeRecord.setDeductLeave(money);
         }
         return studentChargeRecord;
     }
 
-    public List<StudentChargeKlassTotal> findStudentChargeKlassTotal(Actor actor, LocalDate formDate, LocalDate toDate) {
+    public Collection<StudentChargeKlassTotal> findStudentChargeKlassTotal(Actor actor, LocalDate formDate, LocalDate toDate) {
         return this.studentChargeKlassTotalRepository.findAllBySchoolIdAndCreateAtBetween(actor.getSchoolId(), formDate, toDate);
     }
 
@@ -572,8 +560,14 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
         if (sckt == null){
             Klass klass = this.klassRepository.findOne(studentCharge.getKlassId());
             sckt = new StudentChargeKlassTotal(studentCharge.getKlassId(), klass.getName(), studentCharge.getSchoolId(), Instant.now());
-
         }
+
+        String studentChargeIds = StringUtils.isBlank(sckt.getStudentChargeIds()) ? "" : sckt.getStudentChargeIds();
+        if (studentChargeIds.contains(studentCharge.getId().toString())){
+            return;
+        }
+
+        studentChargeIds = studentChargeIds + "," + studentCharge.getId();
 
         Float feeEducation = sckt.getFeeEducation();
         Float feeFood = sckt.getFeeFood();
@@ -586,31 +580,49 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
         if (entityName.contains("保育保教") || entityName.contains("保教") || entityName.contains("保育")) {
 
             // 收入
-            feeEducation = studentCharge.getMoney();
-            feeTotal += feeEducation;
-            feeAllTotal += feeEducation;
+            feeEducation += studentCharge.getMoney();
+            feeTotal += studentCharge.getMoney();
+            feeAllTotal += studentCharge.getMoney();
 
         } else if (entityName.contains("伙食")) {
 
             // 收入
-            feeFood = studentCharge.getMoney();
-            feeTotal += feeFood;
-            feeAllTotal += feeFood;
+            feeFood += studentCharge.getMoney();
+            feeTotal += studentCharge.getMoney();
+            feeAllTotal += studentCharge.getMoney();
 
         } else {
-
             // 收入
+             Map<String, Object> feeOtherMap = new HashMap<>();
             JSONObject feeOtherJson = new JSONObject();
-            feeAllTotal += studentCharge.getMoney();
-            feeOtherJson.put(entityName, studentCharge.getMoney());
-            feeOther = feeOther + "," + feeOtherJson.toString();
+            if (!StringUtils.isBlank(feeOther)){
+                feeOtherMap = feeOtherJson.fromObject(feeOther);
+            }
 
+            // 如果为空的key，添加；如果不为空，先取出来，再累加
+            Float feeMoneyFlaot = studentCharge.getMoney();
+            if (feeOtherMap.get(entityName) != null){
+                Float getMapMoney = Float.valueOf(feeOtherMap.get(entityName).toString());
+                feeMoneyFlaot += getMapMoney;
+            }
+            feeOtherMap.put(entityName, feeMoneyFlaot);
+
+            feeAllTotal += studentCharge.getMoney();
+            feeOther = feeOtherMap.toString();
+
+        }
+
+        // 班级在册人数
+        if (sckt.getListed() == null || sckt.getListed() < 0){
+            Integer klassStudentTotal = studentRepository.findAllBySchoolIdAndKlassIdAndIsShow(schoolId, klassId, true).size();
+            sckt.setListed(klassStudentTotal);
         }
 
         sckt.setFeeFood(feeFood);
         sckt.setFeeEducation(feeEducation);
         sckt.setFeeTotal(feeTotal);
         sckt.setFeeAllTotal(feeAllTotal);
+        sckt.setStudentChargeIds(studentChargeIds);
 
         sckt.setFeeOther(feeOther);
 

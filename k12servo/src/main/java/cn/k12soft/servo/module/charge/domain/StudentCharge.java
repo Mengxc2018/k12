@@ -31,7 +31,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
  */
 @Entity
 @DynamicUpdate
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"studentId", "EXPENSE_ENTRY_ID"}))
 public class StudentCharge extends SchoolEntity {
 
   @Id

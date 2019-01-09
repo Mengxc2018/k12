@@ -6,7 +6,6 @@ import cn.k12soft.servo.domain.School;
 import cn.k12soft.servo.domain.Vacation;
 import cn.k12soft.servo.domain.enumeration.StudentAccountOpType;
 import cn.k12soft.servo.module.account.domain.StudentAccount;
-import cn.k12soft.servo.module.account.domain.StudentAccountChangeRecord;
 import cn.k12soft.servo.module.account.service.StudentAccountChangeRecordService;
 import cn.k12soft.servo.module.account.service.StudentAccountService;
 import cn.k12soft.servo.module.charge.domain.ChargePlan;
@@ -22,6 +21,7 @@ import cn.k12soft.servo.module.revenue.domain.IncomeDetail;
 import cn.k12soft.servo.module.revenue.domain.IncomeSrc;
 import cn.k12soft.servo.module.revenue.service.IncomeDetailService;
 import cn.k12soft.servo.module.revenue.service.IncomeService;
+import cn.k12soft.servo.module.studentChargeRecord.service.StudentChargeRecordService;
 import cn.k12soft.servo.module.wxLogin.service.WxService;
 import cn.k12soft.servo.service.AbstractEntityService;
 import cn.k12soft.servo.service.InterestKlassService;
@@ -50,12 +50,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class StudentChargePlanService extends AbstractEntityService<StudentCharge, Integer> {
     private static final Logger logger = LoggerFactory.getLogger(StudentChargePlanService.class);
-    private final WxService wxService;
+    private final StudentChargeRecordService studentChargeRecordService;
 
     @Autowired
-    public StudentChargePlanService(StudentChargePlanRepository entityRepository, WxService wxService) {
+    public StudentChargePlanService(StudentChargePlanRepository entityRepository, StudentChargeRecordService studentChargeRecordService) {
         super(entityRepository);
-        this.wxService = wxService;
+        this.studentChargeRecordService = studentChargeRecordService;
     }
 
     @Override
@@ -261,6 +261,11 @@ public class StudentChargePlanService extends AbstractEntityService<StudentCharg
                 boolean isNext = studentCharge.checkAndCreateNext(currentTime);
             }
             this.save(studentCharge);
+
+            // 统计班级收入
+//            CompletableFuture completableFuture = CompletableFuture.runAsync(()->{
+//                this.studentChargeRecordService.countStudentChargeKlass(studentCharge);
+//            });
 
             // 微信服务推送
 //            CompletableFuture completableFuture = CompletableFuture.supplyAsync(()->{

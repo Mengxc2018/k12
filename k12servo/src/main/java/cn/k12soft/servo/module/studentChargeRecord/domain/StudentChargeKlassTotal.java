@@ -1,5 +1,6 @@
 package cn.k12soft.servo.module.studentChargeRecord.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -19,6 +20,9 @@ public class StudentChargeKlassTotal {
     private Integer klassId;
     private String klassName;
 
+    @ApiModelProperty("在册人数")
+     private Integer listed;
+
     @ApiModelProperty("固定有伙食费")
     private Float feeFood = 0f;
 
@@ -34,9 +38,13 @@ public class StudentChargeKlassTotal {
     @ApiModelProperty("所有费用的统计")
     private Float feeAllTotal;
 
-    private Integer schoolId;
+    @ApiModelProperty("收入的id，防止重复")
+    @JsonIgnore
+    private String studentChargeIds;
 
+    private Integer schoolId;
     private Instant createAt;
+    private String remark;
 
     public StudentChargeKlassTotal(){
 
@@ -55,17 +63,19 @@ public class StudentChargeKlassTotal {
 
     }
 
-    public StudentChargeKlassTotal(Long id, Integer klassId, String klassName, Float feeFood, Float feeEducation, String feeOther, Float feeTotal, Float feeAllTotal, Integer schoolId, Instant createAt) {
-        this.id = id;
+    public StudentChargeKlassTotal(Integer klassId, String klassName, Integer listed, Float feeFood, Float feeEducation, String feeOther, Float feeTotal, Float feeAllTotal, String studentChargeIds, Integer schoolId, Instant createAt, String remark) {
         this.klassId = klassId;
         this.klassName = klassName;
+        this.listed = listed;
         this.feeFood = feeFood;
         this.feeEducation = feeEducation;
         this.feeOther = feeOther;
         this.feeTotal = feeTotal;
         this.feeAllTotal = feeAllTotal;
+        this.studentChargeIds = studentChargeIds;
         this.schoolId = schoolId;
         this.createAt = createAt;
+        this.remark = remark;
     }
 
     public Long getId() {
@@ -146,5 +156,29 @@ public class StudentChargeKlassTotal {
 
     public void setCreateAt(Instant createAt) {
         this.createAt = createAt;
+    }
+
+    public String getStudentChargeIds() {
+        return studentChargeIds;
+    }
+
+    public void setStudentChargeIds(String studentChargeIds) {
+        this.studentChargeIds = studentChargeIds;
+    }
+
+    public Integer getListed() {
+        return listed;
+    }
+
+    public void setListed(Integer listed) {
+        this.listed = listed;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }
