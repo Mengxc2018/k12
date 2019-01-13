@@ -2,7 +2,6 @@ package cn.k12soft.servo.module.studentChargeRecord.domain.dto;
 
 
 import io.swagger.annotations.ApiModelProperty;
-import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.Instant;
 
@@ -19,7 +18,6 @@ public class StudentChargeKlassSummarySheetDTO {
     private Float feeTotal;
 
     @ApiModelProperty("所有费用的统计")
-    @JsonIgnore
     private Float feeAllTotal;
 
     private Integer schoolId;

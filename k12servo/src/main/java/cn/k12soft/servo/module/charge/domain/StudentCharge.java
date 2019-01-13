@@ -31,6 +31,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
  */
 @Entity
 @DynamicUpdate
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"studentId", "EXPENSE_ENTRY_ID"}))
 public class StudentCharge extends SchoolEntity {
 
   @Id
@@ -65,7 +66,7 @@ public class StudentCharge extends SchoolEntity {
   private ExpenseIdentDiscount identDiscount; // 应用类型
 
   @Column(nullable = false)
-  private Float money;  // 应缴费用
+  private Float money;
 
   @Column(nullable = false)
   private Float remainMoney; // 应该补交金额
@@ -294,13 +295,12 @@ public class StudentCharge extends SchoolEntity {
     public float calcPayMoney(){
       float payMoney = this.money;
       boolean isDisc = false;
-      Float pbm = paybackMoney == null ? 0f : paybackMoney;
       if(periodDiscount != null && periodDiscount.getDiscountRate() != null && periodDiscount.getDiscountRate().floatValue()>0){
           payMoney = payMoney*(1-periodDiscount.getDiscountRate().floatValue()/100f);
           isDisc = true;
       }
       if(identDiscount != null && identDiscount.getDiscountRate() != null && identDiscount.getDiscountRate().floatValue()>0){
-          payMoney = pbm * (1-identDiscount.getDiscountRate().floatValue()/100f);
+          payMoney = paybackMoney * (1-identDiscount.getDiscountRate().floatValue()/100f);
           isDisc = true;
       }
       if(!isDisc){

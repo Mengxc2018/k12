@@ -36,7 +36,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,11 +50,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class StudentChargePlanService extends AbstractEntityService<StudentCharge, Integer> {
     private static final Logger logger = LoggerFactory.getLogger(StudentChargePlanService.class);
     private final StudentChargeRecordService studentChargeRecordService;
+    private final WxService wxService;
 
     @Autowired
-    public StudentChargePlanService(StudentChargePlanRepository entityRepository, StudentChargeRecordService studentChargeRecordService) {
+    public StudentChargePlanService(StudentChargePlanRepository entityRepository, StudentChargeRecordService studentChargeRecordService, WxService wxService) {
         super(entityRepository);
         this.studentChargeRecordService = studentChargeRecordService;
+        this.wxService = wxService;
     }
 
     @Override
