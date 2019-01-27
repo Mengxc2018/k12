@@ -47,7 +47,7 @@ public class StudentChargeRecordManagement {
         return studentChargeRecordService.findStudentChargeRecord(actor,klassId, formDate, toDate);
     }
 
-    @ApiOperation("查询所有班级收入")
+    @ApiOperation("查询所有班级收入")//脚本
     @GetMapping("/findStudentChargeKlassTotal")
     @Timed
     public Collection<StudentChargeKlassTotalDTO> findStudentChargeKlassTotal(@Active Actor actor,
@@ -60,9 +60,9 @@ public class StudentChargeRecordManagement {
     @GetMapping("/findStudentChargeKlassSummarySheet")
     @Timed
     public Collection<StudentChargeKlassSummarySheetDTO> findStudentChargeKlassSummarySheet(@Active Actor actor,
-                                                                                            @RequestParam LocalDate formDate,
-                                                                                            @RequestParam LocalDate toDate){
-        return this.studentChargeKlassSummarySheetMapper.toDTOs(studentChargeRecordService.findStudentChargeKlassTotal(actor, formDate, toDate));
+                                                                        @RequestParam LocalDate formDate,
+                                                                        @RequestParam LocalDate toDate){
+        return this.studentChargeRecordService.findAllBySchoolIdAndCreateAtBetween(actor, formDate, toDate);
     }
 
 

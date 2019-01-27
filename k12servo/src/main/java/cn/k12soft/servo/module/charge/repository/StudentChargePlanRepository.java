@@ -1,11 +1,14 @@
 package cn.k12soft.servo.module.charge.repository;
 
+import cn.k12soft.servo.domain.enumeration.StudentChargeStatus;
 import cn.k12soft.servo.module.charge.domain.StudentCharge;
 import cn.k12soft.servo.module.expense.domain.ExpenseEntry;
 import cn.k12soft.servo.module.expense.domain.ExpenseIdentDiscount;
 import cn.k12soft.servo.module.expense.domain.ExpensePeriodDiscount;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -86,4 +89,29 @@ public interface StudentChargePlanRepository extends JpaRepository<StudentCharge
   List<StudentCharge> findByStudentIdAndCreateAtBetweenForSql(@Param("studentId") Integer studentId,
                                                               @Param("first") Instant first,
                                                               @Param("second") Instant second);
+
+  @Query(value = "select * from student_charge sc"
+          + " where sc.SCHOOL_ID = :schoolId"
+          + " and (DATE(sc.create_at) BETWEEN DATE(:formDate) AND DATE(:toDate))"
+          ,nativeQuery = true)
+  List<StudentCharge> findAllBySchoolIdAndCreateAtBetween(@Param("schoolId") Integer schoolId,
+                                                          @Param("formDate") LocalDate formDate,
+                                                          @Param("toDate") LocalDate toDate);
+
+  // 需要过滤周期为一次性、已经结束周期的、教师没有确认的
+  @Query(value = "select * from student_charge sc"
+          + " join expense_period_discount epd ON epd.id = sc.PERIOD_DISCOUNT_ID"
+          + " where sc.SCHOOL_ID = :schoolId"
+          + "  AND (DATE(sc.create_at) BETWEEN DATE(:firstDayOfMonth) AND DATE(:lastDayOfMonth))"
+          + "  AND (epd.period_type != 'ONCE')"
+          + "  AND NOW() < sc.END_AT"
+          + "  AND sc.t_check = '1'"
+          + "  AND sc.status = 'EXCUTE'"
+          + " GROUP BY sc.id"
+          , nativeQuery = true)
+  List<StudentCharge> findAllByStatusAndCreateAt(@Param("schoolId") Integer schoolId,
+                                                 @Param("firstDayOfMonth") LocalDate firstDayOfMonth,
+                                                 @Param("lastDayOfMonth") LocalDate lastDayOfMonth);
+
+  List<StudentCharge> findAllBySchoolIdAndKlassIdAndStatusAndCreateAtBetween(Integer schoolId, Integer klassId, StudentChargeStatus excute, Instant first, Instant second);
 }

@@ -1,9 +1,7 @@
 package cn.k12soft.servo.module.revenue.service;
 
 import cn.k12soft.servo.module.revenue.domain.Income;
-import cn.k12soft.servo.module.revenue.domain.Payout;
 import cn.k12soft.servo.module.revenue.repository.IncomeRepository;
-import cn.k12soft.servo.module.revenue.repository.PayoutRepository;
 import cn.k12soft.servo.service.AbstractEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

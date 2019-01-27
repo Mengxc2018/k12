@@ -23,5 +23,4 @@ public interface StudentChargeRecordRepository extends JpaRepository<StudentChar
 
     List<StudentChargeRecord> findBySchoolIdAndCreateAtBetween(Integer schoolId, Instant first, Instant second);
 
-    StudentChargeRecord findByStudentIdAndCreateAtBetween(Integer studentId, Instant lastMonthFirst, Instant lastMonthSecond);
 }

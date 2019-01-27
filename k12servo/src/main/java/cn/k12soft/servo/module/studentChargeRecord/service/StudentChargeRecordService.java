@@ -15,6 +15,7 @@ import cn.k12soft.servo.module.expense.domain.*;
 import cn.k12soft.servo.module.holidaysWeek.service.HolidaysWeekService;
 import cn.k12soft.servo.module.studentChargeRecord.domain.StudentChargeKlassTotal;
 import cn.k12soft.servo.module.studentChargeRecord.domain.StudentChargeRecord;
+import cn.k12soft.servo.module.studentChargeRecord.domain.dto.StudentChargeKlassSummarySheetDTO;
 import cn.k12soft.servo.module.studentChargeRecord.repository.StudentChargeKlassTotalRepository;
 import cn.k12soft.servo.module.studentChargeRecord.repository.StudentChargeRecordRepository;
 import cn.k12soft.servo.repository.AttendanceRepository;
@@ -80,7 +81,7 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
             isgone = false;
         }
 
-        // 获取周期内的应出勤天数
+        // 获取月周期内的应出勤天数
         Integer days = holidaysWeekService.firstDayToNow(instantNow);
 
         // 这个月
@@ -632,4 +633,39 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
     }
 
 
+    public Collection<StudentChargeKlassSummarySheetDTO> findAllBySchoolIdAndCreateAtBetween(Actor actor, LocalDate formDate, LocalDate toDate) {
+        Integer schoolId = actor.getSchoolId();
+        List<StudentChargeKlassSummarySheetDTO> klasslist = new ArrayList<>();
+
+        List<Klass> klasses = this.klassRepository.findAllBySchoolId(schoolId);
+        for (Klass klass : klasses){
+            StudentChargeKlassSummarySheetDTO dto = new StudentChargeKlassSummarySheetDTO();
+            Integer listed = this.studentRepository.findByKlassAndIsShow(klass, true).size();
+            Float feeAllTotal = 0f;
+            Float feeTotal = 0f;
+
+            List<StudentCharge> studentCharges = this.studentChargePlanRepository.findAllBySchoolIdAndCreateAtBetween(schoolId, formDate, toDate);
+            for (StudentCharge studentCharge : studentCharges){
+                feeAllTotal += studentCharge.getMoney();
+                String entityName = studentCharge.getExpenseEntry().getName();
+                if (entityName.contains("保育保教")
+                        || entityName.contains("保教")
+                        || entityName.contains("保育")
+                        || entityName.contains("教育")
+                        || entityName.contains("伙食")) {
+                    feeTotal += studentCharge.getMoney();
+                }
+            }
+            dto.setKlassId(klass.getId());
+            dto.setKlassName(klass.getName());
+            dto.setListed(listed);
+            dto.setFeeAllTotal(feeAllTotal);
+            dto.setFeeTotal(feeTotal);
+            dto.setSchoolId(schoolId);
+            klasslist.add(dto);
+        }
+
+
+        return klasslist;
+    }
 }

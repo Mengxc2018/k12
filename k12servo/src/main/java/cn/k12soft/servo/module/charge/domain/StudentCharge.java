@@ -4,6 +4,7 @@ import cn.k12soft.servo.domain.Actor;
 import cn.k12soft.servo.domain.School;
 import cn.k12soft.servo.domain.SchoolEntity;
 import cn.k12soft.servo.domain.enumeration.KlassType;
+import cn.k12soft.servo.domain.enumeration.StudentChargeStatus;
 import cn.k12soft.servo.module.expense.domain.ExpenseEntry;
 import cn.k12soft.servo.module.expense.domain.ExpenseIdentDiscount;
 import cn.k12soft.servo.module.expense.domain.ExpensePeriodDiscount;
@@ -23,6 +24,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 
@@ -87,6 +90,13 @@ public class StudentCharge extends SchoolEntity {
   private Instant checkAt;// 核对时间
 
   private Float paybackMoney;// 上个月应退费的金额
+
+  @ApiModelProperty("教师是否核对，核对后脚本能查询到")
+  private boolean tCheck;  // 教师是否核对，核对后脚本能查询到
+
+  @ApiModelProperty("当前该收费计划状态，状态为执行时脚本才能查到")
+  @Enumerated(EnumType.STRING)
+  private StudentChargeStatus status;  // 当前该收费计划状态
 
   public Integer getId() {
     return id;
@@ -240,7 +250,7 @@ public class StudentCharge extends SchoolEntity {
     this.paybackMoney = paybackMoney;
   }
 
-  StudentCharge() {}
+  public StudentCharge() {}
 
   public StudentCharge(Integer schoolId) {
     super(schoolId);
@@ -256,6 +266,22 @@ public class StudentCharge extends SchoolEntity {
       return true;
     }
     return false;
+  }
+
+  public boolean getIstCheck() {
+    return tCheck;
+  }
+
+  public void settCheck(boolean tCheck) {
+    this.tCheck = tCheck;
+  }
+
+  public StudentChargeStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(StudentChargeStatus status) {
+    this.status = status;
   }
 
   public boolean checkAndCreateNext(long currentTime) {

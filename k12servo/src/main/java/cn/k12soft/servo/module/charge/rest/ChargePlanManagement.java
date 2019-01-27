@@ -9,9 +9,7 @@ import cn.k12soft.servo.domain.Actor;
 import cn.k12soft.servo.domain.InterestKlass;
 import cn.k12soft.servo.domain.Klass;
 import cn.k12soft.servo.domain.Student;
-import cn.k12soft.servo.domain.enumeration.ChargePlanTargetType;
-import cn.k12soft.servo.domain.enumeration.KlassType;
-import cn.k12soft.servo.domain.enumeration.StudentAccountOpType;
+import cn.k12soft.servo.domain.enumeration.*;
 import cn.k12soft.servo.module.account.domain.StudentAccount;
 import cn.k12soft.servo.module.account.domain.StudentAccountChangeRecord;
 import cn.k12soft.servo.module.account.service.StudentAccountChangeRecordService;
@@ -28,7 +26,6 @@ import cn.k12soft.servo.module.charge.service.StudentChargePlanService;
 import cn.k12soft.servo.module.expense.domain.ExpenseEntry;
 import cn.k12soft.servo.module.expense.domain.ExpenseIdentDiscount;
 import cn.k12soft.servo.module.expense.domain.ExpensePeriodDiscount;
-import cn.k12soft.servo.module.expense.domain.ExpensePeriodType;
 import cn.k12soft.servo.module.expense.repository.ExpenseEntryRepository;
 import cn.k12soft.servo.module.expense.service.ExpenseEntryService;
 import cn.k12soft.servo.module.expense.service.PaybackService;
@@ -38,6 +35,7 @@ import cn.k12soft.servo.module.revenue.domain.IncomeSrc;
 import cn.k12soft.servo.module.revenue.service.IncomeDetailService;
 import cn.k12soft.servo.module.revenue.service.IncomeService;
 import cn.k12soft.servo.module.wxLogin.service.WxService;
+import cn.k12soft.servo.repository.StudentRepository;
 import cn.k12soft.servo.security.Active;
 import cn.k12soft.servo.security.permission.PermissionRequired;
 import cn.k12soft.servo.service.InterestKlassService;
@@ -48,7 +46,6 @@ import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +83,7 @@ public class ChargePlanManagement {
   private PaybackService paybackService;
   private final ExpenseEntryRepository expenseEntryRepository;
   private final WxService wxService;
+  private final StudentRepository studentRepository;
 
   @Autowired
   public ChargePlanManagement(ChargePlanService chargePlanService,
@@ -99,7 +97,7 @@ public class ChargePlanManagement {
                               IncomeDetailService incomeDetailService,
                               KlassService klassService,
                               PaybackService paybackService,
-                              ExpenseEntryRepository expenseEntryRepository, WxService wxService) {
+                              ExpenseEntryRepository expenseEntryRepository, WxService wxService, StudentRepository studentRepository) {
     this.chargePlanService = chargePlanService;
     this.studentChargePlanService = studentChargePlanService;
     this.interestKlassService = interestKlassService;
@@ -113,6 +111,7 @@ public class ChargePlanManagement {
     this.paybackService = paybackService;
     this.expenseEntryRepository = expenseEntryRepository;
     this.wxService = wxService;
+    this.studentRepository = studentRepository;
   }
 
   @ApiOperation("批量：发起收费计划")
@@ -164,12 +163,15 @@ public class ChargePlanManagement {
 
       String[] ids = StringUtils.splitByWholeSeparator(target, ",");
       KlassType klassType = null;
+      Klass klass = null;
+      KlassTypeCharge klassTypeCharge = null;
       int periodDate = Times.time2yyyyMM(System.currentTimeMillis());
       // 已经创建了的收费计划(退费转入费种的时候，会提前生成下个周期的收费计划, 所以现在发起收费计划，要过滤掉已有的)
       List<StudentCharge> alreadyCreatedList = this.studentChargePlanService
               .findAllBySchoolAndExpenseEntry(actor.getSchoolId(), expenseEntry);
       if (targetType == ChargePlanTargetType.COMMON_KLASS.getId()) {
         klassType = KlassType.COMMON;
+        klassTypeCharge = KlassTypeCharge.COMMON;
         // 避免重名
         for (String klassId : ids) {
           Map<String, String> queryMap = new HashMap<>();
@@ -179,6 +181,7 @@ public class ChargePlanManagement {
                   endAt, Integer.valueOf(klassId), klassType, periodDate);
         }
       } else if (targetType == ChargePlanTargetType.INTEREST_KLASS.getId()) {
+        klassTypeCharge = KlassTypeCharge.INTEREST_SMALL;
         for (String interestKlassId : ids) {
           InterestKlass interestKlass = this.interestKlassService.get(Integer.valueOf(interestKlassId));
           klassType = interestKlass.getType();
@@ -188,9 +191,11 @@ public class ChargePlanManagement {
 
       } else if (targetType == ChargePlanTargetType.STUDENT.getId()) {
         List<Student> studentList = new LinkedList<>();
+        klassTypeCharge = KlassTypeCharge.COMMON;
         for (String studentId : ids) {
 //            Student student = studentService.findByName(studentId);
-            List<Student> students = studentService.getByName(studentId);
+          klass = this.studentRepository.findOne(Integer.valueOf(studentId)).getKlass();
+          List<Student> students = studentService.getByName(studentId);
             for (Student student : students){
                 Optional<Student> studentOptinal = this.studentService.find(student.getId());
                 if (studentOptinal.isPresent()) {
@@ -203,6 +208,10 @@ public class ChargePlanManagement {
       }
       if (list.size() > 0) {
         ChargePlan chargePlan = new ChargePlan(actor.getSchoolId());
+        if (klass!=null){
+          chargePlan.setKlass(klass);
+        }
+        chargePlan.setKlassType(klassTypeCharge);
         chargePlan.setExpenseEntry(expenseEntry);
         chargePlan.setPeriodDiscount(periodDiscount);
         chargePlan.setIdentDiscount(identDiscount);
@@ -267,12 +276,15 @@ public class ChargePlanManagement {
 
     String[] ids = StringUtils.splitByWholeSeparator(target, ",");
     KlassType klassType = null;
+    Klass klass = null;
+    KlassTypeCharge klassTypeCharge = null;
     int periodDate = Times.time2yyyyMM(System.currentTimeMillis());
     // 已经创建了的收费计划(退费转入费种的时候，会 提前生成 下个周期的收费计划, 所以现在发起收费计划，要过滤掉已有的)
     List<StudentCharge> alreadyCreatedList = this.studentChargePlanService
       .findAllBySchoolAndExpenseEntry(actor.getSchoolId(), expenseEntry);
     if (targetType == ChargePlanTargetType.COMMON_KLASS.getId()) {
       klassType = KlassType.COMMON;
+      klassTypeCharge = KlassTypeCharge.COMMON;
       for (String klassId : ids) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("klassId", klassId);
@@ -281,6 +293,7 @@ public class ChargePlanManagement {
           endAt, Integer.valueOf(klassId), klassType, periodDate);
       }
     } else if (targetType == ChargePlanTargetType.INTEREST_KLASS.getId()) {
+      klassTypeCharge = KlassTypeCharge.INTEREST_SMALL;
       for (String interestKlassId : ids) {
         InterestKlass interestKlass = this.interestKlassService.get(Integer.valueOf(interestKlassId));
         klassType = interestKlass.getType();
@@ -290,7 +303,9 @@ public class ChargePlanManagement {
 
     } else if (targetType == ChargePlanTargetType.STUDENT.getId()) {
       List<Student> studentList = new LinkedList<>();
+      klassTypeCharge = KlassTypeCharge.COMMON;
       for (String studentId : ids) {
+        klass = this.studentRepository.findOne(Integer.valueOf(studentId)).getKlass();
         Optional<Student> studentOptinal = this.studentService.find(Integer.valueOf(studentId));
         if (studentOptinal.isPresent()) {
           studentList.add(studentOptinal.get());
@@ -301,6 +316,10 @@ public class ChargePlanManagement {
     }
     if (list.size() > 0) {
       ChargePlan chargePlan = new ChargePlan(actor.getSchoolId());
+      if (klass!=null){
+        chargePlan.setKlass(klass);
+      }
+      chargePlan.setKlassType(klassTypeCharge);
       chargePlan.setExpenseEntry(expenseEntry);
       chargePlan.setPeriodDiscount(periodDiscount);
       chargePlan.setIdentDiscount(identDiscount);
@@ -322,27 +341,36 @@ public class ChargePlanManagement {
   @GetMapping(value = "/charge/findPlan")
   @PermissionRequired(CHARGE_PLAN_GET)
   @Timed
-  Page getByCreateAt(@Active Actor actor,
-                     @RequestParam(value = "startTime", required = true) long startTime,
+  Page<ChargePlan> getByCreateAt(@Active Actor actor,
+//                     @RequestParam(value = "startTime", required = true) long startTime,
                      @RequestParam(value = "page", required = true) int page,
-                     @RequestParam(value = "size") Integer size) {
+                     @RequestParam(value = "size") Integer size,
+                     @RequestParam(required = false) @Valid Integer klassId,
+                     @RequestParam(required = false) @Valid Integer expenseId,
+                     @RequestParam(required = false) @Valid Long fromDate,
+                     @RequestParam(required = false) @Valid Long toDate,
+                     @RequestParam(required = false) @Valid KlassTypeCharge type) {
     int pageSize = 10;
     if (size != null) {
       pageSize = size;
     }
-    if (startTime == 0) {
-      startTime = System.currentTimeMillis();
-    }
-    page = Math.max(0, page - 1);
-    long firstDayOfMonthTime = Times.monthStartTime(startTime);
-    Times.getBeginAndEndOfCurrentMonth();
-    Date date = new Date();
-    date.setTime(firstDayOfMonthTime);
-    Instant startTimeInstant = date.toInstant();
+//    if (startTime == 0) {
+//      startTime = System.currentTimeMillis();
+//    }
+//    page = Math.max(0, page - 1);
+//    long firstDayOfMonthTime = Times.monthStartTime(startTime);
+//    Times.getBeginAndEndOfCurrentMonth();
+//    Date date = new Date();
+//    date.setTime(firstDayOfMonthTime);
+//    Instant startTimeInstant = date.toInstant();
+
+     Instant from = Instant.ofEpochMilli(fromDate);
+     Instant to = Instant.ofEpochMilli(toDate);
 
     Sort sort = new Sort(Sort.Direction.DESC, "createAt");
     Pageable pageable = new PageRequest(page, pageSize, sort);
-    return this.chargePlanService.findBySchoolIdAndCreateAt(actor.getSchoolId(), startTimeInstant, pageable);
+    return this.chargePlanService.findBySchoolIdAndCreateAt(actor.getSchoolId(), pageable,
+            klassId, expenseId, from, to, type);
   }
 
   @ApiOperation("修改收费计划")
@@ -420,8 +448,10 @@ public class ChargePlanManagement {
   @GetMapping(value = "/charge/findStuPlanByKlass")
   @PermissionRequired(CHARGE_PLAN_GET)
   @Timed
-  List<StudentCharge> getStudentPlanByKlass(@Active Actor actor, @RequestParam(value = "startTime", required = true) long startTime,
-                                            @RequestParam("klassId") int klassId, @RequestParam("expenseId") int expenseId){
+  List<StudentCharge> getStudentPlanByKlass(@Active Actor actor,
+                                            @RequestParam(value = "startTime", required = true) long startTime,
+                                            @RequestParam("klassId") int klassId,
+                                            @RequestParam("expenseId") int expenseId){
     if (startTime == 0) {
       startTime = System.currentTimeMillis();
     }
@@ -685,9 +715,14 @@ public class ChargePlanManagement {
     return remainList;
   }
 
-  private void _createStudentCharge(Integer schoolId, List<StudentCharge> list, List<Student> studentList,
-                                    List<StudentCharge> alreadyCreatedList, ExpenseEntry expenseEntry, ExpenseIdentDiscount identDiscount,
-                                    ExpensePeriodDiscount periodDiscount, float money, Instant endAt, int klassId, KlassType klassType,
+  private void _createStudentCharge(Integer schoolId, List<StudentCharge> list,
+                                    List<Student> studentList,
+                                    List<StudentCharge> alreadyCreatedList,
+                                    ExpenseEntry expenseEntry,
+                                    ExpenseIdentDiscount identDiscount,
+                                    ExpensePeriodDiscount periodDiscount,
+                                    float money, Instant endAt,
+                                    int klassId, KlassType klassType,
                                     int periodDate) {
     for (Student student : studentList) {
       StudentCharge studentCharge = null;
@@ -703,6 +738,8 @@ public class ChargePlanManagement {
         }
       } else {
         StudentCharge stuChargePlan = new StudentCharge(schoolId);
+        stuChargePlan.settCheck(false);
+        stuChargePlan.setStatus(StudentChargeStatus.EXCUTE);
         stuChargePlan.setPeriodDate(periodDate);
         stuChargePlan.setStudentId(student.getId());
         stuChargePlan.setStudentName(student.getName());
@@ -954,7 +991,7 @@ public class ChargePlanManagement {
               studentAccount.setMoney(0f);
           }
       }else{
-          studentCharge.setRemainMoney(0f);//TODO 要对一下   缴费的时候，如果不使用账户余额，则清除欠费，表示 系统外已经交完了欠费???
+          studentCharge.setRemainMoney(0f);//
       }
 
       Income income = new Income(studentCharge.getSchoolId());
@@ -993,19 +1030,25 @@ public class ChargePlanManagement {
       this.studentChargePlanService.save(studentCharge);
   }
 
-  @ApiOperation("结清欠款")
-  @GetMapping("/feeCloseOff")
-  public void feeCloseOff(@RequestParam @Valid Integer studentChargeId){
-    StudentCharge studentCharge = studentChargePlanService.get(studentChargeId);
-    StudentAccount studentAccount = this.studentAccountService.findByStudentId(studentCharge.getStudentId());
-    try {
-      if(studentCharge.getMoney() > studentAccount.getMoney()) {
-        throw new Exception("学生账户余额不足，无法结清欠款");
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    checkArrears(studentCharge, 1);
+  @ApiOperation("查询员工没有确认缴费计划")
+  @GetMapping("/findUnCheck")
+  public List<StudentCharge> findUnCheck(@Active Actor actor,
+                                         @RequestParam Integer klassId){
+    return this.studentChargePlanService.findUnCheck(actor, klassId);
+  }
+
+  @ApiOperation("员工确认收费计划")
+  @PutMapping("/tCheck")
+  public void tCheck(@Active Actor actor,
+                     @RequestParam @Valid Integer id){
+    this.studentChargePlanService.tCheck(actor, id);
+  }
+
+  @ApiOperation("手动结束周期计划")
+  @PutMapping("/endStuCharge")
+  public void endStuCharge(@Active Actor actor,
+                           @RequestParam @Valid Integer id){
+    this.studentChargePlanService.endStuCharge(actor, id);
   }
 
 }

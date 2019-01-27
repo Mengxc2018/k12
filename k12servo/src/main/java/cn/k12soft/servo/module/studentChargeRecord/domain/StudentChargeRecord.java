@@ -24,7 +24,7 @@ public class StudentChargeRecord {
     private Instant createAt;
 
     @JsonIgnore
-    private String StudentChargeIds;    // 当月学生的缴费id
+    private String studentChargeIds;    // 当月学生的缴费id
 
     private String lastMonthIds;    // 统计上个月的收费计划的id，id用英文逗号隔开
 
@@ -99,7 +99,7 @@ public class StudentChargeRecord {
         this.klassId = klassId;
         this.schoolId = schoolId;
         this.createAt = createAt;
-        StudentChargeIds = studentChargeIds;
+        this.studentChargeIds = studentChargeIds;
         this.lastMonthIds = lastMonthIds;
         this.joinAt = joinAt;
         this.feeEducation = feeEducation;
@@ -307,11 +307,11 @@ public class StudentChargeRecord {
     }
 
     public String getStudentChargeIds() {
-        return StudentChargeIds;
+        return studentChargeIds;
     }
 
     public void setStudentChargeIds(String studentChargeIds) {
-        StudentChargeIds = studentChargeIds;
+        this.studentChargeIds = studentChargeIds;
     }
 
     public String getLastMonthIds() {

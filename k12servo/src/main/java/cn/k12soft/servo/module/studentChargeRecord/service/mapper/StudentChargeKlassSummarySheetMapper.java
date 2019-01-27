@@ -10,7 +10,6 @@ public class StudentChargeKlassSummarySheetMapper extends EntityMapper<StudentCh
     @Override
     protected StudentChargeKlassSummarySheetDTO convert(StudentChargeKlassTotal sckt) {
         return new StudentChargeKlassSummarySheetDTO(
-                sckt.getId(),
                 sckt.getKlassId(),
                 sckt.getKlassName(),
                 sckt.getListed(),

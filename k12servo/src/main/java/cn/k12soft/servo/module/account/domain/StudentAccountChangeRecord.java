@@ -1,6 +1,8 @@
 package cn.k12soft.servo.module.account.domain;
 
 import cn.k12soft.servo.domain.Actor;
+import cn.k12soft.servo.domain.Klass;
+import cn.k12soft.servo.domain.Student;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -13,11 +15,13 @@ public class StudentAccountChangeRecord{
     @GeneratedValue
     private Integer id;
     @Column(nullable = false)
-    private Integer klassId;
+    @OneToOne
+    private Klass klass;
 //    @Column(nullable = false)
     private Integer studentAccountId = 0; // 账号id
     @Column(nullable = false)
-    private Integer studentId; // 学生
+    @OneToOne
+    private Student student; // 学生
     @Column(nullable = false)
     private Float changeMoney;// 变化的费用
     @Column(nullable = false)
@@ -40,28 +44,28 @@ public class StudentAccountChangeRecord{
         this.id = id;
     }
 
-    public Integer getKlassId() {
-        return klassId;
+    public Integer getStudentAccountId() {
+        return studentAccountId;
     }
 
-    public void setKlassId(Integer klassId) {
-        this.klassId = klassId;
+    public void setStudentAccountId(Integer studentAccountId) {
+        this.studentAccountId = studentAccountId;
     }
 
-//    public Integer getStudentAccountId() {
-//        return studentAccountId;
-//    }
-
-//    public void setStudentAccountId(Integer studentAccountId) {
-//        this.studentAccountId = studentAccountId;
-//    }
-
-    public Integer getStudentId() {
-        return studentId;
+    public Klass getKlass() {
+        return klass;
     }
 
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
+    public void setKlass(Klass klass) {
+        this.klass = klass;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     public Float getChangeMoney() {

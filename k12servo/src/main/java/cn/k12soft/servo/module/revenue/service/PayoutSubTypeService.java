@@ -1,6 +1,5 @@
 package cn.k12soft.servo.module.revenue.service;
 
-import cn.k12soft.servo.module.revenue.domain.PayoutConfigInfo;
 import cn.k12soft.servo.module.revenue.domain.PayoutSubType;
 import cn.k12soft.servo.module.revenue.domain.PayoutMainType;
 import cn.k12soft.servo.module.revenue.repository.PayoutSubTypeRepository;

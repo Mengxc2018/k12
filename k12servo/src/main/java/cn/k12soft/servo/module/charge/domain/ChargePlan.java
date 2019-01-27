@@ -1,17 +1,16 @@
 package cn.k12soft.servo.module.charge.domain;
 
+import cn.k12soft.servo.domain.Klass;
 import cn.k12soft.servo.domain.SchoolEntity;
+import cn.k12soft.servo.domain.enumeration.KlassTypeCharge;
 import cn.k12soft.servo.module.expense.domain.ExpenseEntry;
 import cn.k12soft.servo.module.expense.domain.ExpenseIdentDiscount;
 import cn.k12soft.servo.module.expense.domain.ExpensePeriodDiscount;
 import cn.k12soft.servo.util.CommonUtils;
 import cn.k12soft.servo.util.Times;
 import java.time.Instant;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
@@ -24,6 +23,10 @@ public class ChargePlan extends SchoolEntity {
   @Id
   @GeneratedValue
   private Integer id;
+  @OneToOne
+  private Klass klass;
+  @Enumerated(EnumType.STRING)
+  private KlassTypeCharge klassType;
   @OneToOne
   private ExpenseEntry expenseEntry; // 费种
   @OneToOne
@@ -43,7 +46,23 @@ public class ChargePlan extends SchoolEntity {
   @Column
   private Instant createAt;
 
-  ChargePlan() {}
+  public ChargePlan() {}
+
+  public Klass getKlass() {
+    return klass;
+  }
+
+  public void setKlass(Klass klass) {
+    this.klass = klass;
+  }
+
+  public KlassTypeCharge getKlassType() {
+    return klassType;
+  }
+
+  public void setKlassType(KlassTypeCharge klassType) {
+    this.klassType = klassType;
+  }
 
   public ChargePlan(Integer schoolId) {
     super(schoolId);

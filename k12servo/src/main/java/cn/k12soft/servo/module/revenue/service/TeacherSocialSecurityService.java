@@ -8,7 +8,6 @@ import cn.k12soft.servo.module.revenue.form.TeacherSocialSecurityForm;
 import cn.k12soft.servo.module.revenue.repository.TeacherSocialSecurityRepository;
 import cn.k12soft.servo.repository.ActorRepository;
 import cn.k12soft.servo.service.AbstractEntityService;
-import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

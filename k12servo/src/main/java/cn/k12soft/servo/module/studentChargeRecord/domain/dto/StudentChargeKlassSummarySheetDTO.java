@@ -7,7 +7,7 @@ import java.time.Instant;
 
 public class StudentChargeKlassSummarySheetDTO {
 
-    private Long id;
+//    private Long id;
     private Integer klassId;
     private String klassName;
 
@@ -28,8 +28,8 @@ public class StudentChargeKlassSummarySheetDTO {
     public StudentChargeKlassSummarySheetDTO() {
     }
 
-    public StudentChargeKlassSummarySheetDTO(Long id, Integer klassId, String klassName, Integer listed, Float feeTotal, Float feeAllTotal, Integer schoolId, Instant createAt, String remark) {
-        this.id = id;
+    public StudentChargeKlassSummarySheetDTO(Integer klassId, String klassName, Integer listed, Float feeTotal, Float feeAllTotal, Integer schoolId, Instant createAt, String remark) {
+//        this.id = id;
         this.klassId = klassId;
         this.klassName = klassName;
         this.listed = listed;
@@ -40,9 +40,6 @@ public class StudentChargeKlassSummarySheetDTO {
         this.remark = remark;
     }
 
-    public Long getId() {
-        return id;
-    }
 
     public Integer getKlassId() {
         return klassId;
@@ -74,5 +71,37 @@ public class StudentChargeKlassSummarySheetDTO {
 
     public String getRemark() {
         return remark;
+    }
+
+    public void setKlassId(Integer klassId) {
+        this.klassId = klassId;
+    }
+
+    public void setKlassName(String klassName) {
+        this.klassName = klassName;
+    }
+
+    public void setListed(Integer listed) {
+        this.listed = listed;
+    }
+
+    public void setFeeTotal(Float feeTotal) {
+        this.feeTotal = feeTotal;
+    }
+
+    public void setFeeAllTotal(Float feeAllTotal) {
+        this.feeAllTotal = feeAllTotal;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public void setCreateAt(Instant createAt) {
+        this.createAt = createAt;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

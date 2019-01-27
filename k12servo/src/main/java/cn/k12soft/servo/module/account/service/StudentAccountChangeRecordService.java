@@ -5,7 +5,11 @@ import cn.k12soft.servo.domain.Student;
 import cn.k12soft.servo.domain.enumeration.StudentAccountOpType;
 import cn.k12soft.servo.module.account.domain.StudentAccount;
 import cn.k12soft.servo.module.account.domain.StudentAccountChangeRecord;
+import cn.k12soft.servo.module.account.domain.dto.StudentAccountChangeRecordDTO;
 import cn.k12soft.servo.module.account.repository.StudentAccountChangeRecordRepository;
+import cn.k12soft.servo.module.account.service.mapper.StudentAccountChangeRecordMapper;
+import cn.k12soft.servo.repository.KlassRepository;
+import cn.k12soft.servo.repository.StudentRepository;
 import cn.k12soft.servo.service.AbstractRepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +21,11 @@ import java.time.Instant;
 
 @Service
 public class StudentAccountChangeRecordService extends AbstractRepositoryService<StudentAccountChangeRecord, Integer, StudentAccountChangeRecordRepository> {
+
+  @Autowired
+  private StudentRepository studentRepository;
+  @Autowired
+  private KlassRepository klassRepository;
 
   @Autowired
   protected StudentAccountChangeRecordService(StudentAccountChangeRecordRepository repository) {
@@ -45,8 +54,9 @@ public class StudentAccountChangeRecordService extends AbstractRepositoryService
   public void create(int studentId, StudentAccount studentAccount, Integer klassId, Float changeMoney, Actor actor, StudentAccountOpType opType){
       StudentAccountChangeRecord record = new StudentAccountChangeRecord();
 //      record.setStudentAccountId(studentAccount.getId());
-      record.setKlassId(klassId);
-      record.setStudentId(studentId);
+
+      record.setKlass(klassRepository.findOne(klassId));
+      record.setStudent(studentRepository.findOne(studentId));
       record.setChangeMoney(changeMoney);
       record.setRemainMoney(studentAccount.getMoney());
       if(actor != null) {
