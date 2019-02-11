@@ -644,17 +644,10 @@ public class StudentChargeRecordService extends AbstractRepositoryService<Studen
             Float feeAllTotal = 0f;
             Float feeTotal = 0f;
 
-            List<StudentCharge> studentCharges = this.studentChargePlanRepository.findAllBySchoolIdAndCreateAtBetween(schoolId, formDate, toDate);
-            for (StudentCharge studentCharge : studentCharges){
-                feeAllTotal += studentCharge.getMoney();
-                String entityName = studentCharge.getExpenseEntry().getName();
-                if (entityName.contains("保育保教")
-                        || entityName.contains("保教")
-                        || entityName.contains("保育")
-                        || entityName.contains("教育")
-                        || entityName.contains("伙食")) {
-                    feeTotal += studentCharge.getMoney();
-                }
+            List<StudentChargeRecord> studentChargesRecords = this.getRepository().findAllBySchoolIdAndCreateAtBetween(schoolId, formDate, toDate);
+            for (StudentChargeRecord studentChargeRecord : studentChargesRecords){
+                feeTotal += studentChargeRecord.getFeeTotalFoodEdu();
+                feeAllTotal += studentChargeRecord.getFeeTotal();
             }
             dto.setKlassId(klass.getId());
             dto.setKlassName(klass.getName());

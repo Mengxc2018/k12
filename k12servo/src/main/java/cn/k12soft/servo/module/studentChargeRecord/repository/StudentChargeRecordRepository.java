@@ -1,5 +1,6 @@
 package cn.k12soft.servo.module.studentChargeRecord.repository;
 
+import cn.k12soft.servo.module.charge.domain.StudentCharge;
 import cn.k12soft.servo.module.studentChargeRecord.domain.StudentChargeRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -23,4 +24,11 @@ public interface StudentChargeRecordRepository extends JpaRepository<StudentChar
 
     List<StudentChargeRecord> findBySchoolIdAndCreateAtBetween(Integer schoolId, Instant first, Instant second);
 
+    @Query(value = "select * from student_charge_record"
+            + " where school_id = :schoolId"
+            + " and (DATE(create_at) between DATE(':formDate') and DATE(':toDate'))"
+            , nativeQuery = true)
+    List<StudentChargeRecord> findAllBySchoolIdAndCreateAtBetween(@Param("schoolId") Integer schoolId,
+                                                            @Param("formDate") LocalDate formDate,
+                                                            @Param("toDate") LocalDate toDate);
 }

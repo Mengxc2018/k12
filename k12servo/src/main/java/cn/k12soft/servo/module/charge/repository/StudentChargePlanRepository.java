@@ -72,7 +72,17 @@ public interface StudentChargePlanRepository extends JpaRepository<StudentCharge
 
   Page<StudentCharge> findBySchoolIdAndPaymentAtIsNullAndCreateAtAfter(Integer schoolId, Instant instant, Pageable pageable);
 
-  List<StudentCharge> findAllBySchoolIdAndExpenseEntry(Integer schoolId, ExpenseEntry expenseEntry);
+  // 周期类型过滤掉一次性的
+    @Query(value = "SELECT * FROM student_charge sc"
+            + " JOIN expense_entry ee ON ee.id = sc.EXPENSE_ENTRY_ID"
+            + " WHERE 1=1"
+            + "  AND sc.SCHOOL_ID = :schoolId"
+            + "  AND sc.EXPENSE_ENTRY_ID = :expenseEntryId"
+            + "  AND ee.PERIOD_TYPE != 5"
+            + " GROUP BY sc.id"
+            ,nativeQuery = true)
+  List<StudentCharge> findAllBySchoolIdAndExpenseEntry(@Param("schoolId") Integer schoolId,
+                                                       @Param("expenseEntryId") Integer expenseEntryId);
 
   void deleteByExpenseEntry(ExpenseEntry entry);
 

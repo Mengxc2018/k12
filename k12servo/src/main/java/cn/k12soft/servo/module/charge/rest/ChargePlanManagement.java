@@ -178,7 +178,7 @@ public class ChargePlanManagement {
           queryMap.put("klassId", klassId);
           List<Student> studentList = this.studentService.query(queryMap);
           _createStudentCharge(actor.getSchoolId(), list, studentList, alreadyCreatedList, expenseEntry, identDiscount, periodDiscount, money,
-                  endAt, Integer.valueOf(klassId), klassType, periodDate);
+                  endAt, Integer.valueOf(klassId), klassType, periodDate, KlassTypeCharge.COMMON);
         }
       } else if (targetType == ChargePlanTargetType.INTEREST_KLASS.getId()) {
         klassTypeCharge = KlassTypeCharge.INTEREST_SMALL;
@@ -186,7 +186,7 @@ public class ChargePlanManagement {
           InterestKlass interestKlass = this.interestKlassService.get(Integer.valueOf(interestKlassId));
           klassType = interestKlass.getType();
           _createStudentCharge(actor.getSchoolId(), list, interestKlass.getStudents(), alreadyCreatedList, expenseEntry, identDiscount,
-                  periodDiscount, money, endAt, interestKlass.getId(), klassType, periodDate);
+                  periodDiscount, money, endAt, interestKlass.getId(), klassType, periodDate, KlassTypeCharge.INTEREST_SMALL);
         }
 
       } else if (targetType == ChargePlanTargetType.STUDENT.getId()) {
@@ -204,7 +204,21 @@ public class ChargePlanManagement {
             }
         }
         _createStudentCharge(actor.getSchoolId(), list, studentList, alreadyCreatedList, expenseEntry, identDiscount, periodDiscount, money,
-                endAt, 0, klassType, periodDate);
+                endAt, 0, klassType, periodDate, KlassTypeCharge.COMMON);
+      }else if (targetType == ChargePlanTargetType.STUDENT_INTEREST.getId()){   // 加一个学生兴趣班的判断
+
+          List<Student> studentList = new LinkedList<>();
+          klassTypeCharge = KlassTypeCharge.INTEREST_SMALL;
+          for (String studentId : ids){
+              Optional<Student> studentOptional = this.studentService.find(Integer.valueOf(studentId));
+              if(studentOptional.get() != null){
+                  klass = studentOptional.get().getKlass();
+                  studentList.add(studentOptional.get());
+              }
+          }
+
+          _createStudentCharge(actor.getSchoolId(), list, studentList, alreadyCreatedList, expenseEntry, identDiscount, periodDiscount, money,
+                  endAt, form.getKlassInterestId(), klassType, periodDate, KlassTypeCharge.INTEREST_SMALL);
       }
       if (list.size() > 0) {
         ChargePlan chargePlan = new ChargePlan(actor.getSchoolId());
@@ -279,7 +293,7 @@ public class ChargePlanManagement {
     Klass klass = null;
     KlassTypeCharge klassTypeCharge = null;
     int periodDate = Times.time2yyyyMM(System.currentTimeMillis());
-    // 已经创建了的收费计划(退费转入费种的时候，会 提前生成 下个周期的收费计划, 所以现在发起收费计划，要过滤掉已有的)
+    // 已经创建了的收费计划(退费转入费种的时候，会 提前生成 下个周期的收费计划, 所以现在发起收费计划，要过滤掉已有的)l
     List<StudentCharge> alreadyCreatedList = this.studentChargePlanService
       .findAllBySchoolAndExpenseEntry(actor.getSchoolId(), expenseEntry);
     if (targetType == ChargePlanTargetType.COMMON_KLASS.getId()) {
@@ -290,7 +304,7 @@ public class ChargePlanManagement {
         queryMap.put("klassId", klassId);
         List<Student> studentList = this.studentService.query(queryMap);
         _createStudentCharge(actor.getSchoolId(), list, studentList, alreadyCreatedList, expenseEntry, identDiscount, periodDiscount, money,
-          endAt, Integer.valueOf(klassId), klassType, periodDate);
+          endAt, Integer.valueOf(klassId), klassType, periodDate, KlassTypeCharge.COMMON);
       }
     } else if (targetType == ChargePlanTargetType.INTEREST_KLASS.getId()) {
       klassTypeCharge = KlassTypeCharge.INTEREST_SMALL;
@@ -298,7 +312,7 @@ public class ChargePlanManagement {
         InterestKlass interestKlass = this.interestKlassService.get(Integer.valueOf(interestKlassId));
         klassType = interestKlass.getType();
         _createStudentCharge(actor.getSchoolId(), list, interestKlass.getStudents(), alreadyCreatedList, expenseEntry, identDiscount,
-          periodDiscount, money, endAt, interestKlass.getId(), klassType, periodDate);
+          periodDiscount, money, endAt, interestKlass.getId(), klassType, periodDate, KlassTypeCharge.INTEREST_SMALL);
       }
 
     } else if (targetType == ChargePlanTargetType.STUDENT.getId()) {
@@ -312,7 +326,22 @@ public class ChargePlanManagement {
         }
       }
       _createStudentCharge(actor.getSchoolId(), list, studentList, alreadyCreatedList, expenseEntry, identDiscount, periodDiscount, money,
-        endAt, 0, klassType, periodDate);
+        endAt, 0, klassType, periodDate, KlassTypeCharge.COMMON);
+
+    }else if (targetType == ChargePlanTargetType.STUDENT_INTEREST.getId()){   // 加一个学生兴趣班的判断
+
+      List<Student> studentList = new LinkedList<>();
+      klassTypeCharge = KlassTypeCharge.INTEREST_SMALL;
+      for (String studentId : ids){
+        Optional<Student> studentOptional = this.studentService.find(Integer.valueOf(studentId));
+        if(studentOptional.get() != null){
+          klass = studentOptional.get().getKlass();
+          studentList.add(studentOptional.get());
+        }
+      }
+
+      _createStudentCharge(actor.getSchoolId(), list, studentList, alreadyCreatedList, expenseEntry, identDiscount, periodDiscount, money,
+      endAt, form.getKlassInterestId(), klassType, periodDate, KlassTypeCharge.INTEREST_SMALL);
     }
     if (list.size() > 0) {
       ChargePlan chargePlan = new ChargePlan(actor.getSchoolId());
@@ -723,7 +752,7 @@ public class ChargePlanManagement {
                                     ExpensePeriodDiscount periodDiscount,
                                     float money, Instant endAt,
                                     int klassId, KlassType klassType,
-                                    int periodDate) {
+                                    int periodDate, KlassTypeCharge klassTypeCharge) {
     for (Student student : studentList) {
       StudentCharge studentCharge = null;
       StudentCharge originalStudentCharge = _alreadyCreated(alreadyCreatedList, student, expenseEntry);
@@ -737,7 +766,22 @@ public class ChargePlanManagement {
           is = false;
         }
       } else {
+
         StudentCharge stuChargePlan = new StudentCharge(schoolId);
+
+        switch(klassTypeCharge){
+          case COMMON:
+              stuChargePlan.setKlassId(student.getKlass().getId());
+              stuChargePlan.setKlassInterestId(0);
+              stuChargePlan.setKlassTypeCharge(KlassTypeCharge.COMMON);
+            break;
+          case INTEREST_SMALL:
+              stuChargePlan.setKlassInterestId(klassId);
+              stuChargePlan.setKlassId(0);
+              stuChargePlan.setKlassTypeCharge(KlassTypeCharge.INTEREST_SMALL);
+            break;
+        }
+
         stuChargePlan.settCheck(false);
         stuChargePlan.setStatus(StudentChargeStatus.EXCUTE);
         stuChargePlan.setPeriodDate(periodDate);
@@ -745,7 +789,6 @@ public class ChargePlanManagement {
         stuChargePlan.setStudentName(student.getName());
         stuChargePlan.setExpenseEntry(expenseEntry);
         stuChargePlan.setPeriodDiscount(periodDiscount);
-        stuChargePlan.setKlassId(klassId);
         stuChargePlan.setKlassType(klassType);
         stuChargePlan.setIdentDiscount(identDiscount);
         stuChargePlan.setMoney(money);

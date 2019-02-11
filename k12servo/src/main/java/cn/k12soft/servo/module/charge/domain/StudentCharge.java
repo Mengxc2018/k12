@@ -4,6 +4,7 @@ import cn.k12soft.servo.domain.Actor;
 import cn.k12soft.servo.domain.School;
 import cn.k12soft.servo.domain.SchoolEntity;
 import cn.k12soft.servo.domain.enumeration.KlassType;
+import cn.k12soft.servo.domain.enumeration.KlassTypeCharge;
 import cn.k12soft.servo.domain.enumeration.StudentChargeStatus;
 import cn.k12soft.servo.module.expense.domain.ExpenseEntry;
 import cn.k12soft.servo.module.expense.domain.ExpenseIdentDiscount;
@@ -53,8 +54,17 @@ public class StudentCharge extends SchoolEntity {
   @Column(nullable = false)
   private String studentName;
 
+  @ApiModelProperty("普通班的id，班级类型为普通班")
   @Column(nullable = false)
   private Integer klassId;
+
+  @ApiModelProperty("兴趣班的id，班级类型为兴趣班")
+  @Column(nullable = false)
+  private Integer klassInterestId;
+
+  @ApiModelProperty("班级类型，只分兴趣班、普通班")
+  @Enumerated(EnumType.STRING)
+  private KlassTypeCharge klassTypeCharge;
 
   @Enumerated(EnumType.STRING)
   private KlassType klassType;
@@ -144,6 +154,22 @@ public class StudentCharge extends SchoolEntity {
 
   public void setKlassId(Integer klassId) {
     this.klassId = klassId;
+  }
+
+  public Integer getKlassInterestId() {
+    return klassInterestId;
+  }
+
+  public void setKlassInterestId(Integer klassInterestId) {
+    this.klassInterestId = klassInterestId;
+  }
+
+  public KlassTypeCharge getKlassTypeCharge() {
+    return klassTypeCharge;
+  }
+
+  public void setKlassTypeCharge(KlassTypeCharge klassTypeCharge) {
+    this.klassTypeCharge = klassTypeCharge;
   }
 
   public KlassType getKlassType() {

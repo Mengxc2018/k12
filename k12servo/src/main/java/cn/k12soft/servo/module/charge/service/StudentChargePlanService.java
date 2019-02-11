@@ -171,7 +171,7 @@ public class StudentChargePlanService extends AbstractEntityService<StudentCharg
     }
 
     public List<StudentCharge> findAllBySchoolAndExpenseEntry(Integer schoolId, ExpenseEntry expenseEntry) {
-        return getEntityRepository().findAllBySchoolIdAndExpenseEntry(schoolId, expenseEntry);
+        return getEntityRepository().findAllBySchoolIdAndExpenseEntry(schoolId, expenseEntry.getId());
     }
 
     public void deleteByExpenseEntry(ExpenseEntry entry) {

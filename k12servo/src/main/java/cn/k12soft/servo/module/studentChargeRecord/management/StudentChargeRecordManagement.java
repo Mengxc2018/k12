@@ -47,7 +47,7 @@ public class StudentChargeRecordManagement {
         return studentChargeRecordService.findStudentChargeRecord(actor,klassId, formDate, toDate);
     }
 
-    @ApiOperation("查询所有班级收入")//脚本
+    @ApiOperation("查询所有班级收入")
     @GetMapping("/findStudentChargeKlassTotal")
     @Timed
     public Collection<StudentChargeKlassTotalDTO> findStudentChargeKlassTotal(@Active Actor actor,
