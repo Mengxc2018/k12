@@ -19,7 +19,6 @@ public class StudentAccountChangeRecord{
     private Klass klass;
 //    @Column(nullable = false)
     private Integer studentAccountId = 0; // 账号id
-    @Column
     @OneToOne
     private Student student; // 学生
     @Column(nullable = false)
