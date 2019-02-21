@@ -752,8 +752,16 @@ public class ChargePlanManagement {
                                     ExpensePeriodDiscount periodDiscount,
                                     float money, Instant endAt,
                                     int klassId, KlassType klassType,
-                                    int periodDate, KlassTypeCharge klassTypeCharge) {
+                                    int periodDate,
+                                    KlassTypeCharge klassTypeCharge) {
     for (Student student : studentList) {
+
+      // 验证是否重复添加，通过学生、费种、结束时间判断，该学生的费种周期范围内是否结束，如果未结束，则可判断为重复添加
+      boolean isRepetition = checkRepetition(student, expenseEntry, endAt);
+      if (isRepetition){
+        continue;
+      }
+
       StudentCharge studentCharge = null;
       StudentCharge originalStudentCharge = _alreadyCreated(alreadyCreatedList, student, expenseEntry);
       boolean is = true;  // 是否推送微信服务消息
@@ -811,6 +819,20 @@ public class ChargePlanManagement {
 //      }
 
     }
+  }
+
+  /**
+   * 通过学生、费种、结束时间来判断该学生有没有添加过有效的收费计划
+   * 如果查到，说明添加过，再次添加为重复添加true
+   * 如果没有，说明第一次添加，返回false
+   * @param student
+   * @param expenseEntry
+   * @param endAt
+   * @return
+   */
+  public boolean checkRepetition(Student student, ExpenseEntry expenseEntry, Instant endAt){
+    Optional<ChargePlan> chargePlanOptional = chargePlanService.findOneByTargetAndExpenseEntryAndEndAt(student.getName(), expenseEntry, endAt);
+    return chargePlanOptional.isPresent() ? true : false;
   }
 
   private StudentCharge _alreadyCreated(List<StudentCharge> alreadyCreatedList, Student student, ExpenseEntry expenseEntry) {

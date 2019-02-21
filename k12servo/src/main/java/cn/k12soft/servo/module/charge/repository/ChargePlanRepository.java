@@ -6,6 +6,8 @@ import cn.k12soft.servo.module.charge.domain.ChargePlan;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+
 import cn.k12soft.servo.module.expense.domain.ExpenseEntry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
@@ -25,4 +27,6 @@ public interface ChargePlanRepository extends JpaRepository<ChargePlan, Integer>
     Page<ChargePlan> findAllBySchoolIdAndExpenseEntry(int schoolId, ExpenseEntry expenseEntry, Pageable pageable);
 
     Page<ChargePlan> findAllBySchoolIdAndKlassType(int schoolId, KlassTypeCharge type, Pageable pageable);
+
+    Optional<ChargePlan> findOneByTargetAndExpenseEntryAndEndAtBefore(String name, ExpenseEntry expenseEntry, Instant endAt);
 }

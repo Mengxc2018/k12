@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/k12servo/k12servo.iml" filepath="$PROJECT_DIR$/.idea/modules/k12servo/k12servo.iml" group="k12servo" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/k12servo/k12servo_main.iml" filepath="$PROJECT_DIR$/.idea/modules/k12servo/k12servo_main.iml" group="k12servo" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/k12servo/k12servo_test.iml" filepath="$PROJECT_DIR$/.idea/modules/k12servo/k12servo_test.iml" group="k12servo" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/k12soft.iml" filepath="$PROJECT_DIR$/.idea/modules/k12soft.iml" />
+    </modules>
+  </component>
+</project>

@@ -9,6 +9,7 @@ import cn.k12soft.servo.module.expense.repository.ExpenseEntryRepository;
 import cn.k12soft.servo.repository.KlassRepository;
 import cn.k12soft.servo.service.AbstractEntityService;
 import java.time.Instant;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -109,4 +110,7 @@ public class ChargePlanService extends AbstractEntityService<ChargePlan, Integer
     getEntityRepository().deleteByExpenseEntry(entry);
   }
 
+    public Optional<ChargePlan> findOneByTargetAndExpenseEntryAndEndAt(String name, ExpenseEntry expenseEntry, Instant endAt) {
+        return this.getEntityRepository().findOneByTargetAndExpenseEntryAndEndAtBefore(name, expenseEntry, endAt);
+    }
 }
