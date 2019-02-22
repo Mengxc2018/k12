@@ -22,8 +22,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -78,7 +76,6 @@ public class TokenResource {
   @Timed
   public ResponseEntity<UserDTO> authorize(@RequestBody @Valid TokenForm form)
     throws JsonProcessingException {
-    Map<String, Object> map = new HashMap<>();
     UsernamePasswordAuthenticationToken authToken =
       new UsernamePasswordAuthenticationToken(form.getMobile(), form.getPassword());
     try {
@@ -87,9 +84,7 @@ public class TokenResource {
       UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
       User user = userPrincipal.getUser();
       if (user.getUserState().compareTo(UserState.INACTIVE) == 0){
-        map.put("errcode", "4005");
-        map.put("errmsg", "用户未激活");
-        return new ResponseEntity(map.toString(), HttpStatus.BAD_REQUEST);
+        throw new IllegalArgumentException("帐号未激活，请先激活！");
       }
       String token = jwtProvider.createToken(user, true);
         return ResponseEntity.ok()

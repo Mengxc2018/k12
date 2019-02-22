@@ -7,7 +7,6 @@ import cn.k12soft.servo.module.holidaysWeek.domain.dto.HolidaysWeekDTO;
 import cn.k12soft.servo.module.holidaysWeek.service.mapper.HolidaysWeekMapper;
 import cn.k12soft.servo.module.holidaysWeek.repository.HolidaysWeekRepository;
 import cn.k12soft.servo.service.AbstractRepositoryService;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,12 +56,6 @@ public class HolidaysWeekService extends AbstractRepositoryService<HolidaysWeek,
 
     }
 
-    /**
-     * 返回某个月除周六日跟节假日的天数(一个月工作日的天数)
-     * @param month
-     * @param year
-     * @return
-     */
     public Integer queryOfMonthToWorkDay(Integer month, Integer year){
 
         Integer count = 0;
@@ -146,7 +139,6 @@ public class HolidaysWeekService extends AbstractRepositoryService<HolidaysWeek,
 
     /**
      * 本月应出勤天数
-     * @param localDate
      * @return
      */
     public Integer days(LocalDate localDate){
@@ -165,24 +157,4 @@ public class HolidaysWeekService extends AbstractRepositoryService<HolidaysWeek,
         }
         return one;
     }
-
-    /**
-     * 返回从某月 1 号到当前日期的应出勤天数
-     * @param instantNow
-     * @return
-     */
-    public Integer firstDayToNow(Instant instantNow) {
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(instantNow, ZoneOffset.UTC);
-        int num = localDateTime.getDayOfMonth();
-        int days = num;
-        for (int i = num; i > 0; i--){
-            boolean isw = isWeekend(instantNow);
-            if (isw){
-                days--;
-            }
-            instantNow = instantNow.minusSeconds(24*3600);
-        }
-        return days;
-    }
-
 }

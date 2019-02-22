@@ -1,11 +1,10 @@
 package cn.k12soft.servo.service;
 
+import static cn.k12soft.servo.domain.enumeration.UserState.INACTIVE;
 import static cn.k12soft.servo.util.HTTPHeaders.BEARER_PREFIX;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.OK;
 
 import cn.k12soft.servo.domain.*;
-import cn.k12soft.servo.domain.enumeration.ActorType;
 import cn.k12soft.servo.domain.enumeration.RelationType;
 import cn.k12soft.servo.domain.enumeration.UserState;
 import cn.k12soft.servo.module.wxLogin.domain.WxUsers;
@@ -16,12 +15,13 @@ import cn.k12soft.servo.security.jwt.JWTProvider;
 import cn.k12soft.servo.service.dto.UserDistrictDTO;
 import cn.k12soft.servo.service.mapper.UserDistrictMapper;
 import cn.k12soft.servo.third.aliyun.AliyunSMSService;
-import cn.k12soft.servo.web.form.*;
-
+import cn.k12soft.servo.web.form.ChangePasswordForm;
+import cn.k12soft.servo.web.form.RegisterForm;
+import cn.k12soft.servo.web.form.ResetPasswordForm;
+import cn.k12soft.servo.web.form.UserForm;
 import java.net.URI;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -53,30 +53,22 @@ public class UserService extends AbstractEntityService<User, Integer> {
   private final GuardianRepository guardianRepository;
   private final ActorRepository actorRepository;
   private final WxUserRepository wxUserRepository;
-  private final RoleService roleService;
 
   @Autowired
   public UserService(UserRepository repository,
                      AliyunSMSService aliyunSMSService,
                      InvitationRepository invitationRepository,
-                     PasswordEncoder passwordEncoder,
-                     JWTProvider jwtProvider,
-                     UserDistrictMapper userMapper,
-                     StudentRepository studentRepository,
-                     GuardianRepository guardianRepository,
-                     ActorRepository actorRepository,
-                     WxUserRepository wxUserRepository, RoleService roleService) {
+                     PasswordEncoder passwordEncoder, JWTProvider jwtProvider, UserDistrictMapper userMapper, StudentRepository studentRepository, GuardianRepository guardianRepository, ActorRepository actorRepository, WxUserRepository wxUserRepository) {
     super(repository);
     this.aliyunSMSService = aliyunSMSService;
     this.invitationRepository = invitationRepository;
     this.passwordEncoder = passwordEncoder;
-    this.jwtProvider = jwtProvider;
-    this.userMapper = userMapper;
+      this.jwtProvider = jwtProvider;
+      this.userMapper = userMapper;
     this.studentRepository = studentRepository;
     this.guardianRepository = guardianRepository;
-    this.actorRepository = actorRepository;
-    this.wxUserRepository = wxUserRepository;
-    this.roleService = roleService;
+      this.actorRepository = actorRepository;
+      this.wxUserRepository = wxUserRepository;
   }
 
   public User createUserNotActivated(String mobile, String username, boolean is) {
@@ -184,16 +176,13 @@ public class UserService extends AbstractEntityService<User, Integer> {
   }
 
   public ResponseEntity<UserDistrictDTO> registerUserByMobile(RegisterForm form) {
-      Map<String, Object> map = new HashMap<>();
       Optional<Invitation> invitation = invitationRepository.findOneByMobile(form.getMobile());
       if (!invitation.isPresent()){
           return null;
       }
 
       if(!form.getCode().equals(String.valueOf(invitation.get().getSecretCode()))){
-          map.put("errcode", "4002");
-          map.put("errmsg", "验证码不匹配");
-          return new ResponseEntity(map.toString(), TEXT_PLAIN, BAD_REQUEST);
+        throw new IllegalArgumentException("验证码不匹配！");
       }
 
       String token = "";
@@ -204,10 +193,11 @@ public class UserService extends AbstractEntityService<User, Integer> {
         return updateUserState(userOptional);
       }else {
         // 如果不存在，返回信息
+        Map<String, Object> map = new HashMap<>();
         map.put("errCode", "4003");
         map.put("mobile", form.getMobile());
         map.put("massage", "用户不存在");
-        return new ResponseEntity(map.toString(), TEXT_PLAIN, BAD_REQUEST);
+        throw new IllegalArgumentException(map.toString());
       }
   }
 
@@ -246,38 +236,22 @@ public class UserService extends AbstractEntityService<User, Integer> {
 
   }
 
-  public ResponseEntity createUser(String mobile, Integer klassId, String stuName, Integer schoolId, RelationType relationType) {
+  public void createUser(String mobile, Integer klassId, String stuName, Integer schoolId, RelationType relationType) {
     // user actor 的创建
-    Map<String, Object> map = new HashMap<String, Object>();
     String username = "此家伙很懒，还没改名字";
     List<Student> students = this.studentRepository.getByName(stuName);
     if (students.size() == 0){
-      map.put("errcode", "4006");
-      map.put("errmsg", "没有找到该儿童，请与教师核对儿童姓名");
-      return new ResponseEntity(map.toString(), TEXT_PLAIN, BAD_REQUEST);
-//      throw new IllegalArgumentException("没有找到该儿童，请与教师核对儿童姓名");
-    }else{
-      map.put("errcode", "4000");
-      map.put("errmsg", "OK");
+      throw new IllegalArgumentException("没有找到该儿童，请与教师核对儿童姓名");
     }
 
     // 创建user、actor
     Actor assoc = createUserActor(mobile, username, schoolId);
-
-    // 微信绑定user
-    WxUsers wxUser = wxUserRepository.findByMobile(mobile);
-    if (wxUser != null){
-        User user = this.getEntityRepository().findOne(assoc.getUserId());
-        wxUser.setUser(user);
-        wxUserRepository.save(wxUser);
-    }
 
     // 儿童与家长的绑定
     Integer actorId = assoc.getId();
     Student student = studentRepository.findOne(students.get(0).getId());
     Guardian guardian = new Guardian(actorId, student, relationType);
     guardianRepository.save(guardian);
-    return new ResponseEntity(map.toString(), TEXT_PLAIN, OK);
   }
 
   /**
@@ -304,17 +278,10 @@ public class UserService extends AbstractEntityService<User, Integer> {
               user.setOneSelf(false);
               getEntityRepository().save(user);
 
-              if (actor.getTypes().add(ActorType.PATRIARCH)) {
-                 actor.addType(ActorType.PATRIARCH);
-                 Role rootRole = roleService.getRoleByName(schoolId, "root");
-                 actor.addRole(rootRole);
-                 actorRepository.save(actor);
-               }
-
               // 如果有微信，更新微信
                 WxUsers wxUsers = wxUserRepository.findByMobile(user.getMobile());
-                if (wxUsers == null){
-                    wxUsers.getActor().addAll(user.getActors());
+                if (wxUsers != null){
+                    wxUsers.setActor((List<Actor>) user.getActors());
                     wxUsers.setUser(user);
                     wxUserRepository.save(wxUsers);
                 }
@@ -353,12 +320,9 @@ public class UserService extends AbstractEntityService<User, Integer> {
     return null;
   }
 
-  public Collection<UserPojo> findUnActive(Actor actor, Integer klassId) {
+  public Collection<User> findUnActive(Actor actor) {
     Integer schoolId = actor.getSchoolId();
-      Collection<Object[]> objs = klassId != null
-          ? getEntityRepository().findAllByUserStateByKlassId(klassId, schoolId)
-          : getEntityRepository().findAllByUserState(schoolId);
-    return objs.stream().map(UserPojo::new).collect(Collectors.toList());
+    return this.getEntityRepository().findAllByUserStateAndIsOneSelf(schoolId, INACTIVE, true);
   }
 
     public void doActive(String ids) {

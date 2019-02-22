@@ -33,6 +33,7 @@ public class DistrictManagement {
     @ApiOperation("添加城市")
     @PostMapping("/web/addCity")
     public Citys createCitys(@RequestBody @Valid CityForm form){
+
         return districtService.CitySive(form);
     }
 
@@ -243,22 +244,5 @@ public class DistrictManagement {
                             @RequestParam @Valid String second){
         districtService.correlation(first, second);
     }
-
-    @ApiOperation("添加部门")
-    @PutMapping("/addDept")
-    public void addDept(@Active Actor actor,
-                               @RequestParam @Valid String districtCode,
-                               @RequestParam @Valid String deptIds){
-        this.districtService.addDept(actor, districtCode, deptIds);
-    }
-
-    @ApiOperation("删除部门")
-    @DeleteMapping("/deleteDept")
-    public void deleteDeptByCity(@Active Actor actor,
-                                 @RequestParam @Valid String districtCode,
-                                 @RequestParam @Valid String deptIds){
-        this.districtService.deleteDept(actor, districtCode, deptIds);
-    }
-
 
 }

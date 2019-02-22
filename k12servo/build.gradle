@@ -14,24 +14,7 @@ configurations {
 }
 
 repositories {
-//    jcenter()
-    repositories {
-        def ALIYUN_REPOSITORY_URL = 'http://maven.aliyun.com/nexus/content/groups/public'
-        def ALIYUN_JCENTER_URL = 'http://maven.aliyun.com/nexus/content/repositories/jcenter'
-        all { ArtifactRepository repo ->
-            if(repo instanceof MavenArtifactRepository){
-                def url = repo.url.toString()
-                if (url.startsWith('https://repo1.maven.org/maven2')) {
-                    project.logger.lifecycle "Repository ${repo.url} replaced by $ALIYUN_REPOSITORY_URL."
-                    remove repo
-                }
-                if (url.startsWith('https://jcenter.bintray.com/')) {
-                    project.logger.lifecycle "Repository ${repo.url} replaced by $ALIYUN_JCENTER_URL."
-                    remove repo
-                }
-            }
-        }
-    }
+    jcenter()
 }
 
 dependencies {
@@ -48,7 +31,6 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-log4j2"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
-    compile 'org.springframework.boot:spring-boot-starter-test'
     compile 'org.hibernate:hibernate-envers'
     compile 'org.hibernate:hibernate-java8'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'

@@ -12,7 +12,6 @@ import cn.k12soft.servo.security.Active;
 import cn.k12soft.servo.service.dto.StudentWithGuardiansDTO;
 import cn.k12soft.servo.service.mapper.StudentWithGuardiansMapper;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -59,11 +58,11 @@ public class HealthCheckManagement {
 
     @ApiOperation("确认发布, 上传多条信息时，将id用逗号隔开")
     @PutMapping("/issue")
-    public ResponseEntity issue(@Active Actor actor,
-                                @RequestParam @Valid String ids,
-                                @RequestParam @Valid Physical.TYPE type,
-                                @RequestParam @Valid Integer klassId){
-        return healthCheckService.issue(actor, ids, klassId, type);
+    public void issue(@Active Actor actor,
+                      @RequestParam @Valid String ids,
+                      @RequestParam @Valid Physical.TYPE type,
+                      @RequestParam @Valid Integer klassId){
+        healthCheckService.issue(actor, ids, klassId, type);
     }
 
     // 查询早午晚未发布的记录，如果type为空，则查询所有

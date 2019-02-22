@@ -183,11 +183,4 @@ public class AttendanceTeacherManagement {
         return service.findTeacherRate(actor, localDate);
     }
 
-    @ApiOperation("添加虚拟数据")
-    @GetMapping("/addDate")
-    public void addDate(@RequestParam @Valid Integer num,
-                        @RequestParam @Valid LocalDate localDate){
-        this.service.addDate(num, localDate);
-    }
-
 }

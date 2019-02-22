@@ -23,7 +23,6 @@ import cn.k12soft.servo.service.AbstractRepositoryService;
 import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -177,7 +176,7 @@ public class HealthCheckService extends AbstractRepositoryService<HealthCheck, L
         return a;
     }
 
-    public ResponseEntity issue(Actor actor, String ids, Integer klassId, TYPE type) {
+    public void issue(Actor actor, String ids, Integer klassId, TYPE type) {
 
         Integer schoolId = actor.getSchoolId();
         Instant first = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC);
@@ -255,7 +254,6 @@ public class HealthCheckService extends AbstractRepositoryService<HealthCheck, L
                 }
             });
         }
-        return null;
     }
 
     public Map<String, Object> findUnIssue(Actor actor, TYPE type, LocalDate localDate, boolean issue, Integer klassId) {

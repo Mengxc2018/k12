@@ -2,8 +2,6 @@ package cn.k12soft.servo.module.expense.form;
 
 import cn.k12soft.servo.module.expense.domain.ExpenseIdentType;
 import cn.k12soft.servo.module.expense.domain.ExpensePeriodType;
-import io.swagger.annotations.ApiModelProperty;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -21,12 +19,6 @@ public class ExpenseEntryForm {
   private List<InnerPaybackByDays> paybackByDays; // 按天退费
   private List<InnerPaybackBySemester> paybackBySemesters; // 按学期退费
   private boolean delayCharge;
-  @ApiModelProperty("是否为规定的固定收费项目")
-  private boolean fixation;
-
-  public boolean getIsFixation() {
-    return fixation;
-  }
 
   public String getName() {
     return name;

@@ -38,14 +38,4 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long>, JpaSp
     Collection<Medicine> findAllBySchoolIdAndActorIdAndCreatedAtBetween(Integer schoolId, Integer id, Instant first, Instant second, Sort sort);
 
     Collection<Medicine> findAllBySchoolIdAndCreatedAtBetween(Integer schoolId, Instant first, Instant second, Sort sort);
-
-    @Query(value = "select * from medicine"
-            + " WHERE DATE(execute_time) = DATE(:date)"
-            + " AND is_over = :b"
-            + " AND is_stop = :b1"
-            + " AND actor_id = :actorId", nativeQuery = true)
-    Collection<Medicine> findDoneForTeacherByAll(@Param("actorId") Integer actorId,
-                                                 @Param("b1") boolean b1,
-                                                 @Param("b") boolean b,
-                                                 @Param("date") LocalDate date);
 }

@@ -4,17 +4,12 @@ import cn.k12soft.servo.domain.Actor;
 import cn.k12soft.servo.domain.School;
 import cn.k12soft.servo.domain.SchoolEntity;
 import cn.k12soft.servo.domain.enumeration.KlassType;
-import cn.k12soft.servo.domain.enumeration.KlassTypeCharge;
-import cn.k12soft.servo.domain.enumeration.StudentChargeStatus;
 import cn.k12soft.servo.module.expense.domain.ExpenseEntry;
 import cn.k12soft.servo.module.expense.domain.ExpenseIdentDiscount;
 import cn.k12soft.servo.module.expense.domain.ExpensePeriodDiscount;
 import cn.k12soft.servo.module.expense.domain.ExpensePeriodType;
 import cn.k12soft.servo.util.Times;
-
-import java.text.DecimalFormat;
 import java.time.Instant;
-import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -25,8 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 
@@ -54,17 +47,8 @@ public class StudentCharge extends SchoolEntity {
   @Column(nullable = false)
   private String studentName;
 
-  @ApiModelProperty("普通班的id，班级类型为普通班")
   @Column(nullable = false)
   private Integer klassId;
-
-  @ApiModelProperty("兴趣班的id，班级类型为兴趣班")
-  @Column(nullable = false)
-  private Integer klassInterestId;
-
-  @ApiModelProperty("班级类型，只分兴趣班、普通班")
-  @Enumerated(EnumType.STRING)
-  private KlassTypeCharge klassTypeCharge;
 
   @Enumerated(EnumType.STRING)
   private KlassType klassType;
@@ -82,7 +66,7 @@ public class StudentCharge extends SchoolEntity {
   private Float money;
 
   @Column(nullable = false)
-  private Float remainMoney; // 应该补交金额
+  private Float remainMoney; // 剩余额度, 用于周期性查询
 
   private Instant createAt; // 发起收费时间
 
@@ -100,13 +84,6 @@ public class StudentCharge extends SchoolEntity {
   private Instant checkAt;// 核对时间
 
   private Float paybackMoney;// 上个月应退费的金额
-
-  @ApiModelProperty("教师是否核对，核对后脚本能查询到")
-  private boolean tCheck;  // 教师是否核对，核对后脚本能查询到
-
-  @ApiModelProperty("当前该收费计划状态，状态为执行时脚本才能查到")
-  @Enumerated(EnumType.STRING)
-  private StudentChargeStatus status;  // 当前该收费计划状态
 
   public Integer getId() {
     return id;
@@ -154,22 +131,6 @@ public class StudentCharge extends SchoolEntity {
 
   public void setKlassId(Integer klassId) {
     this.klassId = klassId;
-  }
-
-  public Integer getKlassInterestId() {
-    return klassInterestId;
-  }
-
-  public void setKlassInterestId(Integer klassInterestId) {
-    this.klassInterestId = klassInterestId;
-  }
-
-  public KlassTypeCharge getKlassTypeCharge() {
-    return klassTypeCharge;
-  }
-
-  public void setKlassTypeCharge(KlassTypeCharge klassTypeCharge) {
-    this.klassTypeCharge = klassTypeCharge;
   }
 
   public KlassType getKlassType() {
@@ -276,7 +237,7 @@ public class StudentCharge extends SchoolEntity {
     this.paybackMoney = paybackMoney;
   }
 
-  public StudentCharge() {}
+  StudentCharge() {}
 
   public StudentCharge(Integer schoolId) {
     super(schoolId);
@@ -294,71 +255,27 @@ public class StudentCharge extends SchoolEntity {
     return false;
   }
 
-  public boolean getIstCheck() {
-    return tCheck;
-  }
-
-  public void settCheck(boolean tCheck) {
-    this.tCheck = tCheck;
-  }
-
-  public StudentChargeStatus getStatus() {
-    return status;
-  }
-
-  public void setStatus(StudentChargeStatus status) {
-    this.status = status;
-  }
-
   public boolean checkAndCreateNext(long currentTime) {
     ExpensePeriodType periodType = this.getExpenseEntry().getPeriodType();
-    long currPeriodDateTime = Times.yyyyMM2Date(this.periodDate);
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTimeInMillis(currPeriodDateTime);
+    int tmpPeriodDate = 0;
     if (periodType == ExpensePeriodType.YEAR) {
-      calendar.add(Calendar.YEAR , 1);
+      tmpPeriodDate = Times.getYear(currentTime);
     } else if (periodType == ExpensePeriodType.HALF_YEAR) {
-      calendar.add(Calendar.MONTH, 6);
-//      tmpPeriodDate = Times.getHalfYear(currentTime);
+      tmpPeriodDate = Times.getHalfYear(currentTime);
     } else if (periodType == ExpensePeriodType.QUARTER) {
-      calendar.add(Calendar.MONTH, 3);
-//      tmpPeriodDate = Times.getSeason(currentTime);
+      tmpPeriodDate = Times.getSeason(currentTime);
     } else if (periodType == ExpensePeriodType.MONTH) {
-      calendar.add(Calendar.MONTH, 1);
-//      tmpPeriodDate = Times.time2yyyyMM(currentTime);
+      tmpPeriodDate = Times.time2yyyyMM(currentTime);
     }
 
-    long nextPeriodDateTime = calendar.getTimeInMillis();
-    int nextPeriodDate = Times.getYear(nextPeriodDateTime);
-    int currYyyyMM = Times.time2yyyyMM(currentTime);
-    if(currYyyyMM>nextPeriodDate){
-        return false;
+    if (tmpPeriodDate == this.periodDate) {
+      return false;
     }
-    this.periodDate = nextPeriodDate;
+    this.periodDate = tmpPeriodDate;
     this.createAt = Instant.now();
-    long endTime = nextPeriodDateTime + this.getEndMills();
+    long endTime = currentTime + this.getEndMills();
     this.endAt = Instant.ofEpochMilli(endTime);
-    this.paymentAt = null;
-    this.checkAt = null;
     return true;
-}
-
-    // 实际需要交的费用，打折后的
-    public float calcPayMoney(){
-      float payMoney = this.money;
-      boolean isDisc = false;
-      if(periodDiscount != null && periodDiscount.getDiscountRate() != null && periodDiscount.getDiscountRate().floatValue()>0){
-          payMoney = payMoney*(1-periodDiscount.getDiscountRate().floatValue()/100f);
-          isDisc = true;
-      }
-      if(identDiscount != null && identDiscount.getDiscountRate() != null && identDiscount.getDiscountRate().floatValue()>0){
-          payMoney = paybackMoney * (1-identDiscount.getDiscountRate().floatValue()/100f);
-          isDisc = true;
-      }
-      if(!isDisc){
-          return payMoney;
-      }
-      return (float)Math.round(payMoney*100f)/100;
-    }
+  }
 
 }

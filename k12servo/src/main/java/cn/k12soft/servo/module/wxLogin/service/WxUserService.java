@@ -48,7 +48,6 @@ import static cn.k12soft.servo.util.HTTPHeaders.BEARER_PREFIX;
 @Transactional
 public class WxUserService extends AbstractRepositoryService<WxUsers, Long, WxUserRepository> {
     private static final HttpHeaders TEXT_PLAIN;
-    private static HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
 
     static {
         TEXT_PLAIN = new HttpHeaders();
@@ -109,12 +108,7 @@ public class WxUserService extends AbstractRepositoryService<WxUsers, Long, WxUs
         String strbody = restTemplate.exchange(uri, HttpMethod.GET, entity,String.class).getBody();
         WxErrPojo wxErrPojo = JSONObject.parseObject(strbody, WxErrPojo.class);
         if (wxErrPojo.getErrcode() != null || wxErrPojo.getErrmsg() != null){
-            try {
-                throw new Exception(wxErrPojo.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-//            return new ResponseEntity(wxErrPojo.toString(), TEXT_PLAIN, BAD_REQUEST);
+            throw new IllegalArgumentException(wxErrPojo.toString());
         }
         WxPojo wxPojo = JSONObject.parseObject(strbody, WxPojo.class);
 
@@ -148,23 +142,18 @@ public class WxUserService extends AbstractRepositoryService<WxUsers, Long, WxUs
 
     public ResponseEntity<UserDTO> userWxLogin(String code)
         throws JsonProcessingException {
-        Map<String, Object> map = new HashMap<>();
         WxPojo wxPojo = getWxOpenid(code);
         WxUsers wxUsers = getRepository().findByOpenid(wxPojo.getOpenid());
         if (wxUsers == null){
-            map.put("errCode", "4003");
-            map.put("errMsg", "用户不存在");
-            return new ResponseEntity(map.toString(), TEXT_PLAIN, BAD_REQUEST);
+            throw new IllegalArgumentException("该用户未注册，请先注册");
         }else if (wxUsers.getMobile() == null || wxUsers.getOpenid() == null){
-            map.put("errCode", "4003");
-            map.put("errMsg", "用户不存在");
-            return new ResponseEntity(map.toString(), TEXT_PLAIN, BAD_REQUEST);
+            throw new IllegalArgumentException("该用户未注册，请先注册");
         }
         try {
             User user = wxUsers.getUser();
             String token = jwtProvider.createToken(user, true);
             return ResponseEntity.ok()
-//                    .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + token)
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + token)
                     .body(userMapper.toDTO(user, token));
         } catch (org.springframework.security.core.AuthenticationException ex) {
             throw new AuthenticationException(ex.getMessage());
@@ -172,7 +161,6 @@ public class WxUserService extends AbstractRepositoryService<WxUsers, Long, WxUs
     }
 
     public ResponseEntity<UserDTO> userLogin(String code, TokenForm form) {
-        Map<String, Object> map = new HashMap<>();
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(form.getMobile(), form.getPassword());
         try {
@@ -181,10 +169,8 @@ public class WxUserService extends AbstractRepositoryService<WxUsers, Long, WxUs
             SecurityContextHolder.getContext().setAuthentication(authentication);
             UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-            if(userPrincipal.getUser().getUserState() == UserState.INACTIVE){
-                map.put("errcode", "4005");
-                map.put("errmsg", "用户未激活");
-                return new ResponseEntity(map.toString(), TEXT_PLAIN, HttpStatus.BAD_REQUEST);
+            if (userPrincipal.getUser().getUserState().compareTo(UserState.INACTIVE) == 0){
+                throw new IllegalArgumentException("帐号未激活，请先激活！");
             }
 
             // 通过微信code获取openid
@@ -195,7 +181,7 @@ public class WxUserService extends AbstractRepositoryService<WxUsers, Long, WxUs
             User user = userPrincipal.getUser();
             String token = jwtProvider.createToken(user, true);
             return ResponseEntity.ok()
-//                    .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + token)
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + token)
                     .body(userMapper.toDTO(user, token));
 
         } catch (org.springframework.security.core.AuthenticationException ex) {
@@ -223,10 +209,7 @@ public class WxUserService extends AbstractRepositoryService<WxUsers, Long, WxUs
 
             User user = this.userRepository.queryByMobile(mobile);
             if (user == null){
-                Map<String, Object> map = new HashMap<>();
-                map.put("errCode", "4001");
-                map.put("errMsg", "用户没有被邀清");
-                return new ResponseEntity(map.toString(), TEXT_PLAIN, BAD_REQUEST);
+                throw new IllegalArgumentException("4000");
             }
 
             // 更新用户状态
@@ -239,7 +222,7 @@ public class WxUserService extends AbstractRepositoryService<WxUsers, Long, WxUs
 
             String token = jwtProvider.createToken(user, true);
             return ResponseEntity.ok()
-//                    .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + token)
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + token)
                     .body(userMapper.toDTO(user, token));
 
         } catch (org.springframework.security.core.AuthenticationException ex) {
@@ -267,12 +250,11 @@ public class WxUserService extends AbstractRepositoryService<WxUsers, Long, WxUs
 
         // 验证手机号是否重复
         Optional<User> userOptional = userRepository.findByMobile(mobile);
+        System.out.println(userOptional.isPresent());
         if (userOptional.isPresent()){
-            if(userOptional.get().getUserState() != UserState.INACTIVE){
-                map.put("errCode", "4004");
-                map.put("errMsg", "手机号已存在");
-                return map;
-            }
+            map.put("errCode", "4004");
+            map.put("errMsg", "手机号已存在");
+            throw new IllegalArgumentException(map.toString());
         }
 
         // 验证码效验
@@ -287,13 +269,17 @@ public class WxUserService extends AbstractRepositoryService<WxUsers, Long, WxUs
         if (!isInvitation){
             map.put("errCode", "4002");
             map.put("errMsg", "验证码不匹配");
-            return map;
+            throw new IllegalArgumentException(map.toString());
         }
 
         if (!userOptional.isPresent()){
+            try {
                 map.put("errCode", "4003");
                 map.put("errMsg", "用户不存在");
-                return map;
+                throw new IllegalAccessException(map.toString());
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }else{
             // 如果用户存在，则激活
             userService.updateUserState(userOptional);

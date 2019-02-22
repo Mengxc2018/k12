@@ -5,7 +5,6 @@ public enum StudentAccountOpType {
     REFUND(1, "费种转入"),
     ENROLMENT(2, "报到"),
     UPDATE_PRE_PAY(3, "接口修改"),
-    MONTHLY_TASK(4, "脚本"),
     ;
 
     StudentAccountOpType(int id, String name){
