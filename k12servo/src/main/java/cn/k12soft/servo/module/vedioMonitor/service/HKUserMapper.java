@@ -10,7 +10,6 @@ import cn.k12soft.servo.repository.KlassRepository;
 import cn.k12soft.servo.repository.StudentRepository;
 import cn.k12soft.servo.repository.UserRepository;
 import cn.k12soft.servo.service.mapper.EntityMapper;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -37,11 +36,9 @@ public class HKUserMapper extends EntityMapper<HKUser, HKUserDTO>{
         String[] ida = hkUser.getHkDeviceIds().split(",");
         Set<HKDevice> hkDevices = new HashSet<>();
 
-        if (ida.length != 0 && StringUtils.isEmpty(ida.toString())) {
-            for (String id : ida) {
-                HKDevice hkDevice = hkDeviceRepository.findOne(Integer.valueOf(id));
-                hkDevices.add(hkDevice);
-            }
+        for (String id : ida){
+            HKDevice hkDevice = hkDeviceRepository.findOne(Integer.valueOf(id));
+            hkDevices.add(hkDevice);
         }
 
         HKUserDTO hkUserDTO = new HKUserDTO();

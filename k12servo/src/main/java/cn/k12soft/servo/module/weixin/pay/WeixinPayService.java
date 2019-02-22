@@ -1,9 +1,7 @@
 package cn.k12soft.servo.module.weixin.pay;
 
-import cn.k12soft.servo.module.weixin.admin.WeixinPayRecord;
 import cn.k12soft.servo.module.weixin.pay.sdk.WXPay;
 import cn.k12soft.servo.module.weixin.pay.sdk.WXPayUtil;
-import cn.k12soft.servo.module.weixin.service.WeixinPayRecodeService;
 import cn.k12soft.servo.module.weixin.util.CommonUtil;
 import cn.k12soft.servo.util.ConcurrentLock;
 import cn.k12soft.servo.util.Times;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,12 +25,9 @@ import java.util.Map;
 public class WeixinPayService {
     private static Logger logger = LoggerFactory.getLogger(WeixinPayService.class);
     private WeixinPayOrderRepository weixinPayOrderRepository;
-    private WeixinPayRecodeService weixinPayRecodeService;
 
-    public WeixinPayService(WeixinPayOrderRepository weixinPayOrderRepository,
-                            WeixinPayRecodeService weixinPayRecodeService){
+    public WeixinPayService(WeixinPayOrderRepository weixinPayOrderRepository){
         this.weixinPayOrderRepository = weixinPayOrderRepository;
-        this.weixinPayRecodeService = weixinPayRecodeService;
     }
 
     public Map<String, String> placeOrder(String code, int totalFee, String clientIp, String body) throws Exception {
@@ -108,21 +102,6 @@ public class WeixinPayService {
         retMap.put("sign", unifiedOrderParamMap.get("sign"));
         retMap.put("orderId", payOrder.getOrderId());
         logger.info("weixinpay placeorder success orderId="+payOrder.getOrderId());
-
-        String transactionId = respMap.get("transaction_id") != null ? respMap.get("transaction_id") : "";
-        String timeEnd = respMap.get("time_end") != null ? respMap.get("time_end") : "";
-
-        // 微信支付记录
-        WeixinPayRecord weixinPayRecode = new WeixinPayRecord(
-                totalFee/100,
-                openid,
-                payOrder.getOrderId(),
-                transactionId,
-                timeEnd,
-                Instant.now()
-        );
-        this.weixinPayRecodeService.save(weixinPayRecode);
-
         return retMap;
     }
 

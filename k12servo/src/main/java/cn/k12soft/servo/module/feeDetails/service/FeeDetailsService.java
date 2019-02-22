@@ -315,15 +315,4 @@ public class FeeDetailsService extends AbstractRepositoryService<FeeDetails, Lon
     }
 
 
-    public boolean isLimit(Actor actor) {
-        boolean is = false;
-        User user = userRepository.findOne(actor.getUserId());
-        HKUser hkUser = hkUserService.findOneUser(actor.getSchoolId(), user.getId());
-        // 1、授权 0、未授权
-        if (hkUser.getState() == 1){
-            is = true;
-        }
-        return is;
-    }
-
 }

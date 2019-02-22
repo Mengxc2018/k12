@@ -1,6 +1,5 @@
 package cn.k12soft.servo.module.charge.domain;
 
-import cn.k12soft.servo.module.account.service.StudentAccountChangeRecordService;
 import cn.k12soft.servo.module.account.service.StudentAccountService;
 import cn.k12soft.servo.module.charge.service.StudentChargePlanService;
 import javax.transaction.Transactional;
@@ -32,7 +31,6 @@ public class MonthlySettlementTask {
   private InterestKlassService interestKlassService;
   private PaybackService paybackService;
   private StudentAccountService studentAccountService;
-  private StudentAccountChangeRecordService studentAccountChangeRecordService;
 
   public MonthlySettlementTask(StudentService studentService,
                                StudentChargePlanService studentChargePlanService,
@@ -41,8 +39,7 @@ public class MonthlySettlementTask {
                                InterestKlassService interestKlassService,
                                IncomeDetailService incomeDetailService,
                                PaybackService paybackService,
-                               StudentAccountService studentAccountService,
-                               StudentAccountChangeRecordService studentAccountChangeRecordService) {
+                               StudentAccountService studentAccountService) {
     this.studentService = studentService;
     this.studentChargePlanService = studentChargePlanService;
     this.incomeService = incomeService;
@@ -51,7 +48,6 @@ public class MonthlySettlementTask {
     this.interestKlassService = interestKlassService;
     this.paybackService = paybackService;
     this.studentAccountService = studentAccountService;
-    this.studentAccountChangeRecordService = studentAccountChangeRecordService;
   }
 
   @Scheduled(cron = "0 3 2 1 * ?") // 每个月1号 2点03分执行
@@ -66,7 +62,7 @@ public class MonthlySettlementTask {
 
   @Transactional
   void _innerExecute() {
-    this.studentChargePlanService.deductExpenses(this.studentService, incomeService,klassService,interestKlassService, paybackService, studentAccountService, incomeDetailService, studentAccountChangeRecordService);
+    this.studentChargePlanService.deductExpenses(this.studentService, incomeService,klassService,interestKlassService, paybackService, studentAccountService, incomeDetailService);
   }
 
 }

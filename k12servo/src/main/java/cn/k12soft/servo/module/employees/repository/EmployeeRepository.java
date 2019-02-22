@@ -1,16 +1,14 @@
 package cn.k12soft.servo.module.employees.repository;
 
 import cn.k12soft.servo.module.employees.domain.Employee;
-import org.springframework.data.domain.Sort;
+import cn.k12soft.servo.module.employees.domain.EmployeeBasic;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long>{
@@ -52,11 +50,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>{
 
     Employee queryBySchoolIdAndActorId(Integer schoolId, Integer actorId);
 
-    Optional<Employee> queryByActorId(Integer teacherActor);
-
-    Collection<Employee> findBySchoolIdAndIsLeaveAndLeaveAtBetween(Integer schoolId, boolean b, Instant first, Instant second, Sort lleaveAt);
-
-    Collection<Employee> findBySchoolIdAndSalaryGreaterThan(Integer schoolId, float salary);
-
-    Collection<Employee> findBySchoolIdAndSalaryNotNullAndSalary(Integer schoolId, float salary);
+    Employee findByEmployeeBasic(EmployeeBasic employeeBasic);
 }

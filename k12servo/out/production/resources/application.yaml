@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: prod
     include: swagger,security
   application:
     name: k12servo
@@ -25,28 +25,8 @@ spring:
       WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: true
     deserialization:
       READ_DATE_TIMESTAMPS_AS_NANOSECONDS: false
-
-  activiti:
-    # 初始化表，如果没有，则创建---一般创建后改为false即可，可加快项目启动速度
-    database-schema-update: true
-    # 自动部署processes下的配置文件
-    process-definition-location-prefix: classpath:/processes/
-    #保存历史数据级别设置为full最高级别，便于历史数据的追溯
-    history-level: full
-    # 校验流程文件，默认校验resources下的processes文件夹里的流程文件
-    check-process-definitions: false
-
-#  devtools:
-#    livereload:
-#      enabled: true #是否支持livereload
-#      port: 35729
-#    restart:
-#      enabled: true #是否支持热部署
-#      additional-paths: cn.k12soft.servo
-
 server:
   contextPath: /
-  port: 8080
   error:
     whitelabel:
       enabled: false
@@ -56,8 +36,6 @@ logging:
     org.springframework.web: INFO
     org.hibernate: INFO
     cn.k12soft.servo: DEBUG
-    # 开启activiti的sql打印，关闭可注释此项
-#    org.activiti.engine.impl.persistence.entity: trace
 
 application:
   appName: k12servo

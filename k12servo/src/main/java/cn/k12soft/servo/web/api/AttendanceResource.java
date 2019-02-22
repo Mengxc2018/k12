@@ -110,11 +110,4 @@ public class AttendanceResource {
     return this.service.findKlassRateOfStu(actor, localDate);
   }
 
-  @ApiOperation("学生添加虚拟数据")
-  @PostMapping("/test/addTestDate")
-  public void addTestDate(@RequestParam @Valid LocalDate localDate,
-                          @RequestParam(required = false) @Valid Integer studentId){
-    this.service.addTestDate(localDate, studentId);
-  }
-
 }

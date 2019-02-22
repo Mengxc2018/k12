@@ -1,9 +1,5 @@
 package cn.k12soft.servo.service.dto;
 
-import cn.k12soft.servo.module.department.domain.Dept;
-
-import java.util.Set;
-
 /**
  * @author <a href="mailto:fenghua.wng@live.com">fenghua.wang</a> Created on 2017/8/13.
  */
@@ -22,7 +18,6 @@ public class SchoolDTO {
   private String barthWith;   // 陪产假
   private String marry;       // 婚假
   private String funeral;     // 丧假
-  private Set<Dept> depts;
 
   public Integer getId() {
     return id;
@@ -120,11 +115,6 @@ public class SchoolDTO {
 
   public SchoolDTO setFuneral(String funeral) {
     this.funeral = funeral;
-    return this;
-  }
-
-  public SchoolDTO setDepts(Set<Dept> depts) {
-    this.depts = depts;
     return this;
   }
 }

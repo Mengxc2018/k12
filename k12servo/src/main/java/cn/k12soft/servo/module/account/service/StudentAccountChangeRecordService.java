@@ -6,8 +6,6 @@ import cn.k12soft.servo.domain.enumeration.StudentAccountOpType;
 import cn.k12soft.servo.module.account.domain.StudentAccount;
 import cn.k12soft.servo.module.account.domain.StudentAccountChangeRecord;
 import cn.k12soft.servo.module.account.repository.StudentAccountChangeRecordRepository;
-import cn.k12soft.servo.repository.KlassRepository;
-import cn.k12soft.servo.repository.StudentRepository;
 import cn.k12soft.servo.service.AbstractRepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,11 +19,6 @@ import java.time.Instant;
 public class StudentAccountChangeRecordService extends AbstractRepositoryService<StudentAccountChangeRecord, Integer, StudentAccountChangeRecordRepository> {
 
   @Autowired
-  private StudentRepository studentRepository;
-  @Autowired
-  private KlassRepository klassRepository;
-
-  @Autowired
   protected StudentAccountChangeRecordService(StudentAccountChangeRecordRepository repository) {
     super(repository);
   }
@@ -36,30 +29,13 @@ public class StudentAccountChangeRecordService extends AbstractRepositoryService
   }
 
   public void create(Student student, StudentAccount studentAccount, Integer klassId, Float changeMoney, Actor actor, StudentAccountOpType opType){
-//      StudentAccountChangeRecord record = new StudentAccountChangeRecord();
-////      record.setStudentAccountId(studentAccount.getId());
-//      record.setKlassId(klassId);
-//      record.setStudentId(student.getId());
-//      record.setChangeMoney(changeMoney);
-//      record.setRemainMoney(studentAccount.getMoney());
-//      record.setCreatedBy(actor);
-//      record.setOpType(opType.getId());
-//      record.setCreateAt(Instant.now());
-//      save(record);
-      create(student.getId(), studentAccount, klassId, changeMoney, actor, opType);
-  }
-
-  public void create(int studentId, StudentAccount studentAccount, Integer klassId, Float changeMoney, Actor actor, StudentAccountOpType opType){
       StudentAccountChangeRecord record = new StudentAccountChangeRecord();
 //      record.setStudentAccountId(studentAccount.getId());
-
-      record.setKlass(klassRepository.findOne(klassId));
-      record.setStudent(studentRepository.findOne(studentId));
+      record.setKlassId(klassId);
+      record.setStudentId(student.getId());
       record.setChangeMoney(changeMoney);
       record.setRemainMoney(studentAccount.getMoney());
-      if(actor != null) {
-          record.setCreatedBy(actor);
-      }
+      record.setCreatedBy(actor);
       record.setOpType(opType.getId());
       record.setCreateAt(Instant.now());
       save(record);

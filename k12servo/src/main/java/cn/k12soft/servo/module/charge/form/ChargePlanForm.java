@@ -1,6 +1,7 @@
 package cn.k12soft.servo.module.charge.form;
 
-import io.swagger.annotations.ApiModelProperty;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
@@ -19,9 +20,6 @@ public class ChargePlanForm {
     private Instant endAt;// 截止日期
     @NotNull
     private Float money;// 金额
-
-    @ApiModelProperty("兴趣班的id，当选择儿童并且为兴趣班时，为兴趣班的di，其他情况请填0，默认为0")
-    private Integer klassInterestId = 0;
 
     public Integer getExpenseId() {
         return expenseId;
@@ -77,9 +75,5 @@ public class ChargePlanForm {
 
     public void setMoney(Float money) {
         this.money = money;
-    }
-
-    public Integer getKlassInterestId() {
-        return klassInterestId;
     }
 }

@@ -2,8 +2,6 @@ package cn.k12soft.servo.module.attendPayRoll;
 
 import cn.k12soft.servo.domain.School;
 import cn.k12soft.servo.module.AttendanceTeacher.repository.AttendanceTeacherRepository;
-import cn.k12soft.servo.module.VacationTeacher.VacationTeacherUtil;
-import cn.k12soft.servo.module.VacationTeacher.repository.VacationTeacherRepository;
 import cn.k12soft.servo.module.revenue.domain.TeacherSocialSecurity;
 import cn.k12soft.servo.module.revenue.repository.TeacherSocialSecurityRepository;
 import cn.k12soft.servo.repository.SchoolRepository;
@@ -24,16 +22,14 @@ public class AttendancePayRollService {
     private final SchoolRepository schoolRepository;
     private final AttendanceTeacherRepository attendanceTeacherRepository;
     private final TeacherSocialSecurityRepository teacherSocialSecurityRepository;
-    private final VacationTeacherRepository vacationTeacherRepository;
 
     @Autowired
     public AttendancePayRollService(SchoolRepository schoolRepository,
                                     AttendanceTeacherRepository attendanceTeacherRepository,
-                                    TeacherSocialSecurityRepository teacherSocialSecurityRepository, VacationTeacherRepository vacationTeacherRepository) {
+                                    TeacherSocialSecurityRepository teacherSocialSecurityRepository) {
         this.schoolRepository = schoolRepository;
         this.attendanceTeacherRepository = attendanceTeacherRepository;
         this.teacherSocialSecurityRepository = teacherSocialSecurityRepository;
-        this.vacationTeacherRepository = vacationTeacherRepository;
     }
 
     public void payRoll() {
@@ -66,50 +62,31 @@ public class AttendancePayRollService {
      * @param second
      * @return
      */
-    public Map<String, Float> payroll(TeacherSocialSecurity security, Integer schoolId, Long first, Long second){
-        Map<String, Float> map = new HashMap<>();
+    public Float payroll(TeacherSocialSecurity security, Integer schoolId, Long first, Long second){
         Integer actorId = Integer.valueOf(security.getActorId());
-        BigDecimal bigSalary = new BigDecimal(security.getSalaryPayment());
+        BigDecimal bigSalary = new BigDecimal(security.getSalary());
         // 统计员工考勤信息
         // 缺勤时长
-        Integer attendSecond = attendanceTeacherRepository.sumTimesBySchoolIdAndActorIdAndCreatedAtBetween(schoolId, actorId, first, second);
-        // 病假请假时长
-        Integer sickSecond = vacationTeacherRepository.sumSickVacationTimeBySchoolIdAndActorIdAndCreatedAtBetween(schoolId, actorId, VacationTeacherUtil.VACATIONTYPE.SICK, first, second);
-        // 事假请假时长
-        Integer affairSecond = vacationTeacherRepository.sumAffairVacationTimeBySchoolIdAndActorIdAndCreatedAtBetween(schoolId, actorId, VacationTeacherUtil.VACATIONTYPE.AFFAIR, first, second);
+        Integer times = attendanceTeacherRepository.sumTimesBySchoolIdAndActorIdAndCreatedAtBetween(schoolId, actorId, first, second);
+        // 请假时长
+        Integer vacationTime = attendanceTeacherRepository.sumVacationTimeBySchoolIdAndActorIdAndCreatedAtBetween(schoolId, actorId, first, second);
 
-
-        if (attendSecond == null || attendSecond == 0){
-            attendSecond = 0;
+        if (times == null){
+            times = 0;
         }
-        if (affairSecond == null || affairSecond == 0){
-            affairSecond = 0;
-        }
-        if (sickSecond == null || sickSecond == 0){
-            sickSecond = 0;
+        if (vacationTime == null){
+            vacationTime = 0;
         }
 
-        BigDecimal bigAttend = new BigDecimal(attendSecond);    // 考勤
-        BigDecimal bigAffair = new BigDecimal(affairSecond);    // 事假
-        BigDecimal bigSick = new BigDecimal(sickSecond);    // 病假
-        bigAttend = bigAttend.divide(new BigDecimal(3600));   // 单位：小时
-        bigAffair = bigAffair.divide(new BigDecimal(3600));   // 单位：小时
-        bigSick = bigSick.divide(new BigDecimal(3600));   // 单位：小时
-
+        BigDecimal bigSum = new BigDecimal(times + vacationTime);
+        bigSum = bigSum.divide(new BigDecimal(3600));   // 单位：小时
         BigDecimal bigOne = new BigDecimal(22);    // 上班工作日
         BigDecimal bigTwo = new BigDecimal(8);     // 每天工作时长
 
         // 计算需要扣除的薪资 应发工资/22/8*缺勤请假时长
-        bigAttend = bigSalary.divide(bigOne, 2, BigDecimal.ROUND_UP).divide(bigTwo, 2, BigDecimal.ROUND_HALF_UP).multiply(bigAttend);
-        bigAffair = bigSalary.divide(bigOne, 2, BigDecimal.ROUND_UP).divide(bigTwo, 2, BigDecimal.ROUND_HALF_UP).multiply(bigAffair);
-        bigSick = bigSalary.divide(bigOne, 2, BigDecimal.ROUND_UP).divide(bigTwo, 2, BigDecimal.ROUND_HALF_UP).multiply(bigSick);
-        Float attend = bigAttend.floatValue();
-        Float affair = bigAffair.floatValue();
-        Float sick = bigSick.floatValue();
-        map.put("attend", attend);
-        map.put("affair", affair);
-        map.put("sick", sick);
-        return map;
+        bigSalary = bigSalary.divide(bigOne, 2, BigDecimal.ROUND_UP).divide(bigTwo, 2, BigDecimal.ROUND_HALF_UP).multiply(bigSum);
+        Float salaryf = Float.valueOf(bigSalary.toString());
+        return salaryf;
     }
 
     /**
