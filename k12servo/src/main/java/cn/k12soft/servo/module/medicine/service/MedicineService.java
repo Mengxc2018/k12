@@ -128,7 +128,8 @@ public class MedicineService extends AbstractRepositoryService<Medicine, Long, M
     }
 
     public Collection<Medicine> findDoneForTeacher(Actor actor, Integer klassId, LocalDate localDate) {
-        return this.getRepository().findDoneForTeacher(actor.getId(), klassId, false,false, localDate);
+        return klassId == null ? this.getRepository().findDoneForTeacherByAll(actor.getId(), false,false, localDate)
+                : this.getRepository().findDoneForTeacher(actor.getId(), klassId, false,false, localDate);
     }
 
     public Collection<Medicine> findBy(Actor actor, Integer code, LocalDate localDate) {

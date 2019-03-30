@@ -29,6 +29,6 @@ public interface StudentChargeRecordRepository extends JpaRepository<StudentChar
             + " and (DATE(create_at) between DATE(':formDate') and DATE(':toDate'))"
             , nativeQuery = true)
     List<StudentChargeRecord> findAllBySchoolIdAndCreateAtBetween(@Param("schoolId") Integer schoolId,
-                                                            @Param("formDate") LocalDate formDate,
-                                                            @Param("toDate") LocalDate toDate);
+                                                                  @Param("formDate") LocalDate formDate,
+                                                                  @Param("toDate") LocalDate toDate);
 }

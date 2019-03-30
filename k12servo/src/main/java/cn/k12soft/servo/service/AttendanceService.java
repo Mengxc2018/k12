@@ -13,6 +13,7 @@ import cn.k12soft.servo.web.form.RetroAttendanceForm;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -120,13 +121,7 @@ public class AttendanceService extends
         List<Object[]> list = studentId != null
                 ? repository.queryStudent(klassId, studentId, lookDate)
                 : repository.query(klassId, lookDate);
-
-        List<DailyAttendStat> collect = list.stream().map(DailyAttendStat::new).collect(Collectors.toList());
-        if(list.size() != 0){
-            Optional<String> portrait = this.getRepository().findLastPortrait(klassId, date, studentId);
-            collect.get(0).setPortrait(portrait.orElse(""));
-        }
-        return collect;
+        return list.stream().map(DailyAttendStat::new).collect(Collectors.toList());
     }
 
     public AttendPeriodStat queryPeriod(Integer klassId, PeriodType type, LocalDate specDate, Integer studentId) {
@@ -244,4 +239,37 @@ public class AttendanceService extends
         return param;
     }
 
+    public void addTestDate(LocalDate localDate, Integer studentId) {
+        LocalDate one = localDate.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate two = localDate.with(TemporalAdjusters.lastDayOfMonth());
+
+        List<Student> students = this.studentRepository.findAll();
+
+        Instant date = one.atStartOfDay().toInstant(ZoneOffset.UTC).plusSeconds(8*3600);
+
+        if (studentId == null){
+            for (Student student : students) {
+                for (int i = one.lengthOfMonth(); i > 0; i--) {
+                    if (holidaysWeekService.isWeekend(date)){
+                        date = date.plusSeconds(24*3600);
+                        continue;
+                    }
+                    List<Attendance> attendances = this.getRepository().findByStudentIdAndSignAt(student.getId(), date);
+                    if (attendances.size() == 0) {
+                        Attendance attendance = new Attendance(
+                                1,
+                                student.getId(),
+                                student.getName(),
+                                student.getKlass().getId(),
+                                "",
+                                0f,
+                                date
+                        );
+                        this.getRepository().save(attendance);
+                    }
+                    date = date.plusSeconds(24*3600);
+                }
+            }
+        }
+    }
 }

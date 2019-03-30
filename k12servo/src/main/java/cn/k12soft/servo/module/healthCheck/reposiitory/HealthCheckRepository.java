@@ -34,10 +34,10 @@ public interface HealthCheckRepository extends JpaRepository<HealthCheck, Long>,
             + " ORDER BY student_id ASC"
             ,nativeQuery = true)
     List<Integer> findAllStudentIdByKlassAndCreatedAtBetween(@Param("klassId") Integer klassId,
-                                                                 @Param("schoolId") Integer schoolId,
-                                                                 @Param("issue") boolean issue,
-                                                                 @Param("first") Instant first,
-                                                                 @Param("second") Instant second);
+                                                             @Param("schoolId") Integer schoolId,
+                                                             @Param("issue") boolean issue,
+                                                             @Param("first") Instant first,
+                                                             @Param("second") Instant second);
 
 
     Collection<HealthCheck> findAllBySchoolIdAndKlassIdAndStudentIdAndIssueAndCreatedAtBetween(Integer id, Integer schoolId, Integer klassId, boolean b, Instant first, Instant second);

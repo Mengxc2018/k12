@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.aliyun:aliyun-java-sdk-push:3.10.0">
+    <CLASSES>
+      <root url="jar://D:/gradle-all/gradleBulid/caches/modules-2/files-2.1/com.aliyun/aliyun-java-sdk-push/3.10.0/474bdee93f1b299d361a6a25de62d0fb9d5ee055/aliyun-java-sdk-push-3.10.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://D:/gradle-all/gradleBulid/caches/modules-2/files-2.1/com.aliyun/aliyun-java-sdk-push/3.10.0/a4a3cf2a625fd06a505c0a18900d4e787269462d/aliyun-java-sdk-push-3.10.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

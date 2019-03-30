@@ -2,8 +2,287 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9bdda9d8-7b91-4dab-9094-adb6014027e7" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/4.7/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.7/fileHashes/fileHashes.bin" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.7/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.7/fileHashes/fileHashes.lock" />
+      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__antlr_antlr_2_7_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_alibaba_fastjson_1_2_49.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_alipay_sdk_alipay_sdk_java_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_aliyun_aliyun_java_sdk_core_3_2_8.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_aliyun_aliyun_java_sdk_dysmsapi_1_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_aliyun_aliyun_java_sdk_push_3_10_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_aliyun_aliyun_java_sdk_sts_2_1_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_aliyun_aliyun_java_sdk_vod_2_7_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_aliyun_mns_aliyun_sdk_mns_jar_with_dependencies_1_1_8.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_aliyun_oss_aliyun_sdk_oss_2_5_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_carrotsearch_hppc_0_7_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_fasterxml_classmate_1_3_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_fasterxml_jackson_core_jackson_annotations_2_8_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_fasterxml_jackson_core_jackson_core_2_8_10.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_fasterxml_jackson_core_jackson_databind_2_8_10.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_fasterxml_jackson_datatype_jackson_datatype_hibernate5_2_8_10.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_fasterxml_jackson_datatype_jackson_datatype_hppc_2_8_10.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_fasterxml_jackson_datatype_jackson_datatype_json_org_2_8_10.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_fasterxml_jackson_datatype_jackson_datatype_jsr310_2_8_10.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_fasterxml_jackson_module_jackson_module_afterburner_2_8_10.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_code_gson_gson_2_8_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_errorprone_error_prone_annotations_2_0_18.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_guava_guava_23_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_j2objc_j2objc_annotations_1_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_h2database_h2_1_4_196.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_papertrail_profiler_1_0_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_ryantenney_metrics_metrics_spring_3_1_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_sun_mail_javax_mail_1_5_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_thoughtworks_xstream_xstream_1_4_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_zaxxer_HikariCP_2_6_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__commons_beanutils_commons_beanutils_1_9_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__commons_codec_commons_codec_1_10.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__commons_collections_commons_collections_3_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__commons_dbcp_commons_dbcp_1_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__commons_io_commons_io_2_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__commons_lang_commons_lang_2_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__commons_logging_commons_logging_1_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__commons_pool_commons_pool_1_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__de_odysseus_juel_juel_api_2_2_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__de_odysseus_juel_juel_impl_2_2_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__de_odysseus_juel_juel_spi_2_2_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__dom4j_dom4j_1_6_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_dropwizard_metrics_metrics_annotation_3_1_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_dropwizard_metrics_metrics_core_3_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_dropwizard_metrics_metrics_healthchecks_3_1_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_dropwizard_metrics_metrics_jcache_3_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_dropwizard_metrics_metrics_json_3_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_dropwizard_metrics_metrics_jvm_3_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_dropwizard_metrics_metrics_servlet_3_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_dropwizard_metrics_metrics_servlets_3_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_jsonwebtoken_jjwt_0_7_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_springfox_springfox_bean_validators_2_9_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_springfox_springfox_core_2_9_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_springfox_springfox_schema_2_9_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_springfox_springfox_spi_2_9_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_springfox_springfox_spring_web_2_9_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_springfox_springfox_swagger2_2_9_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_springfox_springfox_swagger_common_2_9_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_springfox_springfox_swagger_ui_2_9_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_swagger_swagger_annotations_1_5_20.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_swagger_swagger_models_1_5_20.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__javax_activation_activation_1_1_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__javax_transaction_javax_transaction_api_1_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__javax_transaction_jta_1_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__javax_validation_validation_api_1_1_0_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__joda_time_joda_time_2_9_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__junit_junit_4_12.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__log4j_log4j_1_2_17.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__mysql_mysql_connector_java_6_0_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__net_bytebuddy_byte_buddy_1_8_12.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__net_optionfactory_hibernate_json_2_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__net_sf_ezmorph_ezmorph_1_0_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__net_sf_json_lib_json_lib_jdk15_2_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__nz_net_ultraq_thymeleaf_thymeleaf_layout_dialect_1_4_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__ognl_ognl_3_0_8.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_activiti_activiti_bpmn_converter_6_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_activiti_activiti_bpmn_layout_6_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_activiti_activiti_bpmn_model_6_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_activiti_activiti_dmn_api_6_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_activiti_activiti_dmn_model_6_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_activiti_activiti_engine_6_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_activiti_activiti_form_api_6_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_activiti_activiti_form_model_6_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_activiti_activiti_image_generator_6_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_activiti_activiti_process_validation_6_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_activiti_activiti_spring_6_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_activiti_activiti_spring_boot_starter_basic_6_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_commons_commons_email_1_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_commons_commons_lang3_3_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_geronimo_bundles_json_20090211_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_httpcomponents_httpasyncclient_4_1_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_httpcomponents_httpclient_4_5_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_httpcomponents_httpcore_4_4_8.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_httpcomponents_httpcore_nio_4_4_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_logging_log4j_log4j_api_2_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_logging_log4j_log4j_core_2_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_logging_log4j_log4j_slf4j_impl_2_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_tomcat_embed_tomcat_embed_core_8_5_23.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_tomcat_embed_tomcat_embed_el_8_5_23.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_tomcat_embed_tomcat_embed_websocket_8_5_23.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_tomcat_tomcat_annotations_api_8_5_23.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_tomcat_tomcat_jdbc_8_5_23.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_tomcat_tomcat_juli_8_5_23.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_aspectj_aspectjweaver_1_8_11.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_codehaus_groovy_groovy_2_4_12.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_codehaus_mojo_animal_sniffer_annotations_1_14.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hamcrest_hamcrest_core_1_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hibernate_common_hibernate_commons_annotations_5_0_1_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hibernate_hibernate_core_5_0_12_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hibernate_hibernate_entitymanager_5_0_12_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hibernate_hibernate_envers_5_0_12_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hibernate_hibernate_java8_5_0_12_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hibernate_hibernate_validator_5_3_5_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hibernate_javax_persistence_hibernate_jpa_2_1_api_1_0_0_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_javassist_javassist_3_21_0_GA.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_jboss_jandex_2_0_0_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_jboss_logging_jboss_logging_3_3_1_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_jdom_jdom_1_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_mapstruct_mapstruct_1_2_0_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_mybatis_mybatis_3_4_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_jcl_over_slf4j_1_7_25.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_jul_to_slf4j_1_7_25.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_log4j_over_slf4j_1_7_25.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_slf4j_api_1_7_25.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_boot_spring_boot_1_5_8_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_boot_spring_boot_autoconfigure_1_5_8_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_boot_spring_boot_starter_1_5_8_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_boot_spring_boot_starter_aop_1_5_8_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_boot_spring_boot_starter_data_jpa_1_5_8_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_boot_spring_boot_starter_jdbc_1_5_8_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_boot_spring_boot_starter_log4j2_1_5_8_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_boot_spring_boot_starter_logging_1_5_8_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_boot_spring_boot_starter_security_1_5_8_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_boot_spring_boot_starter_thymeleaf_1_5_8_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_boot_spring_boot_starter_tomcat_1_5_8_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_boot_spring_boot_starter_web_1_5_8_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_data_spring_data_commons_1_13_8_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_data_spring_data_jpa_1_11_8_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_plugin_spring_plugin_core_1_2_0_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_plugin_spring_plugin_metadata_1_2_0_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_security_spring_security_config_4_2_3_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_security_spring_security_core_4_2_3_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_security_spring_security_web_4_2_3_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_aop_4_3_12_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_aspects_4_3_12_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_beans_4_3_12_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_context_4_3_12_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_context_support_4_3_12_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_core_4_3_12_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_expression_4_3_12_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_jdbc_4_3_12_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_orm_4_3_12_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_tx_4_3_12_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_web_4_3_12_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_webmvc_4_3_12_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_thymeleaf_thymeleaf_2_1_5_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_thymeleaf_thymeleaf_spring4_2_1_5_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_tinyjee_jgraphx_jgraphx_1_10_4_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_unbescape_unbescape_1_1_0_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_yaml_snakeyaml_1_17.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__xmlpull_xmlpull_1_1_3_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__xpp3_xpp3_min_1_1_4c.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.7/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.7/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.7/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.7/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_code_findbugs_jsr305_3_0_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_code_findbugs_jsr305_3_0_1.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/k12servo/k12servo_main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/k12servo/k12servo_main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/k12servo/k12servo_test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/k12servo/k12servo_test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/application-dev.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/application-local.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/application-prod.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/application-security.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/china-area.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/db/migration/v1_init_database.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/db/migration/v2_init_data.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/processes/vacationProcess7dce86ad866e4b15a85e51fbb62990af.bpmn" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/processes/vacationProcess7dce86ad866e4b15a85e51fbb62990af.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/processes/vacationProcess99f0decb757948d7833c814336ad332b.bpmn" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/processes/vacationProcess99f0decb757948d7833c814336ad332b.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/processes/vacationProcessdfbf9cee3307480ba37c572e5e125f7b.bpmn20.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/processes/vacationProcessdfbf9cee3307480ba37c572e5e125f7b.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/processes/vacationProcessfd54501b0ad74a5ba5b4ae407a2c869e.bpmn" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/build/resources/main/processes/vacationProcessfd54501b0ad74a5ba5b4ae407a2c869e.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/out/production/resources/application-local.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/out/production/resources/application-local.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/out/production/resources/application-prod.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/out/production/resources/application-prod.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/out/production/resources/application-security.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/out/production/resources/application-security.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/out/production/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/out/production/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/configuration/K12SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/configuration/K12SecurityConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/domain/School.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/domain/School.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/domain/SchoolEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/domain/SchoolEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/domain/enumeration/ChargePlanTargetType.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/domain/enumeration/ChargePlanTargetType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/domain/enumeration/StudentAccountOpType.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/domain/enumeration/StudentAccountOpType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/AttendanceTeacher/management/AttendanceTeacherManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/AttendanceTeacher/management/AttendanceTeacherManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/AttendanceTeacher/repository/AttendanceTeacherRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/AttendanceTeacher/repository/AttendanceTeacherRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/AttendanceTeacher/service/AttendanceTeacherSerivce.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/AttendanceTeacher/service/AttendanceTeacherSerivce.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/account/domain/StudentAccountChangeRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/account/domain/StudentAccountChangeRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/account/service/StudentAccountChangeRecordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/account/service/StudentAccountChangeRecordService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/attendPayRoll/AttendancePayRollService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/attendPayRoll/AttendancePayRollService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/domain/ChargePlan.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/domain/ChargePlan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/domain/MonthlySettlementTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/domain/MonthlySettlementTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/domain/StudentCharge.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/domain/StudentCharge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/form/ChargePlanForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/form/ChargePlanForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/form/ChargePlanManyForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/form/ChargePlanManyForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/repository/ChargePlanRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/repository/ChargePlanRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/repository/StudentChargePlanRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/repository/StudentChargePlanRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/rest/ChargePlanManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/rest/ChargePlanManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/service/ChargePlanService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/service/ChargePlanService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/service/StudentChargePlanService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/charge/service/StudentChargePlanService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/commmontest/CommonTaskTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/commmontest/CommonTaskTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/district/form/dto/CitysDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/district/form/dto/CitysDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/district/management/DistrictManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/district/management/DistrictManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/district/repository/ProvincesRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/district/repository/ProvincesRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/district/service/DistrictService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/district/service/DistrictService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/district/service/mapper/CitysMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/district/service/mapper/CitysMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/empFlowRate/service/EmpFlowRateService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/empFlowRate/service/EmpFlowRateService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employeeFlow/domain/EmployeeFlow.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employeeFlow/domain/EmployeeFlow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employeeFlow/service/EmployeeFlowService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employeeFlow/service/EmployeeFlowService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/domain/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/domain/Employee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/domain/dto/EmployeeDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/domain/dto/EmployeeDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/domain/form/EmployeeForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/domain/form/EmployeeForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/management/EmpolyeeManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/management/EmpolyeeManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/repository/EmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/repository/EmployeeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/service/EmployeeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/service/EmployeeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/service/mapper/EmployeeMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/service/mapper/EmployeeMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/service/mapper/EpleToSalMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/employees/service/mapper/EpleToSalMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/expense/domain/ExpenseEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/expense/domain/ExpenseEntry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/expense/form/ExpenseEntryForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/expense/form/ExpenseEntryForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/expense/service/ExpenseEntryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/expense/service/ExpenseEntryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/feeDetails/service/FeeDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/feeDetails/service/FeeDetailsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/finance/domain/receipt/ReceiptNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/finance/domain/receipt/ReceiptNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/healthCheck/management/HealthCheckManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/healthCheck/management/HealthCheckManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/healthCheck/reposiitory/HealthCheckRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/healthCheck/reposiitory/HealthCheckRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/healthCheck/service/HealthCheckService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/healthCheck/service/HealthCheckService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/holidaysWeek/service/HolidaysWeekService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/holidaysWeek/service/HolidaysWeekService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/medicine/management/MedicineManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/medicine/management/MedicineManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/medicine/repository/MedicineRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/medicine/repository/MedicineRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/medicine/service/MedicineService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/medicine/service/MedicineService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/domain/IncomeSrc.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/domain/IncomeSrc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/domain/TeacherSocialSecurity.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/domain/TeacherSocialSecurity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/form/TeacherSocialSecurityForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/form/TeacherSocialSecurityForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/rest/RevenueManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/rest/RevenueManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/service/IncomeDetailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/service/IncomeDetailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/service/IncomeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/service/IncomeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/service/PayoutService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/service/PayoutService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/service/PayoutSubTypeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/service/PayoutSubTypeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/service/TeacherSocialSecurityService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/revenue/service/TeacherSocialSecurityService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/studentChargeRecord/repository/StudentChargeRecordRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/studentChargeRecord/repository/StudentChargeRecordRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/vedioMonitor/service/HKUserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/vedioMonitor/service/HKUserMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/vedioMonitor/service/HKUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/vedioMonitor/service/HKUserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/warehouse/warehouse/domain/Warehouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/warehouse/warehouse/domain/Warehouse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/warehouse/warehouse/management/WarehouseManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/warehouse/warehouse/management/WarehouseManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/warehouse/warehouseSchool/service/WarehouseSchoolService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/warehouse/warehouseSchool/service/WarehouseSchoolService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/weeklyRemark/repository/WeeklyReopsitory.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/weeklyRemark/repository/WeeklyReopsitory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/weixin/management/WeixinPayRecordManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/weixin/management/WeixinPayRecordManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/weixin/pay/WeixinPayService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/weixin/pay/WeixinPayService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/weixin/pay/sdk/WXPay.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/weixin/pay/sdk/WXPay.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/weixin/util/CommonUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/weixin/util/CommonUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/wxLogin/repository/WxActiveRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/wxLogin/repository/WxActiveRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/wxLogin/service/WxService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/wxLogin/service/WxService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/wxLogin/service/WxUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/wxLogin/service/WxUserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/zone/domain/Citys.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/zone/domain/Citys.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/zone/domain/Groups.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/zone/domain/Groups.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/zone/domain/Provinces.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/zone/domain/Provinces.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/zone/domain/Regions.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/zone/domain/Regions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/repository/AttendanceRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/repository/AttendanceRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/repository/StudentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/repository/StudentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/service/AttendanceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/service/AttendanceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/service/DailyTaskService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/service/DailyTaskService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/service/InvitationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/service/InvitationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/service/SchoolService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/service/SchoolService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/service/dto/SchoolDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/service/dto/SchoolDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/third/alipay/AliPayService.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/third/alipay/AliPayService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/web/api/AttendanceResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/web/api/AttendanceResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/web/api/TokenResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/web/api/TokenResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/web/api/UserResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/web/api/UserResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/web/management/SchoolManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/web/management/SchoolManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k12servo/src/main/resources/application-local.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k12servo/src/main/resources/application-local.yaml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -11,591 +290,146 @@
     <ignored path="$PROJECT_DIR$/k12servo/build/" />
     <ignored path="$PROJECT_DIR$/k12servo/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
-    <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
   </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="k12soft" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/activiti/departments/web/DeptActTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="200">
+              <caret line="20" column="24" selection-start-line="20" selection-start-column="24" selection-end-line="20" selection-end-column="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/healthCheck/service/HealthCheckService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="174" column="21" lean-forward="true" selection-start-line="174" selection-start-column="21" selection-end-line="174" selection-end-column="21" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/repository/AttendanceRepository.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="199">
+              <caret line="88" column="17" selection-start-line="88" selection-start-column="17" selection-end-line="88" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/domain/Attendance.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="275">
+              <caret line="16" column="17" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/configuration/swagger/PageableParameterBuilderPlugin.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="274">
+              <caret line="56" column="74" lean-forward="true" selection-start-line="56" selection-start-column="74" selection-end-line="56" selection-end-column="74" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/k12servo/src/main/resources/application.yaml">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/k12servo/src/main/resources/application-local.yaml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="6" column="18" lean-forward="true" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/healthCheck/domain/HealthCheck.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/domain/enumeration/Physical.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1600">
+              <caret line="10" column="24" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>getDepartment</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GradleLocalSettings">
-    <option name="myGradleHomes">
-      <map>
-        <entry key="$PROJECT_DIR$" value="D:\gradle-4.7-all\gradle-4.7" />
-      </map>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/configuration/swagger/PageableParameterBuilderPlugin.java" />
+        <option value="$PROJECT_DIR$/k12servo/src/main/resources/application-local.yaml" />
+      </list>
     </option>
-    <option name="myGradleVersions">
-      <map>
-        <entry key="$PROJECT_DIR$" value="4.7" />
-      </map>
-    </option>
-    <option name="availableProjects">
-      <map>
-        <entry>
-          <key>
-            <ExternalProjectPojo>
-              <option name="name" value="k12soft" />
-              <option name="path" value="$PROJECT_DIR$" />
-            </ExternalProjectPojo>
-          </key>
-          <value>
-            <list>
-              <ExternalProjectPojo>
-                <option name="name" value="k12soft" />
-                <option name="path" value="$PROJECT_DIR$" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
-                <option name="name" value=":k12servo" />
-                <option name="path" value="$PROJECT_DIR$/k12servo" />
-              </ExternalProjectPojo>
-            </list>
-          </value>
-        </entry>
-      </map>
-    </option>
-    <option name="availableTasks">
-      <map>
-        <entry key="$PROJECT_DIR$">
-          <value>
-            <list>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the components produced by root project 'k12soft'. [incubating]" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="components" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the sub-projects of root project 'k12soft'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="projects" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project and all projects that depend on it." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="buildDependents" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the dependent components of components in root project 'k12soft'. [incubating]" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="dependentComponents" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles main classes." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="classes" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays all buildscript dependencies declared in root project 'k12soft'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="buildEnvironment" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates Gradle wrapper files." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="wrapper" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles test classes." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="testClasses" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates Javadoc API documentation for the main source code." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="javadoc" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the configuration model of root project 'k12soft'. [incubating]" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="model" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles a jar archive containing the main classes." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="jar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Processes main resources." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="processResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the tasks runnable from root project 'k12soft' (some of the displayed tasks may belong to subprojects)." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="tasks" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Initializes a new Gradle build." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="init" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs the unit tests." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="test" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the dependency management declared in project ':k12servo'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="dependencyManagement" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Repackage existing JAR and WAR archives so that they can be executed from the command line using 'java -jar'" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="bootRepackage" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Run the project with support for auto-detecting main class and reloading static resources" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="bootRun" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Compiles main Java source." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="compileJava" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the insight into a specific dependency in root project 'k12soft'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="dependencyInsight" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs all checks." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="check" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles the outputs of this project." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="assemble" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Deletes the build directory." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="clean" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Compiles test Java source." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="compileTestJava" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays all dependencies declared in root project 'k12soft'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="dependencies" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Processes test resources." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="processTestResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays a help message." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="help" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="build" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="findMainClass" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project and all projects it depends on." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="buildNeeded" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the properties of root project 'k12soft'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="properties" />
-              </ExternalTaskPojo>
-            </list>
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/k12servo">
-          <value>
-            <list>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the components produced by project ':k12servo'. [incubating]" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="components" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project and all projects that depend on it." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="buildDependents" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the sub-projects of project ':k12servo'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="projects" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles main classes." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="classes" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the dependent components of components in project ':k12servo'. [incubating]" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="dependentComponents" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays all buildscript dependencies declared in project ':k12servo'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="buildEnvironment" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles test classes." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="testClasses" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates Javadoc API documentation for the main source code." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="javadoc" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles a jar archive containing the main classes." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="jar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the configuration model of project ':k12servo'. [incubating]" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="model" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Processes main resources." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="processResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the tasks runnable from project ':k12servo'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="tasks" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs the unit tests." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="test" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the dependency management declared in project ':k12servo'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="dependencyManagement" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Repackage existing JAR and WAR archives so that they can be executed from the command line using 'java -jar'" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="bootRepackage" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Run the project with support for auto-detecting main class and reloading static resources" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="bootRun" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Compiles main Java source." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="compileJava" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the insight into a specific dependency in project ':k12servo'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="dependencyInsight" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs all checks." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="check" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles the outputs of this project." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="assemble" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Deletes the build directory." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="clean" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Compiles test Java source." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="compileTestJava" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays all dependencies declared in project ':k12servo'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="dependencies" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Processes test resources." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="processTestResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays a help message." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="help" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="build" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="findMainClass" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project and all projects it depends on." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="buildNeeded" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the properties of project ':k12servo'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/k12servo" />
-                <option name="name" value="properties" />
-              </ExternalTaskPojo>
-            </list>
-          </value>
-        </entry>
-      </map>
-    </option>
-    <option name="modificationStamps">
-      <map>
-        <entry key="$PROJECT_DIR$/build.gradle" value="268628709" />
-        <entry key="$PROJECT_DIR$/gradle.properties" value="1935133563" />
-        <entry key="$PROJECT_DIR$/k12servo/build.gradle" value="2210210193" />
-        <entry key="$PROJECT_DIR$/settings.gradle" value="592697197" />
-      </map>
-    </option>
-    <option name="projectBuildClasspath">
-      <map>
-        <entry key="$PROJECT_DIR$">
-          <value>
-            <ExternalProjectBuildClasspathPojo>
-              <option name="modulesBuildClasspath">
-                <map>
-                  <entry key="$PROJECT_DIR$">
-                    <value>
-                      <ExternalModuleBuildClasspathPojo>
-                        <option name="path" value="$PROJECT_DIR$" />
-                      </ExternalModuleBuildClasspathPojo>
-                    </value>
-                  </entry>
-                  <entry key="$PROJECT_DIR$/k12servo">
-                    <value>
-                      <ExternalModuleBuildClasspathPojo>
-                        <option name="entries">
-                          <list>
-                            <option value="D:/gradle-4.7-all/gradle-4.7/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-gradle-plugin/1.5.8.RELEASE/710e1f24906575e788b3a348727b71524ff22ffe/spring-boot-gradle-plugin-1.5.8.RELEASE-sources.jar" />
-                            <option value="D:/gradle-4.7-all/gradle-4.7/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-gradle-plugin/1.5.8.RELEASE/9c14329cbd7ad30b3b9fe6b8e27e83f2d811324f/spring-boot-gradle-plugin-1.5.8.RELEASE.jar" />
-                            <option value="D:/gradle-4.7-all/gradle-4.7/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-loader-tools/1.5.8.RELEASE/a50beb4d4b750f1c52ba07957dcff6f657e6bf7d/spring-boot-loader-tools-1.5.8.RELEASE-sources.jar" />
-                            <option value="D:/gradle-4.7-all/gradle-4.7/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-loader-tools/1.5.8.RELEASE/31a9bac25f0c83e69873c453de93282d6091e627/spring-boot-loader-tools-1.5.8.RELEASE.jar" />
-                            <option value="D:/gradle-4.7-all/gradle-4.7/caches/modules-2/files-2.1/io.spring.gradle/dependency-management-plugin/1.0.3.RELEASE/7bb9ab86474b9ff2e7aa8ea3609878a1750e3f90/dependency-management-plugin-1.0.3.RELEASE-sources.jar" />
-                            <option value="D:/gradle-4.7-all/gradle-4.7/caches/modules-2/files-2.1/io.spring.gradle/dependency-management-plugin/1.0.3.RELEASE/c7fc988680e19cef9bf91de0c39b891e4c8dca2d/dependency-management-plugin-1.0.3.RELEASE.jar" />
-                            <option value="D:/gradle-4.7-all/gradle-4.7/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.12.RELEASE/2106c4c25ad9f0021109c2087d4c39b71ddcc6f4/spring-core-4.3.12.RELEASE-sources.jar" />
-                            <option value="D:/gradle-4.7-all/gradle-4.7/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.12.RELEASE/4cebc69478c6d350dbd5af28e3db7d5694f416e3/spring-core-4.3.12.RELEASE.jar" />
-                            <option value="D:/gradle-4.7-all/gradle-4.7/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/ecf26c7507d67782a3bbd148d170b31dfad001aa/commons-logging-1.2-sources.jar" />
-                            <option value="D:/gradle-4.7-all/gradle-4.7/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar" />
-                          </list>
-                        </option>
-                        <option name="path" value="$PROJECT_DIR$/k12servo" />
-                      </ExternalModuleBuildClasspathPojo>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-              <option name="name" value="k12soft" />
-              <option name="projectBuildClasspath">
-                <list>
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/announce" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/antlr" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/base-services" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/base-services-groovy" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/build-cache" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/build-cache-http" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/build-comparison" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/build-init" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/build-option" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/cli" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/code-quality" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/composite-builds" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/core" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/core-api" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/dependency-management" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/diagnostics" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/ear" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/ide" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/ide-native" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/ide-play" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/installation-beacon" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/internal-android-performance-testing" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/internal-integ-testing" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/internal-performance-testing" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/internal-testing" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/ivy" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/jacoco" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/javascript" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/jvm-services" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/language-groovy" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/language-java" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/language-jvm" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/language-native" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/language-scala" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/launcher" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/logging" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/maven" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/messaging" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/model-core" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/model-groovy" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/native" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/osgi" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/persistent-cache" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/platform-base" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/platform-jvm" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/platform-native" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/platform-play" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/plugin-development" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/plugin-use" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/plugins" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/process-services" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/publish" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/reporting" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/resources" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/resources-gcs" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/resources-http" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/resources-s3" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/resources-sftp" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/scala" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/signing" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/test-kit" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/testing-base" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/testing-junit-platform" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/testing-jvm" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/testing-native" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/tooling-api" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/tooling-api-builders" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/version-control" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/workers" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/src/wrapper" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/ant-1.9.9.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/ant-launcher-1.9.9.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-base-services-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-base-services-groovy-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-build-cache-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-build-option-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-cli-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-core-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-core-api-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-docs-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-installation-beacon-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-jvm-services-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-kotlin-dsl-0.16.3.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-kotlin-dsl-tooling-builders-0.16.3.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-kotlin-dsl-tooling-models-0.16.3.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-launcher-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-logging-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-messaging-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-model-core-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-model-groovy-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-native-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-persistent-cache-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-process-services-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-resources-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-runtime-api-info-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-tooling-api-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/gradle-wrapper-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/groovy-all-2.4.12.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-announce-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-antlr-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-build-cache-http-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-build-comparison-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-build-init-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-code-quality-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-composite-builds-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-dependency-management-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-diagnostics-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-ear-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-ide-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-ide-native-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-ide-play-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-ivy-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-jacoco-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-javascript-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-language-groovy-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-language-java-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-language-jvm-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-language-native-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-language-scala-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-maven-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-osgi-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-platform-base-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-platform-jvm-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-platform-native-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-platform-play-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-plugin-development-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-plugin-use-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-plugins-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-publish-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-reporting-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-resources-gcs-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-resources-http-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-resources-s3-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-resources-sftp-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-scala-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-signing-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-test-kit-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-testing-base-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-testing-junit-platform-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-testing-jvm-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-testing-native-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-tooling-api-builders-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-version-control-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/gradle-workers-4.7.jar" />
-                  <option value="D:/gradle-4.7-all/gradle-4.7/lib/plugins/ivy-2.2.0.jar" />
-                  <option value="$PROJECT_DIR$/buildSrc/src/main/java" />
-                  <option value="$PROJECT_DIR$/buildSrc/src/main/groovy" />
-                </list>
-              </option>
-            </ExternalProjectBuildClasspathPojo>
-          </value>
-        </entry>
-      </map>
-    </option>
-    <option name="externalProjectsViewState">
-      <projects_view />
-    </option>
-    <option name="projectSyncType">
-      <map>
-        <entry key="D:/IdeaProjects/project/k12soft" value="PREVIEW" />
-        <entry key="D:/IdeaProjects/project/k12soft - 副本" value="PREVIEW" />
-        <entry key="D:/k12web/k12soft" value="PREVIEW" />
-        <entry key="$PROJECT_DIR$/../../Intelliidea" value="PREVIEW" />
-        <entry key="$PROJECT_DIR$/../../Intelliidea/k12soft - 副本" value="PREVIEW" />
-        <entry key="$PROJECT_DIR$/../../Intelliidea/k12webTest" value="PREVIEW" />
-        <entry key="$PROJECT_DIR$/../../Intelliidea/k12webTest/k12soft" value="PREVIEW" />
-      </map>
-    </option>
-  </component>
-  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsGulpfileManager">
-    <detection-done>true</detection-done>
-    <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -619,87 +453,88 @@
     <option name="height" value="1057" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
-      <flattenPackages />
-      <showMembers />
-      <showModules />
-      <showLibraryContents />
-      <hideEmptyPackages />
-      <abbreviatePackageNames />
-      <autoscrollToSource />
-      <autoscrollFromSource />
-      <sortByType />
-      <manualOrder />
+    <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="k12" type="b2602c69:ProjectViewProjectNode" />
+              <item name="k12soft" type="b2602c69:ProjectViewProjectNode" />
               <item name="k12" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
             </path>
             <path>
-              <item name="k12" type="b2602c69:ProjectViewProjectNode" />
-              <item name="k12" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="k12servo" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="k12" type="b2602c69:ProjectViewProjectNode" />
+              <item name="k12soft" type="b2602c69:ProjectViewProjectNode" />
               <item name="k12" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="k12servo" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="k12" type="b2602c69:ProjectViewProjectNode" />
+              <item name="k12soft" type="b2602c69:ProjectViewProjectNode" />
               <item name="k12" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="k12servo" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
             </path>
             <path>
-              <item name="k12" type="b2602c69:ProjectViewProjectNode" />
+              <item name="k12soft" type="b2602c69:ProjectViewProjectNode" />
               <item name="k12" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="k12servo" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="k12" type="b2602c69:ProjectViewProjectNode" />
+              <item name="k12soft" type="b2602c69:ProjectViewProjectNode" />
               <item name="k12" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="k12servo" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="servo" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="k12" type="b2602c69:ProjectViewProjectNode" />
+              <item name="k12soft" type="b2602c69:ProjectViewProjectNode" />
               <item name="k12" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="k12servo" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="servo" type="462c0819:PsiDirectoryNode" />
-              <item name="module" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="k12soft" type="b2602c69:ProjectViewProjectNode" />
+              <item name="k12" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="k12servo" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelOrder2" value="2" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RequestMappingsPanelWidth2" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1553934456656" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\JavaCode\ideaWorkspace\k12\k12servo\src\main\java\cn\k12soft\servo" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -714,86 +549,49 @@
     </option>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
+    <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <module />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration default="true" type="Remote" factoryName="Remote">
-      <option name="USE_SOCKET_TRANSPORT" value="true" />
-      <option name="SERVER_MODE" value="false" />
-      <option name="SHMEM_ADDRESS" value="javadebug" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="5005" />
+    <configuration name="K12ServoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="k12servo_main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="cn.k12soft.servo.K12ServoApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration default="true" type="TestNG" factoryName="TestNG">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="SUITE_NAME" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="GROUP_NAME" />
-      <option name="TEST_OBJECT" value="CLASS" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
+    <configuration default="true" type="TestNG">
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <option name="OUTPUT_DIRECTORY" />
-      <option name="ANNOTATION_TYPE" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <option name="USE_DEFAULT_REPORTERS" value="false" />
-      <option name="PROPERTIES_FILE" />
-      <envs />
       <properties />
       <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration name="&lt;template&gt;" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" default="true" selected="false">
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType">
+      <module name="" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <predefined_log_file enabled="true" id="idea.log" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-  </component>
-  <component name="ShelveChangesManager" show_recycled="false">
-    <option name="remove_strategy" value="false" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -806,61 +604,214 @@
       <option name="presentableId" value="Default" />
       <updated>1550020795901</updated>
       <workItem from="1550020800148" duration="178000" />
+      <workItem from="1553917221489" duration="2152000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="178000" />
+    <option name="totallyTimeSpent" value="2330000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32938644" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="BPMNPalette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Web" side_tool="true" />
+      <window_info id="Learn" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25266525" />
+      <window_info id="Structure" order="1" weight="0.25" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="Designer" order="3" />
+      <window_info id="Capture Tool" order="4" />
+      <window_info id="UI Designer" order="5" />
+      <window_info id="Favorites" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Spring" />
+      <window_info anchor="bottom" id="Messages" weight="0.32939914" />
+      <window_info anchor="bottom" id="Java Enterprise" />
+      <window_info anchor="bottom" id="Database Changes" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39914164" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.32939914" />
+      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Build" order="10" weight="0.32938644" />
+      <window_info anchor="right" id="Maven" />
+      <window_info anchor="right" id="Bean Validation" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Gradle" order="5" weight="0.32995737" />
+      <window_info anchor="right" id="BPMNPalette" order="6" />
+      <window_info anchor="right" id="Theme Preview" order="7" />
+      <window_info anchor="right" id="Database" order="8" weight="0.32995737" />
+      <window_info anchor="right" id="Palette&#9;" order="9" />
+      <window_info anchor="right" id="Maven Projects" order="10" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager />
-    <watches-manager />
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/domain/School.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/department/service/DeptService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="91" column="37" selection-start-line="91" selection-start-column="37" selection-end-line="91" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/activiti/departments/web/DeptActTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="20" column="24" selection-start-line="20" selection-start-column="24" selection-end-line="20" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/domain/enumeration/Physical.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1600">
+          <caret line="10" column="24" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/healthCheck/domain/HealthCheck.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/domain/Attendance.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="16" column="17" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/configuration/swagger/PageableParameterBuilderPlugin.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="56" column="74" lean-forward="true" selection-start-line="56" selection-start-column="74" selection-end-line="56" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/k12servo/src/main/resources/application.yaml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/k12servo/src/main/resources/application-local.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="6" column="18" lean-forward="true" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/repository/AttendanceRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="88" column="17" selection-start-line="88" selection-start-column="17" selection-end-line="88" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/k12servo/src/main/java/cn/k12soft/servo/module/healthCheck/service/HealthCheckService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="174" column="21" lean-forward="true" selection-start-line="174" selection-start-column="21" selection-end-line="174" selection-end-column="21" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
   </component>
   <component name="masterDetails">
     <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>k12servo</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
       <state key="ProjectJDKs.UI">
         <settings>
           <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Gradle: com.google.code.findbugs:jsr305:3.0.1</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

@@ -70,7 +70,7 @@ public class K12SecurityConfiguration extends WebSecurityConfigurerAdapter {
   private void applyAuthorizeRequests(
     ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry) {
     AccessRule[] accessRules = k12Properties.getSecurity().getAccessRules();
-    for (K12Properties.Security.AccessRule accessRule : accessRules) {
+    for (AccessRule accessRule : accessRules) {
       K12Properties.Security.AntMatcher matcher = accessRule.getMatcher();
       registry = registry.antMatchers(matcher.getMethod(), matcher.getAntPatterns())
         .access(accessRule.getAccess());

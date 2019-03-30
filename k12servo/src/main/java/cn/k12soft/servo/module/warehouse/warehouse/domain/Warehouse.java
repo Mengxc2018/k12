@@ -25,6 +25,11 @@ public class Warehouse {
     private String spec;    // 商品规格
     @NotNull
     private Float price;    // 单价
+    private String country; // 国家
+    private String company; // 公司
+    private String prefix;  // 厂商识别代码
+    private String addr;    // 公司地址
+
     @NotNull
     private Integer schoolId;    // 学校
     @NotNull
@@ -38,6 +43,19 @@ public class Warehouse {
         this.isbn = isbn;
         this.spec = spec;
         this.price = price;
+        this.schoolId = schoolId;
+        this.createdAt = createdAt;
+    }
+
+    public Warehouse(String name, String isbn, String spec, Float price, String country, String company, String prefix, String addr, Integer schoolId, Instant createdAt) {
+        this.name = name;
+        this.isbn = isbn;
+        this.spec = spec;
+        this.price = price;
+        this.country = country;
+        this.company = company;
+        this.prefix = prefix;
+        this.addr = addr;
         this.schoolId = schoolId;
         this.createdAt = createdAt;
     }
@@ -96,5 +114,37 @@ public class Warehouse {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr;
     }
 }

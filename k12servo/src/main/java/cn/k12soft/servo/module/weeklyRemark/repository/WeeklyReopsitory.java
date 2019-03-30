@@ -22,7 +22,7 @@ public interface WeeklyReopsitory extends JpaRepository<Weekly, Long>, JpaSpecif
             + " WHERE klass_id = :klassId"
             + " AND  student_id = :studentId", nativeQuery = true)
     List<Object[]> findCreatedAtByKlassAndStudent(@Param("klassId") Integer klassId,
-                                                   @Param("studentId") Integer studentId);
+                                                  @Param("studentId") Integer studentId);
 
     List<Weekly> findAllBySchoolIdAndStudentAndPStatus(Integer schoolId, Student student, boolean b);
 

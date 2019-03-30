@@ -1,4 +1,4 @@
-//package cn.k12soft.servo.module.finance.domain.receipt;
+package cn.k12soft.servo.module.finance.domain.receipt;//package cn.k12soft.servo.module.finance.domain.receipt;
 //
 //import cn.k12soft.servo.domain.SchoolEntity;
 //import java.time.Instant;

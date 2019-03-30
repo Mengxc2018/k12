@@ -39,6 +39,7 @@ public class ExpenseEntry extends SchoolEntity {
   @Column
   private boolean delayCharge;                            // 延迟收费
   private BigDecimal amount;
+  private boolean fixation;     // 是否为固定收费项目
 
   ExpenseEntry() {
   }
@@ -50,20 +51,23 @@ public class ExpenseEntry extends SchoolEntity {
   public ExpenseEntry(Integer schoolId,
                       String name,
                       ExpensePeriodType periodType,
-                      BigDecimal amount) {
-    this(schoolId, name, periodType, amount, false);
+                      BigDecimal amount,
+                      boolean fixation) {
+    this(schoolId, name, periodType, amount, fixation, false);
   }
 
   public ExpenseEntry(Integer schoolId,
                       String name,
                       ExpensePeriodType periodType,
                       BigDecimal amount,
-                      boolean delayCharge) {
+                      boolean delayCharge,
+                      boolean fixation) {
     super(schoolId);
     this.name = name;
     this.periodType = periodType;
     this.amount = amount;
     this.delayCharge = delayCharge;
+    this.fixation = fixation;
     this.periodDiscounts = new ArrayList<>();
     this.identDiscounts = new ArrayList<>();
     this.paybackByDays = new ArrayList<>();
@@ -132,5 +136,17 @@ public class ExpenseEntry extends SchoolEntity {
 
   public void addPaybackBySemester(PaybackBySemester ps){
     this.paybackBySemesters.add(ps);
+  }
+
+    public boolean getIsFixation() {
+        return fixation;
+    }
+
+    public void setFixation(boolean fixation) {
+        this.fixation = fixation;
+    }
+
+  public boolean getIsDelayCharge() {
+    return delayCharge;
   }
 }

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: io.dropwizard.metrics:metrics-jcache:3.2.2">
+    <CLASSES>
+      <root url="jar://D:/gradle-all/gradleBulid/caches/modules-2/files-2.1/io.dropwizard.metrics/metrics-jcache/3.2.2/b624010110de592a664769ef5dba730d5c6ed065/metrics-jcache-3.2.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://D:/gradle-all/gradleBulid/caches/modules-2/files-2.1/io.dropwizard.metrics/metrics-jcache/3.2.2/77d4550b7c22798608f772b927e96f2d80497830/metrics-jcache-3.2.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

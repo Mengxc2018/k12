@@ -58,7 +58,7 @@ public class MedicineManagement {
     @ApiOperation("教师：查询正在进行的")
     @GetMapping("/findDoneForTeacher")
     public Collection<Medicine> findDoneForTeacher(@Active Actor actor,
-                                         @RequestParam @Valid Integer klassId,
+                                         @RequestParam(required = false) @Valid Integer klassId,
                                          @RequestParam @Valid LocalDate localDate){
         return this.medicineService.findDoneForTeacher(actor, klassId, localDate);
     }

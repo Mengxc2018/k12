@@ -24,8 +24,8 @@ public interface WxActiveRepository extends JpaSpecificationExecutor<WxActive>, 
             + " AND (w.created_at BETWEEN :first AND :second)"
             + " GROUP BY w.user_name",nativeQuery = true)
     Collection<Object[]> findAllBySchoolIdAndCreatedAtBetween(@Param("schoolId") Integer schoolId,
-                                                               @Param("first") Instant first,
-                                                               @Param("second") Instant second);
+                                                              @Param("first") Instant first,
+                                                              @Param("second") Instant second);
 
     @Query(value = "SELECT"
             + " count(*) AS count,"
@@ -37,7 +37,7 @@ public interface WxActiveRepository extends JpaSpecificationExecutor<WxActive>, 
             + " AND (w.created_at BETWEEN :first AND :second)"
             + " GROUP BY w.user_name",nativeQuery = true)
     Collection<Object[]> findAllBySchoolIdAndActorIdAndCreatedAtBetween(@Param("schoolId") Integer schoolId,
-                                                                           @Param("actorId") Integer actorId,
-                                                                           @Param("first") Instant first,
-                                                                           @Param("second") Instant second);
+                                                                        @Param("actorId") Integer actorId,
+                                                                        @Param("first") Instant first,
+                                                                        @Param("second") Instant second);
 }

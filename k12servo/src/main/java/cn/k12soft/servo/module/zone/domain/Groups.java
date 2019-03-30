@@ -1,12 +1,11 @@
 package cn.k12soft.servo.module.zone.domain;
 
+import cn.k12soft.servo.module.department.domain.Dept;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.Instant;
+import java.util.Set;
 
 /**
  * 集团
@@ -24,6 +23,9 @@ public class Groups {
     private String code;
     @Column
     private Instant createdAt;
+    @Column
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Set<Dept> department;
 
     public Groups(){}
 
@@ -57,5 +59,13 @@ public class Groups {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Set<Dept> getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Set<Dept> department) {
+        this.department = department;
     }
 }

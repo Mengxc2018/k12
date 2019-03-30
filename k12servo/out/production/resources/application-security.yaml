@@ -15,12 +15,14 @@ application:
             - /visit/management/web/**
             - /district/management/**
             - /wxLogin/web/**
+            - /web/**
 
             - /users/**
             - /tokens/**
             - /schools
             - /nianhui/**
             - /expense/**
+            - /weixin/pay/notify
         access: permitAll
       - matcher:
           antPatterns:

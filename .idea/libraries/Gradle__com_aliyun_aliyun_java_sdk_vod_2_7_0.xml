@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.aliyun:aliyun-java-sdk-vod:2.7.0">
+    <CLASSES>
+      <root url="jar://D:/gradle-all/gradleBulid/caches/modules-2/files-2.1/com.aliyun/aliyun-java-sdk-vod/2.7.0/168ae407853a1bd4725c1abba54ed4becb8ed9e4/aliyun-java-sdk-vod-2.7.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://D:/gradle-all/gradleBulid/caches/modules-2/files-2.1/com.aliyun/aliyun-java-sdk-vod/2.7.0/84ce6bd58909756f83826c5b10bcadf2445e281e/aliyun-java-sdk-vod-2.7.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

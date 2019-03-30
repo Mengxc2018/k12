@@ -9,7 +9,7 @@ import java.util.Map;
 public class WXPay {
 
     private WXPayConfig config;
-    private WXPayConstants.SignType signType;
+    private SignType signType;
     private boolean autoReport;
     private boolean useSandbox;
     private String notifyUrl;
@@ -42,10 +42,10 @@ public class WXPay {
         this.autoReport = autoReport;
         this.useSandbox = useSandbox;
         if (useSandbox) {
-            this.signType = WXPayConstants.SignType.MD5; // 沙箱环境
+            this.signType = SignType.MD5; // 沙箱环境
         }
         else {
-            this.signType = WXPayConstants.SignType.HMACSHA256;
+            this.signType = SignType.HMACSHA256;
         }
         this.wxPayRequest = new WXPayRequest(config);
     }

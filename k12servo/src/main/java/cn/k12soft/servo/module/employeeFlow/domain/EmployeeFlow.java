@@ -33,6 +33,9 @@ public class EmployeeFlow {         // 转正申请              // 离职申请
     private Integer schoolId;
     private String types;            // 类型，转正（official）、离职（leave）
 
+    public EmployeeFlow() {
+    }
+
     public EmployeeFlow(Integer actorId, String userName, Integer schoolId, LocalDate joinAt, String content, LocalDate date, Instant createdAt, String types) {
         this.actorId = actorId;
         this.userName = userName;

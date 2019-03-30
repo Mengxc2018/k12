@@ -74,7 +74,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long>, J
           + " WHERE a.student_id = :studentId"
           + " AND a.school_id = :schoolId"
           + " AND DATE(a.created_at) = DATE(:now)", nativeQuery = true)
-  Integer countAllByStudentIdAndSchoolIdAndCreatedAt(@Param("studentId")Integer studentId,
+  Integer countAllByStudentIdAndSchoolIdAndCreatedAt(@Param("studentId") Integer studentId,
                                                      @Param("schoolId") Integer schoolId,
                                                      @Param("now") LocalDate now);
 
@@ -87,7 +87,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long>, J
           + "  )"
           + " GROUP BY a.student_id", nativeQuery = true)
   Collection<Attendance> findBySchoolIdAndKlassIdAndStudentIdAndCreatedAtBetween(@Param("schoolId") Integer schoolId,
-                                                                                 @Param("klassId")Integer klassId,
+                                                                                 @Param("klassId") Integer klassId,
                                                                                  @Param("studentId") Integer studentId,
                                                                                  @Param("first") Instant first,
                                                                                  @Param("second") Instant second);
@@ -111,9 +111,14 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long>, J
           + "  )"
           + " GROUP BY DATE(a.created_at)", nativeQuery = true)
   Collection<Attendance> findBySchoolIdAndKlassIdAndStudentIdAndCreatedAtBetweenAndCreatdAtGroupBy(@Param("schoolId") Integer schoolId,
-                                                                                                   @Param("klassId")Integer klassId,
+                                                                                                   @Param("klassId") Integer klassId,
                                                                                                    @Param("studentId") Integer studentId,
                                                                                                    @Param("first") Instant first,
                                                                                                    @Param("second") Instant second);
 
+  @Query(value = "SELECT * FROM attendance a"
+          + " WHERE a.student_id = :studentId"
+          + " AND DATE(a.sign_at) = DATE(:date)", nativeQuery = true)
+  List<Attendance> findByStudentIdAndSignAt(@Param("studentId") Integer studentId,
+                                            @Param("date") Instant date);
 }

@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("weixinPayRecord")
+@RequestMapping("/weixinPayRecord")
 public class WeixinPayRecordManagement {
 
     private final WeixinPayRecodeService weixinPayRecodeService;
@@ -24,7 +24,7 @@ public class WeixinPayRecordManagement {
     }
 
     @ApiOperation("查询微信支付成功的订单")
-    @GetMapping("findOrder")
+    @GetMapping("/findOrder")
     public Collection<WxPayRecordDTO> findOrder(@Active Actor actor,
                                                 @RequestParam LocalDate localDate){
         return weixinPayRecodeService.findOrder(actor, localDate);

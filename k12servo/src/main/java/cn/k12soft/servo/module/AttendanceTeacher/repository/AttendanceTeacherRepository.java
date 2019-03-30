@@ -13,7 +13,7 @@ import java.util.Collection;
 @Repository
 public interface AttendanceTeacherRepository extends JpaRepository<AttendanceTeacher, Long >, JpaSpecificationExecutor<AttendanceTeacher> {
 
-    AttendanceTeacher findBySchoolIdAndCreatedAtAndActorId( Integer schoolId, Long lookDate, Integer actorId);
+    AttendanceTeacher findBySchoolIdAndCreatedAtAndActorId(Integer schoolId, Long lookDate, Integer actorId);
 
     Collection<AttendanceTeacher> findBySchoolIdAndActorIdAndCreatedAtBetween(Integer schoolId, Integer actorId, Long startTime, Long endTime);
 
@@ -91,8 +91,8 @@ public interface AttendanceTeacherRepository extends JpaRepository<AttendanceTea
             " AND att.created_at BETWEEN :first" +
             " AND :second", nativeQuery = true)
     Integer countByVacation(@Param("actorId") Integer actorId,
-                         @Param("first") Long first,
-                         @Param("second") Long second);
+                            @Param("first") Long first,
+                            @Param("second") Long second);
 
     @Query(value = "SELECT count(*) FROM ("
             + "  SELECT * FROM attendance_teacher a"
@@ -105,26 +105,26 @@ public interface AttendanceTeacherRepository extends JpaRepository<AttendanceTea
             " AND att.created_at BETWEEN :first" +
             " AND :second", nativeQuery = true)
     Integer countByDel(@Param("actorId") Integer actorId,
-                            @Param("first") Long first,
-                            @Param("second") Long second);
+                       @Param("first") Long first,
+                       @Param("second") Long second);
 
     @Query(value = "select sum(times) from attendance_teacher"
             + " WHERE  school_id = :schoolId"
             + " AND actor_id = :actorId"
             + " AND  (created_at BETWEEN :first AND :second)", nativeQuery = true)
     Integer sumTimesBySchoolIdAndActorIdAndCreatedAtBetween(@Param("schoolId") Integer schoolId,
-                                                         @Param("actorId") Integer actorId,
-                                                         @Param("first") Long first,
-                                                         @Param("second") Long second);
+                                                            @Param("actorId") Integer actorId,
+                                                            @Param("first") Long first,
+                                                            @Param("second") Long second);
 
     @Query(value = "select sum(vacation_time) from attendance_teacher"
             + " WHERE  school_id = :schoolId"
             + " AND actor_id = :actorId"
             + " AND  (created_at BETWEEN :first AND :second)", nativeQuery = true)
     Integer sumVacationTimeBySchoolIdAndActorIdAndCreatedAtBetween(@Param("schoolId") Integer schoolId,
-                                                                @Param("actorId") Integer actorId,
-                                                                @Param("first") Long first,
-                                                                @Param("second") Long second);
+                                                                   @Param("actorId") Integer actorId,
+                                                                   @Param("first") Long first,
+                                                                   @Param("second") Long second);
 
     @Query(value = "select * from attendance_teacher"
             + " WHERE school_id = :schoolId"

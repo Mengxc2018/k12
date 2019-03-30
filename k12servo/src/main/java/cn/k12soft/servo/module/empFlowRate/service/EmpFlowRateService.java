@@ -8,7 +8,6 @@ import cn.k12soft.servo.module.district.repository.ProvincesRepository;
 import cn.k12soft.servo.module.district.repository.RegionsRepository;
 import cn.k12soft.servo.module.empFlowRate.domain.*;
 import cn.k12soft.servo.module.empFlowRate.repository.*;
-import cn.k12soft.servo.module.employees.repository.EmployeeBasicRepository;
 import cn.k12soft.servo.module.zone.domain.Citys;
 import cn.k12soft.servo.module.zone.domain.Groups;
 import cn.k12soft.servo.module.zone.domain.Provinces;
@@ -35,7 +34,6 @@ public class EmpFlowRateService {
     private final SchoolRepository schoolRepository;
     private final RegionsRepository regionsRepository;
     private final ProvincesRepository provincesRepository;
-    private final EmployeeBasicRepository employeeBasicRepository;
 
     private final RateFolwSchoolRepository rateFolwSchoolRepository;
     private final RateFolwCityRepository rateFolwCityRepository;
@@ -49,7 +47,6 @@ public class EmpFlowRateService {
                               SchoolRepository schoolRepository,
                               RegionsRepository regionsRepository,
                               ProvincesRepository provincesRepository,
-                              EmployeeBasicRepository employeeBasicRepository,
                               RateFolwSchoolRepository rateFolwSchoolRepository,
                               RateFolwCityRepository rateFolwCityRepository,
                               RateFolwProvincesRepository rateFolwProvincesRepository,
@@ -60,7 +57,6 @@ public class EmpFlowRateService {
         this.schoolRepository = schoolRepository;
         this.regionsRepository = regionsRepository;
         this.provincesRepository = provincesRepository;
-        this.employeeBasicRepository = employeeBasicRepository;
         this.rateFolwSchoolRepository = rateFolwSchoolRepository;
         this.rateFolwCityRepository = rateFolwCityRepository;
         this.rateFolwProvincesRepository = rateFolwProvincesRepository;
@@ -101,15 +97,15 @@ public class EmpFlowRateService {
             BigDecimal bigTwo = new BigDecimal(0);
             BigDecimal bigThree = new BigDecimal(0);
             // 自然月新加入的员工数量
-            Integer joinInt = employeeBasicRepository.countAllBySchoolIdAndJoinAtBetween(schoolId, first, second);
-            Integer allTeaInt = employeeBasicRepository.countAllBySchoolId(schoolId);
-            if (joinInt != 0){
-                bigOne = new BigDecimal(joinInt);
-                bigTwo = new BigDecimal(allTeaInt);
-                // 计算：本月新加入的老师/所有的老师（包括本月新加入的）
-                bigThree = bigOne.divide(bigTwo, 4, BigDecimal.ROUND_HALF_UP).multiply(bigo);
-                valueStr = bigThree.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-            }
+//            Integer joinInt = employeeBasicRepository.countAllBySchoolIdAndJoinAtBetween(schoolId, first, second);
+//            Integer allTeaInt = employeeBasicRepository.countAllBySchoolId(schoolId);
+//            if (joinInt != 0){
+//                bigOne = new BigDecimal(joinInt);
+//                bigTwo = new BigDecimal(allTeaInt);
+//                // 计算：本月新加入的老师/所有的老师（包括本月新加入的）
+//                bigThree = bigOne.divide(bigTwo, 4, BigDecimal.ROUND_HALF_UP).multiply(bigo);
+//                valueStr = bigThree.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+//            }
 
             RateFolwSchool rf = rateFolwSchoolRepository.findAllBySchoolAndStatus(school, JOIN);
             if (rf == null) {
@@ -178,8 +174,10 @@ public class EmpFlowRateService {
             Integer schoolId = school.getId();
             String valueStr = "0.00";
             // 自然月新加入的员工数量
-            Integer leaveInt = employeeBasicRepository.countAllBySchoolIdAndLeaveAtBetween(schoolId, first, second);
-            Integer allTeaInt = employeeBasicRepository.countAllBySchoolId(schoolId);
+//            Integer leaveInt = employeeBasicRepository.countAllBySchoolIdAndLeaveAtBetween(schoolId, first, second);
+//            Integer allTeaInt = employeeBasicRepository.countAllBySchoolId(schoolId);
+            Integer leaveInt = 0;
+            Integer allTeaInt = 0;
             if (allTeaInt != 0) {
                 BigDecimal bigOne = new BigDecimal(0);
                 BigDecimal bigTwo = new BigDecimal(allTeaInt);

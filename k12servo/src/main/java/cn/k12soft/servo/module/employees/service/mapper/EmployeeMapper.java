@@ -4,6 +4,8 @@ import cn.k12soft.servo.domain.Actor;
 import cn.k12soft.servo.domain.Teaching;
 import cn.k12soft.servo.domain.User;
 import cn.k12soft.servo.module.attendanceCount.domain.dto.EntityMapperToList;
+import cn.k12soft.servo.module.department.domain.Dept;
+import cn.k12soft.servo.module.department.repository.DeptRepository;
 import cn.k12soft.servo.module.employees.domain.Employee;
 import cn.k12soft.servo.module.employees.domain.dto.EmployeeDTO;
 import cn.k12soft.servo.repository.ActorRepository;
@@ -12,7 +14,6 @@ import cn.k12soft.servo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 @Component
@@ -21,14 +22,16 @@ public class EmployeeMapper extends EntityMapperToList<Employee, EmployeeDTO> {
     private final UserRepository userRepository;
     private final ActorRepository actorRepository;
     private final TeachingRepository teachingRepository;
+    private final DeptRepository deptRepository;
 
     @Autowired
     public EmployeeMapper(UserRepository userRepository,
                           ActorRepository actorRepository,
-                          TeachingRepository teachingRepository) {
+                          TeachingRepository teachingRepository, DeptRepository deptRepository) {
         this.userRepository = userRepository;
         this.actorRepository = actorRepository;
         this.teachingRepository = teachingRepository;
+        this.deptRepository = deptRepository;
     }
 
     @Override
@@ -39,7 +42,7 @@ public class EmployeeMapper extends EntityMapperToList<Employee, EmployeeDTO> {
             Actor actor = actorRepository.findOne(employee.getActorId());
             User user = userRepository.getOne(actor.getUserId());
             String userByMasterName = "";
-            if (employee.getParentActorId() != null){
+            if (employee.getParentActorId() != null && employee.getParentActorId() != 0){
                 Actor actorByMaster = actorRepository.findOne(employee.getParentActorId());
                 User userByMaster = userRepository.findOne(actorByMaster.getUserId());
                 userByMasterName = userByMaster.getUsername();
@@ -58,22 +61,58 @@ public class EmployeeMapper extends EntityMapperToList<Employee, EmployeeDTO> {
                 courseIds = courseIds + teaching.getCourse().getId() + " ";
             }
 
+            Dept dept = employee.getDeptId() == null ? null : deptRepository.findOne(Long.parseLong(employee.getDeptId().toString()));
+            if (employee.getDeptId() == null){
+                dept = null;
+            }else{
+                dept = deptRepository.findOne(Long.parseLong(employee.getDeptId().toString()));
+            }
+
             return new EmployeeDTO(
                     employee.getId(),
-                    employee.getDuty(),
+                    employee.getFileId(),
                     employee.getActorId(),
                     user.getUsername(),
                     employee.getActorNum(),
-                    user.getMobile(),
+                    dept,
+                    employee.getProbation(),
+                    employee.getSalaryProbationer(),
+                    employee.getSalary(),
+                    employee.getDateJoinAt(),
+                    employee.getDateOfficialAt(),
+                    employee.getDateRegisterAt(),
+                    employee.getIdCard(),
+                    employee.getSex(),
+                    employee.getMobile(),
+                    employee.getEmergencyContact(),
+                    employee.getEmergencyContactMobile(),
+                    employee.getNativePlace(),
+                    employee.getNation(),
+                    employee.getPoliticsStatus(),
+                    employee.getIsMarry(),
+                    employee.getHjAddress(),
+                    employee.getAddress(),
+                    employee.getEducation(),
+                    employee.getGraduateSchool(),
+                    employee.getSpecialty(),
+                    employee.getCgfns(),
+                    employee.getUseForm(),
+                    employee.getIsContract(),
+                    employee.getContractDateStart(),
+                    employee.getContractDateEnd(),
+                    employee.getRenewRemind(),
+                    employee.getIsRenew(),
+                    employee.getRenewDateStart(),
+                    employee.getRenewDateEnd(),
+                    employee.getRemark(),
+                    employee.getIsGraduate(),
+                    employee.getIsHasDiploma(),
+                    employee.getIsOfficial(),
+                    employee.getIsLeave(),
+                    employee.getLeaveAt(),
+                    employee.getIsHasSocial(),
+                    employee.getDuty(),
                     employee.getParentActorId(),
-                    userByMasterName,
-                    employee.getSchoolId(),
-                    employee.getEmployeeBasic(),
-                    klassNames,
-                    klassIds,
-                    courseNames,
-                    courseIds,
-                    employee.isShow(),
                     employee.getOvertime(),
                     employee.getRest(),
                     employee.getAnnual(),
@@ -81,9 +120,16 @@ public class EmployeeMapper extends EntityMapperToList<Employee, EmployeeDTO> {
                     employee.getBarth(),
                     employee.getBarthWith(),
                     employee.getMarry(),
-                    employee.getFuneral()
-            );
-
+                    employee.getFuneral(),
+                    employee.isShow(),
+                    employee.getSchoolId(),
+                    employee.getCreatedAt(),
+                    userByMasterName,
+                    klassIds,
+                    klassNames,
+                    courseNames,
+                    courseIds
+                    );
         }
 
         return employeeDTO;

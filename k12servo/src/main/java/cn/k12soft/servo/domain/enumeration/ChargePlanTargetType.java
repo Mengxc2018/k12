@@ -3,7 +3,8 @@ package cn.k12soft.servo.domain.enumeration;
 public enum ChargePlanTargetType {
     COMMON_KLASS(0, "普通班"),
     INTEREST_KLASS(1, "兴趣班"),
-    STUDENT(3,"指定儿童"),
+    STUDENT(3,"指定儿童_普通班"),
+    STUDENT_INTEREST(4,"指定儿童_兴趣班")
     ;
     ChargePlanTargetType(int id, String name){
         this.id = id;

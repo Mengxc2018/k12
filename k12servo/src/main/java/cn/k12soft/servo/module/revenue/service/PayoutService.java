@@ -4,7 +4,6 @@ import cn.k12soft.servo.module.revenue.domain.Payout;
 import cn.k12soft.servo.module.revenue.repository.PayoutRepository;
 import cn.k12soft.servo.service.AbstractEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

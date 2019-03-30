@@ -5,6 +5,7 @@ package cn.k12soft.servo.module.revenue.domain;
  */
 public enum IncomeSrc {
     MONTHLY_DEDUCT(0, "每月自动扣除收费计划余额"),
+    PAY_DEDUCT(1, "缴费是补交费用"),
     ;
 
     IncomeSrc(int id, String name){

@@ -38,19 +38,7 @@ public class EpleToSalMapper extends EntityMapper<Employee, EpleToSalDTO>{
                     actor.getId().toString(),
                     employee,
                     user.getUsername(),
-                    "",
-                    "",
-                    type,
-                    0f,
-                    0f,
-                    0f,
-                    0f,
-                    0f,
-                    0f,
-                    0f,
-                    0f,
-                    0f,
-                    0f
+                    type
             );
             teacherSocialSecurity.setId(0);
             teacherSocialSecurity.setSchoolId(0);

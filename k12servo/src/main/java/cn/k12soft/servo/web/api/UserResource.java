@@ -7,7 +7,6 @@ import cn.k12soft.servo.domain.enumeration.RelationType;
 import cn.k12soft.servo.security.Active;
 import cn.k12soft.servo.service.SchoolService;
 import cn.k12soft.servo.service.UserService;
-import cn.k12soft.servo.service.dto.UserDTO;
 import cn.k12soft.servo.service.dto.UserDistrictDTO;
 import cn.k12soft.servo.web.form.*;
 import com.codahale.metrics.annotation.Timed;
@@ -113,21 +112,22 @@ public class UserResource {
    */
   @ApiOperation("扫码后提交手机号、班级id、学生姓名、学校id")
   @GetMapping("/tokens/CreateUser")
-  public void CreateUser(@RequestParam @Valid String mobile,
+  public ResponseEntity CreateUser(@RequestParam @Valid String mobile,
                          @RequestParam @Valid Integer klassId,
                          @RequestParam @Valid String stuName,
                          @RequestParam @Valid Integer schoolId,
                          @RequestParam @Valid RelationType relationType){
-    this.userService.createUser(mobile, klassId, stuName, schoolId, relationType);
+    return this.userService.createUser(mobile, klassId, stuName, schoolId, relationType);
   }
 
-  @ApiOperation("园长查询未激活的用户")
+  @ApiOperation("教师查询未激活的用户，有klassId时按照班级查，没有时查询全部")
   @GetMapping("/user/findUnActive")
-  public Collection<User> findUnActive(@Active Actor actor){
-    return this.userService.findUnActive(actor);
+  public Collection<UserPojo> findUnActive(@Active Actor actor,
+                                           @RequestParam(required = false) @Valid Integer klassId){
+    return this.userService.findUnActive(actor, klassId);
   }
 
-  @ApiOperation("园长批量激活用户，将userid用英文逗号隔开")
+  @ApiOperation("教师批量激活用户，将userid用英文逗号隔开")
   @PutMapping("/doActive")
   public void doActive(@Active Actor actor,
                        @RequestBody @Valid String ids){
