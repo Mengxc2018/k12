@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="k12">
+    <output-path>$PROJECT_DIR$/out/artifacts/k12</output-path>
+    <root id="archive" name="k12.war">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+        <element id="dir-copy" path="$PROJECT_DIR$" />
+      </element>
+    </root>
+  </artifact>
+</component>
